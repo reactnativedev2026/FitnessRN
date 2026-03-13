@@ -1,0 +1,120 @@
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text, Platform,   Image } from 'react-native';
+ import ScreenNameEnum from '../routes/screenName.enum';
+import HomeStack from './HomeStack';
+ import SvgIndex from '../assets/svgIndex';
+ import { useSafeAreaInsets } from 'react-native-safe-area-context';
+ import UserProfile from '../screen/BottomTab/Profile/UserProfile';
+ 
+import InvoiceScreen from '../screen/BottomTab/Invoice/Invoice';
+import InvoiceCalculator from '../screen/BottomTab/InvoiceCalculator/InvoiceCalculator';
+  
+const Tab = createBottomTabNavigator();
+
+const TAB_CONFIG:any = {
+  [ScreenNameEnum.HomeStack]: {
+    label: 'Home',
+    iconActive: SvgIndex.HomeAtive, 
+    iconInactive: SvgIndex.Home, 
+  },
+ 
+  Booking: {
+    label: 'Invoices',
+    iconActive: SvgIndex.Box, 
+    iconInactive: SvgIndex.Box1,  
+  },
+  Chat: {
+    label: 'Calculator',
+    iconActive: SvgIndex.MessageActive, 
+    iconInactive: SvgIndex.Message,
+  },
+  Profile: {
+    label: 'Settings',
+    iconActive: SvgIndex.UserActive, 
+    iconInactive: SvgIndex.User,
+  },
+};
+
+const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 80 : 70;
+const ICON_SIZE = 26;
+
+export default function TabNavigator() {
+  const insets = useSafeAreaInsets();
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => {
+        const tab = TAB_CONFIG[route.name];
+        return {
+          headerShown: false,
+          tabBarLabel: ({ focused }) => (
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontSize: 13,
+                color: focused ? '#4038FF' : '#2F4858',
+                marginTop: 4,
+                fontWeight:"500"
+               }}
+            >
+              {tab?.label ?? route.name}
+            </Text>
+          ),
+          tabBarIcon: ({ focused }) => {
+            const Icon = focused ? tab.iconActive : tab.iconInactive;
+            if (typeof Icon === 'function') {
+              return <Icon width={ICON_SIZE} height={ICON_SIZE}  />;
+            } else {
+              return (
+                <Image
+                  source={Icon}
+                  style={{
+                    width: ICON_SIZE,
+                    height: ICON_SIZE,
+                    resizeMode: 'contain',
+                  }}
+                />
+              );
+            }
+          },
+          tabBarStyle: {
+            position: 'absolute',
+            left: 20,
+            right: 20,
+             backgroundColor: 'white', // your desired background
+            height: TAB_BAR_HEIGHT + insets.bottom, // safe height including bottom inset
+            paddingBottom: insets.bottom,
+            paddingTop: 8,
+          
+            // Rounded corners
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+          
+            // Borders
+        
+            borderTopColor: 'rgba(125, 154, 155, 0.15)',
+            borderLeftColor: 'rgba(125, 154, 155, 0.15)',
+            borderRightColor: 'rgba(125, 154, 155, 0.15)',
+          
+            // Optional shadow for iOS
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.05,
+            shadowRadius: 4,
+          
+            // Optional elevation for Android
+            elevation: 4,
+          
+       
+          },
+        };
+      }}
+    >
+      <Tab.Screen name={ScreenNameEnum.HomeStack} component={HomeStack} />
+      {/* <Tab.Screen name="MyTrack" component={MyTrack} /> */}
+       <Tab.Screen name="Booking" component={InvoiceScreen} />
+       <Tab.Screen name="Chat" component={InvoiceCalculator}/>
+       <Tab.Screen name="Profile" component={UserProfile} />
+     </Tab.Navigator>
+  );
+}

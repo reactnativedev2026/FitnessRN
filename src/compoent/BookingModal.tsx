@@ -1,0 +1,109 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import StatusBarComponent from './StatusBarCompoent';
+import CustomButton from './CustomButton';
+  
+const BookingSuccessModal = ({ visible, onClose, userName, userImage, onOpenChat }:any) => {
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <SafeAreaView style={styles.container}>
+        <StatusBarComponent />
+        <View style={styles.modalView}>
+          {/* User Image */}
+          <Image 
+        //   source={{ uri: userImage }} 
+          
+            source={{ uri: "https://i.pravatar.cc/300" }}
+          style={styles.userImage} />
+
+          {/* User Name */}
+          <Text style={styles.userName}>{userName}</Text>
+
+          {/* Booking Text */}
+          <Text style={styles.title}>Booking Successful!</Text>
+          <Text style={styles.subTitle}>
+            Your session with <Text style={{ fontWeight: '600' }}>[Institution Name]</Text> has been confirmed
+          </Text>
+
+          {/* Open Chat Button */}
+           <CustomButton title="Open Chat With Institution 💬"  
+          onPress={onOpenChat}
+         />
+         
+        </View>
+      </SafeAreaView>
+    </Modal>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)', // semi-transparent background
+  },
+  modalView: {
+    width: '85%',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    elevation: 5, // shadow for Android
+    shadowColor: '#000', // shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  userImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 15,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 5,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginVertical: 5,
+  },
+  subTitle: {
+    fontSize: 14,
+    color: '#888',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: '#FF1E8B',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    width: '100%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+});
+
+export default BookingSuccessModal;
