@@ -20,6 +20,8 @@ import { color } from "../constant";
 // -------- Menu Data --------
 const menuItems = [
   { id: "11", title: "Dashboard", icon: imageIndex.multiUser, screen: ScreenNameEnum.DashBoardScreen },
+  { id: "13", title: "Announcements", icon: imageIndex.no1, screen: ScreenNameEnum.AnnouncementsScreen },
+  { id: "14", title: "Offers", icon: imageIndex.bag, screen: ScreenNameEnum.OffersScreen },
   { id: "1", title: "Profile", icon: imageIndex.profile, screen: ScreenNameEnum.EditProfile },
 
   { id: "2", title: "Calculator", icon: imageIndex.service, screen: ScreenNameEnum.ClickUploadScreen },

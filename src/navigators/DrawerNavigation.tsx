@@ -6,7 +6,9 @@ import PrivacyPolicy from '../screen/Profile/PrivacyPolicy';
 import ScreenNameEnum from '../routes/screenName.enum';
 import HelpScreen from '../screen/Profile/Help/Helps';
  import Dashboard from '../screen/BottomTab/DashBoard/Dashboard';
-import ProfileScreen from '../screen/Profile/ProfileScreen/ProfileScreen';
+ import ProfileScreen from '../screen/Profile/ProfileScreen/ProfileScreen';
+import AnnouncementsScreen from '../screen/Announcements/Announcements';
+import OffersScreen from '../screen/Offers/Offers';
 import NotificationsScreen from '../screen/Notification/Notification';
 import NotificationsSetting from '../screen/Profile/NotificationsSetting'; 
 import DutyLog from '../screen/BottomTab/DutyLog/DutyLog';
@@ -44,6 +46,8 @@ export default function DrawerNavigation() {
       )}
     >
       <Drawer.Screen name={ScreenNameEnum.DashBoardScreen} component={Dashboard} />
+      <Drawer.Screen name={ScreenNameEnum.AnnouncementsScreen} component={AnnouncementsScreen} />
+      <Drawer.Screen name={ScreenNameEnum.OffersScreen} component={OffersScreen} />
       {/* <Drawer.Screen name="MedicationLog" component={MedicationLog} />
       <Drawer.Screen name="DoseCalculator" component={DoseCalculator} />
       <Drawer.Screen name="EmergencyGuide" component={EmergencyGuide} />

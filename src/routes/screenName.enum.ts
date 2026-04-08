@@ -114,8 +114,9 @@ NotificationsScreen ="NotificationsScreen",
   Patient_Driver = "Patient_Driver",
   RaceDetail = "RaceDetail",
   PresubscriberDetail = "presubscriberDetail",
-  DetailScreen = "DetailScreen"
-
+  DetailScreen = "DetailScreen",
+  AnnouncementsScreen = "AnnouncementsScreen",
+  OffersScreen = "OffersScreen"
 }
 
 export default ScreenNameEnum;

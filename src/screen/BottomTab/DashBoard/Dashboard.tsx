@@ -29,8 +29,10 @@ import LocationPicker from "./locationPicker";
 import { POST_API } from "../../../api/APIRequest";
 import { ENDPOINT } from "../../../api/endpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MAP_API_KEY } from "@env";
+import ScreenNameEnum from "../../../routes/screenName.enum";
  
-const MapApiKey = "AIzaSyBvK5H1yLB4aPHfRMujC-rV-t5Yg2gOLXk";
+const MapApiKey = MAP_API_KEY;
 
 const DashboardScreen = () => {
   const {
@@ -128,7 +130,7 @@ const DashboardScreen = () => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.AnnouncementsScreen as never)}>
             <Image
               source={imageIndex.no1}
               style={{

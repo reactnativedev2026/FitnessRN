@@ -14,6 +14,8 @@ export const ENDPOINT = {
   CREATE_TRIP:'user/add_duty_request',
   CHANGE_STATUS:"user/change_duty",
   USER_LOG:"user/duty_log_summary",
-  GET_CURRENT_TRIP:"user/get_current_duty_request"
+  GET_CURRENT_TRIP:"user/get_current_duty_request",
+  GET_ANNOUNCEMENTS: "user/get_announcements",
+  GET_OFFERS: "user/get_offers"
 
 };
