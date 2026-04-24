@@ -26,12 +26,9 @@ import useDashboard, { DUTY_OPTIONS } from "./useDashboard";
 import LoadingModal from "../../../utils/Loader";
 import CustomButton from "../../../compoent/CustomButton";
 import LocationPicker from "./locationPicker";
-import { POST_API } from "../../../api/APIRequest";
-import { ENDPOINT } from "../../../api/endpoints";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MAP_API_KEY } from "@env";
 import ScreenNameEnum from "../../../routes/screenName.enum";
- 
+
 const MapApiKey = MAP_API_KEY;
 
 const DashboardScreen = () => {
@@ -83,8 +80,8 @@ const DashboardScreen = () => {
     locationModal2,
     handleModalSubmit2,
     handleLocationSelected2,
-    CreateTrip ,
-       ratingModalVisible1, setRatingModalVisible1,
+    CreateTrip,
+    ratingModalVisible1, setRatingModalVisible1,
     driverType,
     setDriverType,
   } = useDashboard();
@@ -156,62 +153,64 @@ const DashboardScreen = () => {
         >
           <View style={styles.content}>
 
-            <View style={{ flexDirection: "row",
-              
-              justifyContent: "space-between", alignItems: "center", marginBottom: 10 }} >
-            {/* Dropdown */}
-            <TouchableOpacity
-              ref={ratingRef}
-              style={styles.dropdown}
-              activeOpacity={0.8}
-              onPress={() => {
-                ratingRef.current?.measureInWindow(
-                  (x: any, y: any, width: any, height: any) => {
-                    setRatingLayout({ x, y, width, height });
-                    setRatingModalVisible(true);
-                  },
-                );
-              }}
-            >
-              <Text
-                style={[
-                  styles.dropdownText,
-                  selectedRating && { color: "#000" },
-                ]}
+            <View style={{
+              flexDirection: "row",
+
+              justifyContent: "space-between", alignItems: "center", marginBottom: 10
+            }} >
+              {/* Dropdown */}
+              <TouchableOpacity
+                ref={ratingRef}
+                style={styles.dropdown}
+                activeOpacity={0.8}
+                onPress={() => {
+                  ratingRef.current?.measureInWindow(
+                    (x: any, y: any, width: any, height: any) => {
+                      setRatingLayout({ x, y, width, height });
+                      setRatingModalVisible(true);
+                    },
+                  );
+                }}
               >
-                {selectedRating
-                  ? selectedRating.rating
-                  : "Select Company Rating"}
-              </Text>
-              <Icon name="chevron-down" size={20} color="#777" />
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.dropdownText,
+                    selectedRating && { color: "#000" },
+                  ]}
+                >
+                  {selectedRating
+                    ? selectedRating.rating
+                    : "Select Company Rating"}
+                </Text>
+                <Icon name="chevron-down" size={20} color="#777" />
+              </TouchableOpacity>
 
 
 
               <TouchableOpacity
-              ref={ratingRef1}
-              style={styles.dropdown}
-              activeOpacity={0.8}
-              onPress={() => {
-                ratingRef1.current?.measureInWindow(
-                  (x: any, y: any, width: any, height: any) => {
-                    setRatingLayout1({ x, y, width, height });
-                    setRatingModalVisible1(true);
-                  },
-                );
-              }}
-            >
-              <Text
-                style={[
-                  styles.dropdownText,
-                  driverType && { color: "#000" },
-                ]}
+                ref={ratingRef1}
+                style={styles.dropdown}
+                activeOpacity={0.8}
+                onPress={() => {
+                  ratingRef1.current?.measureInWindow(
+                    (x: any, y: any, width: any, height: any) => {
+                      setRatingLayout1({ x, y, width, height });
+                      setRatingModalVisible1(true);
+                    },
+                  );
+                }}
               >
-                {driverType || "Select Team"}
-              </Text>
-              <Icon name="chevron-down" size={20} color="#777" />
-            </TouchableOpacity>
-</View>
+                <Text
+                  style={[
+                    styles.dropdownText,
+                    driverType && { color: "#000" },
+                  ]}
+                >
+                  {driverType || "Select Team"}
+                </Text>
+                <Icon name="chevron-down" size={20} color="#777" />
+              </TouchableOpacity>
+            </View>
             {/* Driver Card */}
             <View
               style={[
@@ -256,66 +255,66 @@ const DashboardScreen = () => {
             </View>
 
             {/* Duty Status */}
-                <View style={styles.whiteCard}>
-                <View style={styles.statusRow}>
-                  <View style={{ flexDirection: "row" }}>
+            <View style={styles.whiteCard}>
+              <View style={styles.statusRow}>
+                <View style={{ flexDirection: "row" }}>
+                  <Icon
+                    name={selectedDuty.icon}
+                    size={100}
+                    color={selectedDuty.color}
+                    style={{ marginRight: 6 }}
+                  />
+                  {/* <Icon name="checkmark-circle" size={100} color="#34C759" /> */}
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      paddingTop: 20,
+                      marginLeft: 5,
+                    }}
+                  >
+                    <Text style={styles.sectionTitle}>Duty Status</Text>
+                    <Text style={styles.statusText}>
+                      {selectedDuty.label}
+                    </Text>
+                  </View>
+                </View>
+
+                <TouchableOpacity
+                  ref={badgeRef}
+                  activeOpacity={0.8}
+                  style={styles.badge}
+                  onPress={() => {
+                    badgeRef.current?.measureInWindow(
+                      (x: any, y: any, width: any, height: any) => {
+                        setBadgeLayout({ x, y, width, height });
+                        setDutyModalVisible(true);
+                      },
+                    );
+                  }}
+                >
+                  <View
+                    style={{ flexDirection: "row", alignItems: "center" }}
+                  >
                     <Icon
                       name={selectedDuty.icon}
-                      size={100}
+                      size={16}
                       color={selectedDuty.color}
                       style={{ marginRight: 6 }}
                     />
-                    {/* <Icon name="checkmark-circle" size={100} color="#34C759" /> */}
-                    <View
-                      style={{
-                        justifyContent: "center",
-                        paddingTop: 20,
-                        marginLeft: 5,
-                      }}
+                    <Text
+                      style={[
+                        styles.badgeText,
+                        { color: selectedDuty.color },
+                      ]}
                     >
-                      <Text style={styles.sectionTitle}>Duty Status</Text>
-                      <Text style={styles.statusText}>
-                        {selectedDuty.label}
-                      </Text>
-                    </View>
+                      {selectedDuty.label}
+                    </Text>
+                    <Icon name="chevron-down" size={16} color="#333" />
                   </View>
-
-                  <TouchableOpacity
-                    ref={badgeRef}
-                    activeOpacity={0.8}
-                    style={styles.badge}
-                    onPress={() => {
-                      badgeRef.current?.measureInWindow(
-                        (x: any, y: any, width: any, height: any) => {
-                          setBadgeLayout({ x, y, width, height });
-                          setDutyModalVisible(true);
-                        },
-                      );
-                    }}
-                  >
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Icon
-                        name={selectedDuty.icon}
-                        size={16}
-                        color={selectedDuty.color}
-                        style={{ marginRight: 6 }}
-                      />
-                      <Text
-                        style={[
-                          styles.badgeText,
-                          { color: selectedDuty.color },
-                        ]}
-                      >
-                        {selectedDuty.label}
-                      </Text>
-                      <Icon name="chevron-down" size={16} color="#333" />
-                    </View>
-                  </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
               </View>
-          
+            </View>
+
             <View style={styles.whiteCard}>
               <Text style={styles.sectionTitle}>Location</Text>
 
@@ -327,9 +326,9 @@ const DashboardScreen = () => {
               </View> */}
               <TouchableOpacity
                 onPress={() => {
-                
-                    setLocationModal(true);
-                 
+
+                  setLocationModal(true);
+
                 }}
               >
                 <View style={styles.locationRow}>
@@ -345,9 +344,9 @@ const DashboardScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  
-                    setLocationModal2(true);
-                  
+
+                  setLocationModal2(true);
+
                 }}
               >
                 <View style={styles.locationRow}>
@@ -357,7 +356,7 @@ const DashboardScreen = () => {
                     color={color.primary}
                   />
                   <Text style={styles.locationText}>
-                    {selectedAddress2?.address || "End Location"}
+                    {selectedAddress2?.address || "Destination"}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -409,13 +408,11 @@ const DashboardScreen = () => {
                 </View>
               </View>
             </View>
-            {false && (
-              <CustomButton
-                // onPress={() => (start ? setStart(false) : CreateTrip())}
-                title={start ? "Complete Trip" : "Create Trip"}
-                style={{ marginVertical: 20 }}
-              />
-            )}
+            <CustomButton
+              onPress={() => CreateTrip()}
+              title="Submit"
+              style={{ marginVertical: 20 }}
+            />
             <View style={[styles.redCard, { marginBottom: 20 }]}>
               <Image source={imageIndex.multiUser} style={styles.iconCircle} />
               <View>
@@ -479,11 +476,11 @@ const DashboardScreen = () => {
       >
         <Pressable
           style={styles.modalOverlay}
-          onPress={() =>{
-setRatingModalVisible(false)
+          onPress={() => {
+            setRatingModalVisible(false)
           }
-             
-            }
+
+          }
         />
 
         <View
@@ -502,7 +499,7 @@ setRatingModalVisible(false)
               style={styles.ratingItem}
               onPress={() => {
                 setSelectedRating(item);
-                
+
                 setRatingModalVisible(false);
               }}
             >
@@ -520,7 +517,7 @@ setRatingModalVisible(false)
 
 
 
-  <Modal
+      <Modal
         visible={ratingModalVisible1}
         transparent
         animationType="fade"
@@ -528,11 +525,11 @@ setRatingModalVisible(false)
       >
         <Pressable
           style={styles.modalOverlay}
-          onPress={() =>{
-setRatingModalVisible1(false)
+          onPress={() => {
+            setRatingModalVisible1(false)
           }
-             
-            }
+
+          }
         />
 
         <View
@@ -545,7 +542,7 @@ setRatingModalVisible1(false)
             },
           ]}
         >
-         {drivingModes?.map((item, index) => (
+          {drivingModes?.map((item, index) => (
             <TouchableOpacity
               key={index}
               style={styles.ratingItem}
@@ -556,7 +553,7 @@ setRatingModalVisible1(false)
             >
               <Text style={styles.ratingText}>{item}</Text>
             </TouchableOpacity>
-          ))}  
+          ))}
         </View>
       </Modal>
 
@@ -623,7 +620,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     width: "45%",
     marginRight: 10,
-   },
+  },
 
   dropdownText: {
     color: "#888",

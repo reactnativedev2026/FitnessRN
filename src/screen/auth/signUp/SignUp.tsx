@@ -193,11 +193,15 @@ export default function SignUpUI() {
                 value={credentials.mobile}
                 onChangeText={(text) => handleChange('mobile', text)}
                 firstLogo
-                img={imageIndex.Textphone}
+                countryCode="US"
                 keyboardType="phone-pad"
                 error={!!errors.mobile}
-                maxLength={15}
+                maxLength={10}
+                prefix="+1"
               />
+
+
+
               {renderError('mobile')}
 
               {/* FMCSA Verification Section */}

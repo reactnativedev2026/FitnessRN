@@ -95,22 +95,23 @@ const useSignup = () => {
   };
 
   const validatePhone = (phone: string): boolean => {
-    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{3,6}$/;
-    return phoneRegex.test(phone.replace(/\s/g, ''));
+    // US Phone Number Regex: matches 10 digits, optional +1 prefix
+    const phoneRegex = /^(?:\+1)?\d{10}$/;
+    return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''));
   };
 
   const validateFields = (): boolean => {
     const validationErrors: ValidationErrors = {};
-    const { 
-      email, 
-      password, 
-      cpassword, 
-      mobile, 
-      fullName, 
-      driverLicenseNumber, 
-      issuedState, 
-      issuedDate, 
-      language, 
+    const {
+      email,
+      password,
+      cpassword,
+      mobile,
+      fullName,
+      driverLicenseNumber,
+      issuedState,
+      issuedDate,
+      language,
       dotNumber,
       mcNumber,
       companyName
@@ -118,25 +119,26 @@ const useSignup = () => {
 
     // Required field validations
     if (!fullName.trim()) validationErrors.fullName = 'Full name is required';
-    
+
     if (!email.trim()) validationErrors.email = 'Email is required';
     else if (!validateEmail(email)) validationErrors.email = 'Please enter a valid email';
-    
+
     if (!password.trim()) validationErrors.password = 'Password is required';
     else if (password.length < 6) validationErrors.password = 'Password must be at least 6 characters';
-    
+
     if (!cpassword?.trim()) validationErrors.cpassword = 'Confirm Password is required';
     else if (password !== cpassword) validationErrors.cpassword = 'Passwords do not match';
-    
+
     if (!mobile.trim()) validationErrors.mobile = 'Mobile number is required';
-     
+    else if (!validatePhone(mobile)) validationErrors.mobile = 'Please enter a valid 10-digit USA phone number';
+
     if (!driverLicenseNumber.trim()) validationErrors.driverLicenseNumber = 'Driver License Number is required';
     if (!issuedState.trim()) validationErrors.issuedState = 'Issued State is required';
-     if (!language.trim()) validationErrors.language = 'Language is required';
+    if (!language.trim()) validationErrors.language = 'Language is required';
     // if (!dotNumber.trim()) validationErrors.dotNumber = 'DOT Number is required';
     if (!mcNumber.trim()) validationErrors.mcNumber = 'MC Number is required';
     // if (!companyName.trim()) validationErrors.companyName = 'Company Name is required';
-    
+
     if (!termsAccepted) validationErrors.general = 'Please accept Terms & Conditions';
 
     if (Object.keys(validationErrors).length > 0) {
@@ -150,10 +152,10 @@ const useSignup = () => {
 
   const handleSignup = async () => {
     if (!validateFields()) return;
-if(!fmcsaData.isDotVerified){
-  Alert.alert('Please add valid MC Number')
-  return;
-}
+    if (!fmcsaData.isDotVerified) {
+      Alert.alert('Please add valid MC Number')
+      return;
+    }
     setIsLoading(true);
     setErrors({});
 
@@ -162,7 +164,8 @@ if(!fmcsaData.isDotVerified){
         email: credentials.email.trim(),
         password: credentials.password,
         user_name: credentials.fullName.trim(),
-        mobile_number: credentials.mobile.trim(),
+        mobile_number: credentials.mobile.trim().startsWith('+1') ? credentials.mobile.trim() : `+1${credentials.mobile.trim()}`,
+
         driver_license_number: credentials.driverLicenseNumber.trim(),
         issued_date: credentials.issuedState,
         language: credentials.language.trim(),
@@ -173,59 +176,70 @@ if(!fmcsaData.isDotVerified){
         company_name: credentials.companyName.trim(),
         company_authorised: 'yes',
       };
-      
+
       const response = await signupApi(signupData, setIsLoading);
-      
+
       if (response.success) {
         navigation.navigate(ScreenNameEnum.Login as never);
-      }  
+      }
     } catch (error: any) {
       errorToast(error.message || 'Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
-// Add these to your useSignup.ts hook
-const [fmcsaData, setFmcsaData] = useState({
-  dotNumber: '',
-  isDotVerified: false,
-  isMcActive: false,
-  verifying: false,
-  companyName:''
-});
+  // Add these to your useSignup.ts hook
+  const [fmcsaData, setFmcsaData] = useState({
+    dotNumber: '',
+    isDotVerified: false,
+    isMcActive: false,
+    verifying: false,
+    companyName: ''
+  });
 
-const verifyMCNumber = async (mcNumber: string) => {
-  if (mcNumber.length < 5) return;
+  const verifyMCNumber = async (mcNumber: string) => {
+    if (mcNumber.length < 5) return;
 
-  setFmcsaData(prev => ({ ...prev, verifying: true, dotNumber:'' }));
-  try {
-    const webKey = '6e1b90075560acec3cb2e888c13c585a9002f253';
-    const response = await fetch(
-      `https://mobile.fmcsa.dot.gov/qc/services/carriers/docket-number/${mcNumber}?webKey=${webKey}`
-    );
-    const data = await response.json();
-    console.log(data)
+    setFmcsaData(prev => ({ ...prev, verifying: true, dotNumber: '' }));
+    try {
+      const webKey = '6e1b90075560acec3cb2e888c13c585a9002f253';
+      const response = await fetch(
+        `https://mobile.fmcsa.dot.gov/qc/services/carriers/docket-number/${mcNumber}?webKey=${webKey}`
+      );
+      const data = await response.json();
+      console.log(data)
 
-    if (data?.content[0]?.carrier) {
-      const carrier = data.content[0].carrier;
-      console.log(carrier,'carrrrrrr')
-      setFmcsaData({
-        dotNumber: carrier.dotNumber,
-        isDotVerified: !!carrier.dotNumber,
-        isMcActive: carrier.allowedToOperate === "Y",
-        verifying: false,
-       companyName:  carrier?.legalName ?? carrier?.dbaName ?? ''
-      });
-      // Automatically update the credentials with the fetched DOT number
-      handleChange('dotNumber', carrier.dotNumber);
-    } else {
-       setFmcsaData(prev => ({ ...prev, verifying: false, isMcActive: false, isDotVerified: false }));
+      if (data?.content && data.content.length > 0) {
+        // Prioritize Active (A) first, then Allowed to Operate (Y)
+        const bestMatch = data.content.find((item: any) => item.carrier?.statusCode === "A") || 
+                          data.content.find((item: any) => item.carrier?.allowedToOperate === "Y") || 
+                          data.content[0];
+
+
+        const carrier = bestMatch.carrier;
+        console.log(carrier, 'carrrrrrr')
+        
+        const companyName = carrier?.dbaName || carrier?.legalName || '';
+        
+        setFmcsaData({
+          dotNumber: carrier.dotNumber,
+          isDotVerified: !!carrier.dotNumber,
+          isMcActive: carrier.allowedToOperate === "Y" || carrier.statusCode === "A",
+          verifying: false,
+          companyName: companyName
+        });
+        // Automatically update the credentials with the fetched DOT and Company Name
+        handleChange('dotNumber', carrier.dotNumber);
+        handleChange('companyName', companyName);
+      } else {
+
+        setFmcsaData(prev => ({ ...prev, verifying: false, isMcActive: false, isDotVerified: false }));
+      }
+    } catch (error) {
+      console.error("FMCSA Verification Error:", error);
+      setFmcsaData(prev => ({ ...prev, verifying: false }));
     }
-  } catch (error) {
-    console.error("FMCSA Verification Error:", error);
-    setFmcsaData(prev => ({ ...prev, verifying: false }));
-  }
-};
+  };
   return {
     credentials,
     errors,

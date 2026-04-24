@@ -7,7 +7,9 @@ import { loginSuccess } from "../../../redux/feature/authSlice";
 import { ENDPOINT } from "../../../api/endpoints";
 import { GET_API, POST_API } from "../../../api/APIRequest";
 import { getLocation } from "../../../compoent/location";
- import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MAP_API_KEY } from "@env";
+
 
 const STORAGE_KEYS = {
   DRIVER_TYPE: "driver_type",
@@ -44,11 +46,60 @@ const useDashboard = () => {
   const [persistedLoaded, setPersistedLoaded] = useState(false);
   const [selectedDutyState, setSelectedDutyState] = useState(DUTY_OPTIONS[0]);
 
+  const ChangeStatus = async (status: string, id: string, isSilent = false) => {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) return;
+
+    const loaderFunc = isSilent ? () => { } : setLoading;
+    const param: any = {
+      user_id: userData?.user_data?.id,
+      duty_request_id: id || trip?.id,
+      status: status || selectedDutyState.status,
+      rating: selectedRatingValue?.rating,
+      driver_type: driverType,
+    };
+
+    console.log("🚀 CALLING CHANGE_STATUS API:", param);
+
+    const stChange = await POST_API(
+      token,
+      param,
+      ENDPOINT.CHANGE_STATUS,
+      loaderFunc,
+    );
+    console.log("✅ CHANGE_STATUS API RESPONSE:", stChange);
+  };
+
+  const UpdateRatingType = async () => {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) return;
+
+    const param = {
+      request_id: trip?.id,
+      rating: selectedRatingValue?.rating,
+      type: driverType,
+    };
+
+
+    console.log("🚀 CALLING CHANGE_RATING_STATUS API:", param);
+
+    const res = await POST_API(
+      token,
+      param,
+      ENDPOINT.CHANGE_RATING_STATUS,
+      () => { } // Silent
+    );
+    console.log("✅ CHANGE_RATING_STATUS API RESPONSE:", res);
+  };
+
   // Persist selected rating when user selects (so it shows after app close)
   const setSelectedRating = (value: any) => {
     setSelectedRatingState(value);
     const toSave = value?.rating ?? (typeof value === "string" ? value : null);
     if (toSave != null) AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_RATING, String(toSave));
+
+    // Call new rating status API immediately on change
+    UpdateRatingType();
   };
 
   // Persist rpm when user changes it (so it shows after app close)
@@ -87,29 +138,58 @@ const useDashboard = () => {
           try {
             const parsed = JSON.parse(savedStart);
             if (parsed && (parsed.address || parsed.latitude)) setSelectedAddress(parsed);
-          } catch (_) {}
+          } catch (_) { }
         }
         if (savedEnd) {
           try {
             const parsed = JSON.parse(savedEnd);
             if (parsed && (parsed.address || parsed.latitude)) setSelectedAddress2(parsed);
-          } catch (_) {}
+          } catch (_) { }
         }
         if (savedDutyStatus) {
           const dutyOption = DUTY_OPTIONS.find((o) => o.status === savedDutyStatus);
           if (dutyOption) setSelectedDutyState(dutyOption);
         }
-      } catch (_) {}
+      } catch (_) { }
       setPersistedLoaded(true);
     })();
   }, []);
 
-  // After persisted data is loaded, fetch current trip, rating list, and driver count
+  // Load all persisted values first so fields show what user had set (after app close)
+  const fetchAddress = async (lat: number, lng: number) => {
+    try {
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${MAP_API_KEY}`;
+      const response = await fetch(url);
+      const result = await response.json();
+      if (result.results && result.results.length > 0) {
+        return result.results[0].formatted_address;
+      }
+    } catch (error) {
+      console.log("Error fetching address:", error);
+    }
+    return null;
+  };
+
   useEffect(() => {
     if (!persistedLoaded) return;
     getCurrentTripApi();
     getRatingApi();
-    getLocation().then((res) => getDriver(res));
+    getLocation().then(async (res) => {
+      getDriver(res);
+      // If start address is not set, use current location
+      if (!selectedAddress?.address) {
+        const address = await fetchAddress(res.latitude, res.longitude);
+        if (address) {
+          const location = {
+            latitude: res.latitude,
+            longitude: res.longitude,
+            address: address,
+          };
+          setSelectedAddress(location);
+          AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_START_ADDRESS, JSON.stringify(location));
+        }
+      }
+    });
   }, [persistedLoaded]);
   const [ratingData, setRatingData] = useState([]);
   const getRatingApi = async () => {
@@ -199,13 +279,13 @@ const useDashboard = () => {
           };
           setSelectedAddress(startAddr);
           setSelectedAddress2(endAddr);
-          
+
           // Only overwrite local RPM if it's currently at default value
           // This prevents stale server data from reverting a newly set local RPM on reload
           if (rating?.data?.rpm && (rpm === "0.00" || rpm === "0")) {
             setRpmState(rating?.data?.rpm);
           }
-          
+
           setSelectedRatingState({
             rating:
               rating?.data?.rating == null ? userData?.user_data?.rating : rating?.data?.rating,
@@ -213,103 +293,97 @@ const useDashboard = () => {
           if (rating?.data?.driver_type === "Solo" || rating?.data?.driver_type === "Team") {
             setDriverTypeState(rating.data.driver_type);
           }
-         
-        } else {
-          // No current trip found, create a new one if we have minimal data
-          if (selectedAddress?.latitude) {
-             CreateTrip();
-          }
         }
       }
 
-     } catch (error) {
+    } catch (error) {
       setLoading(false);
 
       console.log("❌ Profile API error:", error);
     }
   };
-  
-const CreateTrip = async (isSilent = false) => {
-  // Create body object with only fields that have data
-  // Alert.alert('selectedRating?.rating', selectedRating?.rating)
-  const body: any = {
-    company_id: 1,
-   
-  };
-  if (selectedRatingValue != null && selectedRatingValue.rating != null) {
-    body.rating = selectedRatingValue?.rating;
-  }
 
-  // Add rpm if it exists and is not empty
-  if (rpm && rpm.trim() !== "") {
-    body.rpm = rpm;
-  }
+  const CreateTrip = async (isSilent = false) => {
+    // Create body object with only fields that have data
+    // Alert.alert('selectedRating?.rating', selectedRating?.rating)
+    const body: any = {
+      company_id: 1,
 
-  // Add start location data only if it exists
-  if (selectedAddress?.address) {
-    body.start_location = selectedAddress.address;
-  }
-  // When user has not selected, API still needs a value → default "Solo"
-  body.driver_type = driverType ?? "";
-
-  // Add start coordinates only if they exist
-  if (selectedAddress?.latitude) {
-    body.start_location_lat = selectedAddress.latitude;
-  }
-  
-  if (selectedAddress?.longitude) {
-    body.start_location_lon = selectedAddress.longitude;
-  }
-
-  // Add end location data only if it exists
-  if (selectedAddress2?.address) {
-    body.end_location = selectedAddress2.address;
-  }
-
-  // Add end coordinates only if they exist
-  if (selectedAddress2?.latitude) {
-    body.end_location_lat = selectedAddress2.latitude;
-  }
-  
-  if (selectedAddress2?.longitude) {
-    body.end_location_lon = selectedAddress2.longitude;
-  }
-
-  // Optional: Validate required fields
-  const requiredFields = ['start_location', 'end_location'];
-  // const missingFields = requiredFields.filter(field => !body[field]);
-  
-  // if (missingFields.length > 0) {
-  //   Alert.alert('Missing Information', 
-  //     `Please fill in: ${missingFields.join(', ').replace(/_/g, ' ')}`);
-  //   return;
-  // }
-
-  const token = await AsyncStorage.getItem("token");
-  if (!token) return;
-  
-  const loaderFunc = isSilent ? () => {} : setLoading;
-  if (!isSilent) setLoading(true);
-  try {
-    const res = await POST_API(token, body, ENDPOINT.CREATE_TRIP, loaderFunc);
-
-    if (res?.success) {
-      setTrip(res?.data);
-      const tripId = res?.data?.id != null ? String(res.data.id) : "";
-      await ChangeStatus("on_duty", tripId, isSilent);
-      setStart(true);
-      // Removed: AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_RPM, String(res.data.rpm)); 
-      // We rely on the local setter (setRpm) to keep storage in sync. 
-      // Overwriting it here from the API response often reverts it to old data if the server hasn't updated its record yet.
-      if (res?.data?.rating != null)
-        AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_RATING, String(res.data.rating));
+    };
+    if (selectedRatingValue != null && selectedRatingValue.rating != null) {
+      body.rating = selectedRatingValue?.rating;
     }
-  } catch (error) {
-    console.log("CreateTrip Error:", error);
-  } finally {
-    if (!isSilent) setLoading(false);
-  }
-};
+
+    // Add rpm if it exists and is not empty
+    if (rpm && rpm.trim() !== "") {
+      body.rpm = rpm;
+    }
+
+    // Add start location data only if it exists
+    if (selectedAddress?.address) {
+      body.start_location = selectedAddress.address;
+    }
+    // When user has not selected, API still needs a value → default "Solo"
+    body.driver_type = driverType ?? "";
+
+    // Add start coordinates only if they exist
+    if (selectedAddress?.latitude) {
+      body.start_location_lat = selectedAddress.latitude;
+    }
+
+    if (selectedAddress?.longitude) {
+      body.start_location_lon = selectedAddress.longitude;
+    }
+
+    // Add end location data only if it exists
+    if (selectedAddress2?.address) {
+      body.end_location = selectedAddress2.address;
+    }
+
+    // Add end coordinates only if they exist
+    if (selectedAddress2?.latitude) {
+      body.end_location_lat = selectedAddress2.latitude;
+    }
+
+    if (selectedAddress2?.longitude) {
+      body.end_location_lon = selectedAddress2.longitude;
+    }
+
+    // Optional: Validate required fields
+    const requiredFields = ['start_location', 'end_location'];
+    // const missingFields = requiredFields.filter(field => !body[field]);
+
+    // if (missingFields.length > 0) {
+    //   Alert.alert('Missing Information', 
+    //     `Please fill in: ${missingFields.join(', ').replace(/_/g, ' ')}`);
+    //   return;
+    // }
+    console.log(body, 'this is body')
+    const token = await AsyncStorage.getItem("token");
+    if (!token) return;
+
+    const loaderFunc = isSilent ? () => { } : setLoading;
+    if (!isSilent) setLoading(true);
+    try {
+      const res = await POST_API(token, body, ENDPOINT.CREATE_TRIP, loaderFunc);
+
+      if (res?.success) {
+        setTrip(res?.data);
+        const tripId = res?.data?.id != null ? String(res.data.id) : "";
+        await ChangeStatus(selectedDutyState.status, tripId, isSilent);
+        setStart(true);
+        // Removed: AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_RPM, String(res.data.rpm)); 
+        // We rely on the local setter (setRpm) to keep storage in sync. 
+        // Overwriting it here from the API response often reverts it to old data if the server hasn't updated its record yet.
+        if (res?.data?.rating != null)
+          AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_RATING, String(res.data.rating));
+      }
+    } catch (error) {
+      console.log("CreateTrip Error:", error);
+    } finally {
+      if (!isSilent) setLoading(false);
+    }
+  };
   // const CreateTrip = async () => {
   //   console.log(selectedAddress);
   //   // if (!selectedAddress.latitude) {
@@ -336,7 +410,7 @@ const CreateTrip = async (isSilent = false) => {
   //   console.log(selectedAddress);
   //   const token = await AsyncStorage.getItem("token");
   //   const res = await POST_API(token, body, ENDPOINT.CREATE_TRIP, setLoading);
-  
+
   // console.log(res, 'this is res')
   //   if (res.success) {
 
@@ -387,7 +461,7 @@ const CreateTrip = async (isSilent = false) => {
     height: 0,
   });
 
-   const [locationModal, setLocationModal] = useState(false);
+  const [locationModal, setLocationModal] = useState(false);
   const [locationModal2, setLocationModal2] = useState(false);
 
   const handleLocationSelected = (location: {
@@ -402,10 +476,6 @@ const CreateTrip = async (isSilent = false) => {
   const handleModalSubmit = () => {
     setLocationModal(false);
   };
-  useEffect(() => {
-    if (!persistedLoaded || !selectedAddress2?.latitude) return;
-    CreateTrip();
-  }, [selectedAddress2?.latitude]);
   const handleLocationSelected2 = (location: {
     latitude: number;
     longitude: number;
@@ -423,6 +493,9 @@ const CreateTrip = async (isSilent = false) => {
   const setDriverType = (value: "Solo" | "Team") => {
     setDriverTypeState(value);
     AsyncStorage.setItem(STORAGE_KEYS.DRIVER_TYPE, value);
+
+    // Call new rating status API immediately on change
+    UpdateRatingType();
   };
 
   const [currentRequest, setCurrentRequest] = useState();
@@ -440,44 +513,14 @@ const CreateTrip = async (isSilent = false) => {
     AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_DUTY_STATUS, option.status);
   };
 
-  const ChangeStatus = async (status: string, id: string, isSilent = false) => {
-    const token = await AsyncStorage.getItem("token");
-    if (!token) return;
-
-    const loaderFunc = isSilent ? () => {} : setLoading;
-    const param = {
-      user_id: userData?.user_data?.id,
-      duty_request_id: id || trip?.id,
-      status: status,
-    };
-    console.log(param)
-    const stChange = await POST_API(
-      token,
-      param,
-      ENDPOINT.CHANGE_STATUS,
-      loaderFunc,
-    );
-    console.log(stChange, "this is status change");
-  };
 
   // Replace multiple redundant effects with a single debounced-like effect or at least guarded one
   useEffect(() => {
     if (!persistedLoaded) return;
-    
-    // Avoid calling CreateTrip if we are still initializing or if data isn't ready
-    if (!selectedAddress?.latitude || !selectedAddress2?.latitude) return;
-    
-    const timeout = setTimeout(() => {
-        CreateTrip(true); // Silent update for state changes (RPM, Rating, DriverType)
-    }, 800); // Slightly longer debounce for smoother typing experience
+    UpdateRatingType();
+  }, [selectedRatingValue, driverType]);
 
-    return () => clearTimeout(timeout);
-  }, [selectedRatingValue, driverType, rpm]);
 
-  useEffect(() => {
-    if (!persistedLoaded || !selectedAddress2?.latitude) return;
-    CreateTrip();
-  }, [selectedAddress2?.latitude]);
   return {
     userData,
     loading,

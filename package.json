@@ -27,6 +27,7 @@
     "react": "19.1.0",
     "react-native": "0.80.1",
     "react-native-confirmation-code-field": "^8.0.1",
+    "react-native-country-flag": "^2.0.2",
     "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "^2.29.1",
     "react-native-haptic-feedback": "^2.3.3",

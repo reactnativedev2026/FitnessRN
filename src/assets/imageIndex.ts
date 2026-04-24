@@ -28,6 +28,7 @@ export default {
   back: require('./images/back.png'),
   logout: require('./images/logout.png'),
   userLogo: require('./images/userLogo.png'),
+  usaFlag: require('./images/usa_flag.png'),
   no1: require('./images/no1.png'),
   driver: require('./images/driver.png'),
   global: require('./images/global.png'),

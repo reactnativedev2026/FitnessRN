@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import imageIndex from '../assets/imageIndex';
 import { color } from '../constant';
+import CountryFlag from "react-native-country-flag";
 
 export default function TextInputField({ ...props }) {
+
   const [showPassword, setShowPassword] = useState(props.hide);
   const PasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -51,12 +53,25 @@ export default function TextInputField({ ...props }) {
               alignItems: 'center',
               width: '10%',
             }}>
-            <Image
-              source={props.img}
-              style={[{ width: 22, height: 22  ,tintColor:color.primary}, props.imgStyle]}
-              resizeMode="contain"
-            />
+            {props.countryCode ? (
+              <CountryFlag 
+                isoCode={props.countryCode} 
+                size={14} 
+                style={{ borderRadius: 3 }} 
+              />
 
+            ) : (
+              <Image
+                source={props.img}
+                style={[
+                  { width: 22, height: 22 }, 
+                  props.isFlag && { width: 28, height: 18 },
+                  !props.isFlag && { tintColor: color.primary }, 
+                  props.imgStyle
+                ]}
+                resizeMode="contain"
+              />
+            )}
           </View>
         )}
 
@@ -69,7 +84,17 @@ export default function TextInputField({ ...props }) {
             height: 50,
 
           }}>
+          {props.prefix && (
+            <Text style={{
+              color: 'black',
+              fontWeight: '500',
+              fontSize: 14,
+              marginRight: 5,
+              marginLeft: 5
+            }}>{props.prefix}</Text>
+          )}
           <View style={{ width: '80%' }}>
+
             <TextInput
               placeholderTextColor={props.placeholderTextColor || "#ADA4A5"}
               style={[

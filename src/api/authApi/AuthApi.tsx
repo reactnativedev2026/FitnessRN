@@ -3,7 +3,7 @@ import { BASE_URL } from "..";
 import { errorToast, successToast } from "../../utils/customToast";
 import { ENDPOINT } from "../endpoints";
 
- 
+
 interface ApiParam {
   url: string;
   body?: any;
@@ -47,11 +47,11 @@ export const loginApi = async (
     let resJson: ApiResponse;
     try {
       resJson = JSON.parse(text);
-      
+
     } catch {
       resJson = { success: false, message: text };
     }
-console.log(resJson, 'this is res')
+    console.log(resJson, 'this is res')
     return resJson;
   } catch (error) {
     console.error('POST API Error:', error);
@@ -72,7 +72,7 @@ export const signupApi = async (
     const response = await loginApi({ url: ENDPOINT.SIGN_UP, body }, setLoading);
 
     if (response.success) {
-      successToast('Signup successful!');
+      successToast('Successfully registered. As soon as possible our customer service will call you back.');
     } else {
       errorToast(response.message || 'Signup failed');
     }
@@ -106,7 +106,7 @@ export const UpdteProfileApi = async (
   }
 };
 export const ApiCall = async (
-  endPonit:any,
+  endPonit: any,
   body: any,
   setLoading: (loading: boolean) => void
 ): Promise<ApiResponse> => {
@@ -115,7 +115,7 @@ export const ApiCall = async (
     const response = await loginApi({ url: endPonit, body }, setLoading);
 
     if (response.success) {
-      successToast('Signup successful!');
+      successToast('Successfully registered. As soon as possible our customer service will call you back.');
     } else {
       errorToast(response.message || 'Signup failed');
     }
@@ -182,11 +182,11 @@ export const POST_API = async (
       },
       body: formData,
     });
-// console.log(formData, 'formadata')
+    // console.log(formData, 'formadata')
     const text = await response.text();
 
     try {
-        console.log(JSON.parse(text))
+      console.log(JSON.parse(text))
       return JSON.parse(text);
     } catch {
       console.log('Non JSON response:', text);
@@ -202,8 +202,8 @@ export const POST_API = async (
 };
 
 
- 
- export const Privacypolicy = async (setLoading: any) => {
+
+export const Privacypolicy = async (setLoading: any) => {
   setLoading(true);
   try {
     const response = await fetch(`${BASE_URL}common/get_privacy_policy`, {
@@ -222,7 +222,7 @@ export const POST_API = async (
     if (parsedResponse?.status == 1) {
       successToast(parsedResponse?.message);
       return parsedResponse; // ✅ Return the data
-    }  
+    }
 
   } catch (error: any) {
     console.error('Privacy Policy error:', error);
@@ -234,7 +234,7 @@ export const POST_API = async (
 };
 
 
- export  const Termsconditions = async (setLoading: any) => {
+export const Termsconditions = async (setLoading: any) => {
   setLoading(true);
   try {
     const response = await fetch(`${BASE_URL}common/get_terms_and_condition`, {
@@ -253,8 +253,8 @@ export const POST_API = async (
     if (parsedResponse?.status == 1) {
       successToast(parsedResponse?.message);
       return parsedResponse; // ✅ Return the data
-    }  
- 
+    }
+
 
   } catch (error: any) {
     console.error('Privacy Policy error:', error);

@@ -13,7 +13,7 @@ import {
     Modal,
     Animated,
     Platform,
-} from 'react-native'; 
+} from 'react-native';
 import imageIndex from '../../../assets/imageIndex';
 
 type Props = {
@@ -46,7 +46,7 @@ const LocationPicker: React.FC<Props> = ({ apiKey, visible, onSumit, onClose, on
             console.log("response", response)
 
             const result = await response.json();
-            console.log("result--",result)
+            console.log("result--", result)
             setPlaces(result?.predictions || []);
             Animated.timing(fadeAnim, {
                 toValue: result?.predictions?.length ? 1 : 0,
