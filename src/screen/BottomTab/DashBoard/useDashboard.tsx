@@ -97,10 +97,8 @@ const useDashboard = () => {
     setSelectedRatingState(value);
     const toSave = value?.rating ?? (typeof value === "string" ? value : null);
     if (toSave != null) AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_RATING, String(toSave));
-
-    // Call new rating status API immediately on change
-    UpdateRatingType();
   };
+
 
   // Persist rpm when user changes it (so it shows after app close)
   const setRpm = (value: string | ((prev: string) => string)) => {
@@ -493,10 +491,8 @@ const useDashboard = () => {
   const setDriverType = (value: "Solo" | "Team") => {
     setDriverTypeState(value);
     AsyncStorage.setItem(STORAGE_KEYS.DRIVER_TYPE, value);
-
-    // Call new rating status API immediately on change
-    UpdateRatingType();
   };
+
 
   const [currentRequest, setCurrentRequest] = useState();
 
