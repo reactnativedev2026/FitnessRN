@@ -29,7 +29,7 @@ module.exports = {
         allowUndefined: true,
       },
     ],
-    'react-native-reanimated/plugin', // 👈 always last
+    'react-native-reanimated/plugin',
   ],
 };
 

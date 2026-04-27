@@ -66,18 +66,18 @@ const NotificationItem = ({ item }) => {
 };
 
 const NotificationsScreen = () => {
-    const navigation = useNavigation()
+  const navigation = useNavigation()
   return (
     <SafeAreaView style={styles.container}>
-            <CustomHeader
-                label={"Notification"}
-                menuIcon={imageIndex.left}
-                leftPress={true}
-                navigation={navigation}
-                // rightIcons={[
-                //     { icon: imageIndex.close, onPress:()=>navigation.navigate(ScreenNameEnum.NotificationsScreen)}
-                // ]}
-            />
+      <CustomHeader
+        label={"Notification"}
+        menuIcon={imageIndex.left}
+        leftPress={true}
+        navigation={navigation}
+      // rightIcons={[
+      //     { icon: imageIndex.close, onPress:()=>navigation.navigate(ScreenNameEnum.NotificationsScreen)}
+      // ]}
+      />
       <SectionList
         sections={notifications}
         keyExtractor={(item) => item.id}

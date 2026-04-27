@@ -1,8 +1,8 @@
 // useSignup.ts
 import { useEffect, useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { signupApi, UpdteProfileApi } from '../../../api/authApi/AuthApi';
-import ScreenNameEnum from '../../../routes/screenName.enum';
+import { UpdteProfileApi } from '../../../api/authApi/AuthApi';
+
 import { errorToast } from '../../../utils/customToast';
 import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -44,23 +44,6 @@ const useProfileScreen = () => {
     companyName: '',
   });
 
-  // useEffect(() => {
-  //   if (userData?.user_data) {
-  //     setCredentials({
-  //       fullName: userData.user_data.user_name || 'dddd',
-  //       mobile: userData.user_data.mobile_number || '',
-  //       driverLicenseNumber: userData.user_data.driver_license_number || '',
-  //       issuedState: userData.user_data.issued_state || '',
-  //       issuedDate: userData.user_data.issued_date || '',
-  //       language: userData.user_data.language || '',
-  //       dotNumber: userData.user_data.dot_number || '',
-  //       mcNumber: userData.user_data.mc_number || '',
-  //       companyName: userData.user_data.company_name || '',
-  //     });
-  //   }
-  // }, [userData?.user_data]);
-
-
   useEffect(() => {
     console.log("Updated credentials 👉", credentials);
   }, [credentials]);
@@ -79,7 +62,6 @@ const useProfileScreen = () => {
         email: userData.user_data.email ?? '',
         driverLicenseNumber: userData.user_data.driver_license_number ?? '',
         issuedState: userData.user_data.issuedState ?? '',
-        // issuedDate: userData.user_data.issuedDate ?? '',
         language: userData.user_data.language ?? '',
         dotNumber: userData.user_data.dot_number ?? '',
         mcNumber: userData.user_data.mc_number ?? '',
@@ -160,9 +142,6 @@ const useProfileScreen = () => {
 
     if (!mobile.trim()) validationErrors.mobile = 'Mobile number is required';
 
-    // if (!driverLicenseNumber.trim()) validationErrors.driverLicenseNumber = 'Driver License Number is required';
-    // if (!issuedState.trim()) validationErrors.issuedState = 'Issued State is required';
-    //  if (!language.trim()) validationErrors.language = 'Language is required';
     if (!dotNumber.trim()) validationErrors.dotNumber = 'DOT Number is required';
     if (!mcNumber.trim()) validationErrors.mcNumber = 'MC Number is required';
     if (!companyName.trim()) validationErrors.companyName = 'Company Name is required';
@@ -198,11 +177,11 @@ const useProfileScreen = () => {
       };
 
       const response = await UpdteProfileApi(signupData, token, setIsLoading);
-console.log('this is response for ', response.data)
+      console.log('this is response for ', response.data)
       if (response.success) {
         dispatch(
           loginSuccess({
-            userData: {user_data : response.data},          // ✅ full user object
+            userData: { user_data: response.data },          // ✅ full user object
             token: token,
           })
         );

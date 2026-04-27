@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -11,17 +11,14 @@ import {
   ScrollView,
   Platform,
   KeyboardAvoidingView,
-  Alert,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import imageIndex from "../../../assets/imageIndex";
 import { color } from "../../../constant";
 import { Modal, Pressable } from "react-native";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
-import StatusBarComponent from "../../../compoent/StatusBarCompoent";
+import { DrawerActions } from "@react-navigation/native";
 import useDashboard, { DUTY_OPTIONS } from "./useDashboard";
 import LoadingModal from "../../../utils/Loader";
 import CustomButton from "../../../compoent/CustomButton";
@@ -40,7 +37,6 @@ const DashboardScreen = () => {
     trip,
     start,
     setStart,
-
     selectedAddress,
     setSelectedAddress,
     selectedAddress2,
@@ -90,7 +86,7 @@ const DashboardScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <LoadingModal visible={loading} />
-      <StatusBarComponent barStyle="light-content" />
+      <StatusBar barStyle="light-content" />
       {/* Header */}
       <LinearGradient
         colors={[color.primary, color.primary]}
@@ -138,7 +134,6 @@ const DashboardScreen = () => {
               }}
             />
 
-            {/* <Icon name="notifications-outline" size={24} color="#fff" /> */}
           </TouchableOpacity>
         </View>
       </LinearGradient>
@@ -155,7 +150,6 @@ const DashboardScreen = () => {
 
             <View style={{
               flexDirection: "row",
-
               justifyContent: "space-between", alignItems: "center", marginBottom: 10
             }} >
               {/* Dropdown */}
@@ -184,8 +178,6 @@ const DashboardScreen = () => {
                 </Text>
                 <Icon name="chevron-down" size={20} color="#777" />
               </TouchableOpacity>
-
-
 
               <TouchableOpacity
                 ref={ratingRef1}
@@ -218,15 +210,13 @@ const DashboardScreen = () => {
                 {
                   borderBottomLeftRadius: 0,
                   borderBottomRightRadius: 0,
-                  marginBottom: 20,
+                  marginBottom: 10,
                 },
               ]}
             >
               {/* <View style={styles.iconCircle}> */}
               <Image source={imageIndex.user} style={styles.iconCircle} />
 
-              {/* <Icon name="person" size={22} color={color.primary}/> */}
-              {/* </View> */}
               <View>
                 <Text style={styles.cardLabel}>Driver</Text>
                 <Text style={styles.cardTitle}>
@@ -239,12 +229,9 @@ const DashboardScreen = () => {
             <View
               style={[
                 styles.redCard,
-                { borderTopLeftRadius: 0, borderTopRightRadius: 0 },
+                { borderTopLeftRadius: 0, borderTopRightRadius: 0, },
               ]}
             >
-              {/* <View style={styles.iconCircle}>
-            <Icon name="business" size={22} color={color.primary} />
-          </View> */}
               <Image source={imageIndex.company} style={styles.iconCircle} />
               <View>
                 <Text style={styles.cardLabel}>Company</Text>
@@ -253,7 +240,6 @@ const DashboardScreen = () => {
                 </Text>
               </View>
             </View>
-
             {/* Duty Status */}
             <View style={styles.whiteCard}>
               <View style={styles.statusRow}>
@@ -264,7 +250,6 @@ const DashboardScreen = () => {
                     color={selectedDuty.color}
                     style={{ marginRight: 6 }}
                   />
-                  {/* <Icon name="checkmark-circle" size={100} color="#34C759" /> */}
                   <View
                     style={{
                       justifyContent: "center",
@@ -318,17 +303,9 @@ const DashboardScreen = () => {
             <View style={styles.whiteCard}>
               <Text style={styles.sectionTitle}>Location</Text>
 
-              {/* <View style={styles.locationRow}>
-                <Icon name="location-outline" size={24} color={color.primary} />
-                <Text style={styles.locationText}>
-                  New Palasia, Indore, Madhya Pradesh
-                </Text>
-              </View> */}
               <TouchableOpacity
                 onPress={() => {
-
                   setLocationModal(true);
-
                 }}
               >
                 <View style={styles.locationRow}>
@@ -479,7 +456,6 @@ const DashboardScreen = () => {
           onPress={() => {
             setRatingModalVisible(false)
           }
-
           }
         />
 
@@ -508,15 +484,6 @@ const DashboardScreen = () => {
           ))}
         </View>
       </Modal>
-
-
-
-
-
-
-
-
-
       <Modal
         visible={ratingModalVisible1}
         transparent

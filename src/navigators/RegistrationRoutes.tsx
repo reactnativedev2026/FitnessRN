@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 import { createNativeStackNavigator, NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import _routes from '../routes/routes';
 import ScreenNameEnum from '../routes/screenName.enum';
@@ -6,7 +6,6 @@ import ScreenNameEnum from '../routes/screenName.enum';
 export type RegistrationStackParamList = {
   [ScreenNameEnum.SPLASH_SCREEN]: undefined;
   [ScreenNameEnum.OnboardingScreen]: undefined;
-   [ScreenNameEnum.ReadyScreen]: undefined;
   [ScreenNameEnum.LoginScreen]: undefined;
   [ScreenNameEnum.OtpScreen]: undefined;
   [ScreenNameEnum.CreatePassword]: undefined;

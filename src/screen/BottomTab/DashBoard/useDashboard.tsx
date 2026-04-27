@@ -9,6 +9,7 @@ import { GET_API, POST_API } from "../../../api/APIRequest";
 import { getLocation } from "../../../compoent/location";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MAP_API_KEY } from "@env";
+import { errorToast } from "../../../utils/customToast";
 
 
 const STORAGE_KEYS = {
@@ -49,6 +50,9 @@ const useDashboard = () => {
   const ChangeStatus = async (status: string, id: string, isSilent = false) => {
     const token = await AsyncStorage.getItem("token");
     if (!token) return;
+    if (!(id || trip?.id)) {
+      errorToast("for see changes pleas create first your trip");
+    }
 
     const loaderFunc = isSilent ? () => { } : setLoading;
     const param: any = {
@@ -58,8 +62,6 @@ const useDashboard = () => {
       rating: selectedRatingValue?.rating,
       driver_type: driverType,
     };
-
-    console.log("🚀 CALLING CHANGE_STATUS API:", param);
 
     const stChange = await POST_API(
       token,
@@ -111,7 +113,6 @@ const useDashboard = () => {
     });
   };
 
-  // Load all persisted values first so fields show what user had set (after app close)
   useEffect(() => {
     (async () => {
       try {
@@ -153,7 +154,6 @@ const useDashboard = () => {
     })();
   }, []);
 
-  // Load all persisted values first so fields show what user had set (after app close)
   const fetchAddress = async (lat: number, lng: number) => {
     try {
       const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${MAP_API_KEY}`;
@@ -174,7 +174,6 @@ const useDashboard = () => {
     getRatingApi();
     getLocation().then(async (res) => {
       getDriver(res);
-      // If start address is not set, use current location
       if (!selectedAddress?.address) {
         const address = await fetchAddress(res.latitude, res.longitude);
         if (address) {
@@ -206,16 +205,12 @@ const useDashboard = () => {
 
       const response = await GET_API(
         ENDPOINT.GET_PROFILE,
-        // loader
         token,
         "POST",
       );
 
       if (response?.success) {
         setLoading(false);
-        console.log(response.data.user_data.rating, " response.data  response.data");
-        // setSelectedRating({rating:response.data.user_data.rating})
-        // console.log( response.data, ' response.data  response.data')
         dispatch(
           loginSuccess({
             userData: response.data,
@@ -225,7 +220,6 @@ const useDashboard = () => {
       }
     } catch (error) {
       setLoading(false);
-
       console.log("❌ Profile API error:", error);
     }
   };
@@ -243,7 +237,6 @@ const useDashboard = () => {
       "user/get_nearby_users",
       setLoading,
     );
-    // console.log(dd, 'driverdata')
     setTotalDriver(dd?.data?.total_nearby_users);
   };
 
@@ -278,8 +271,6 @@ const useDashboard = () => {
           setSelectedAddress(startAddr);
           setSelectedAddress2(endAddr);
 
-          // Only overwrite local RPM if it's currently at default value
-          // This prevents stale server data from reverting a newly set local RPM on reload
           if (rating?.data?.rpm && (rpm === "0.00" || rpm === "0")) {
             setRpmState(rating?.data?.rpm);
           }
@@ -302,8 +293,6 @@ const useDashboard = () => {
   };
 
   const CreateTrip = async (isSilent = false) => {
-    // Create body object with only fields that have data
-    // Alert.alert('selectedRating?.rating', selectedRating?.rating)
     const body: any = {
       company_id: 1,
 
@@ -347,16 +336,6 @@ const useDashboard = () => {
       body.end_location_lon = selectedAddress2.longitude;
     }
 
-    // Optional: Validate required fields
-    const requiredFields = ['start_location', 'end_location'];
-    // const missingFields = requiredFields.filter(field => !body[field]);
-
-    // if (missingFields.length > 0) {
-    //   Alert.alert('Missing Information', 
-    //     `Please fill in: ${missingFields.join(', ').replace(/_/g, ' ')}`);
-    //   return;
-    // }
-    console.log(body, 'this is body')
     const token = await AsyncStorage.getItem("token");
     if (!token) return;
 
@@ -370,9 +349,6 @@ const useDashboard = () => {
         const tripId = res?.data?.id != null ? String(res.data.id) : "";
         await ChangeStatus(selectedDutyState.status, tripId, isSilent);
         setStart(true);
-        // Removed: AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_RPM, String(res.data.rpm)); 
-        // We rely on the local setter (setRpm) to keep storage in sync. 
-        // Overwriting it here from the API response often reverts it to old data if the server hasn't updated its record yet.
         if (res?.data?.rating != null)
           AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_RATING, String(res.data.rating));
       }
@@ -382,42 +358,6 @@ const useDashboard = () => {
       if (!isSilent) setLoading(false);
     }
   };
-  // const CreateTrip = async () => {
-  //   console.log(selectedAddress);
-  //   // if (!selectedAddress.latitude) {
-  //   //   Alert.alert('Please select start location')
-  //   //   return
-
-  //   // }
-  //   // if (!selectedAddress2.latitude) {
-  //   //   Alert.alert('Please select End location')
-  //   //   return
-  //   // }
-  //   const body = {
-  //     company_id: 1,
-  //     rating: "A",
-  //     // start_location: selectedAddress?.address  ?? null,
-  //     // end_location: selectedAddress2?.address  ?? null,
-  //     rpm: rpm,
-  //     // start_location_lat: selectedAddress?.latitude ?? null,
-  //     // start_location_lon: selectedAddress?.longitude ?? null,
-  //     // end_location_lat: selectedAddress2?.latitude ?? null,
-  //     // end_location_lon: selectedAddress2?.longitude ?? null,
-  //   };
-  //   console.log(body, 'this is body');
-  //   console.log(selectedAddress);
-  //   const token = await AsyncStorage.getItem("token");
-  //   const res = await POST_API(token, body, ENDPOINT.CREATE_TRIP, setLoading);
-
-  // console.log(res, 'this is res')
-  //   if (res.success) {
-
-  //     setCurrentRequest(res?.data);
-  //     ChangeStatus("on_duty", res?.data?.id);
-  //     // setStart(true);
-  //   }
-  //   // setStart(true)
-  // };
 
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
@@ -425,7 +365,7 @@ const useDashboard = () => {
   const badgeRef = useRef(null);
   const ratingRef = useRef(null);
   const ratingRef1 = useRef(null);
-  const STEP = 0.05; // 🔁 change step here
+  const STEP = 0.05;
 
   const increaseRpm = () => {
     const value = parseFloat(rpm) || 0;
@@ -438,9 +378,7 @@ const useDashboard = () => {
     setRpm((next < 0 ? 0 : next).toFixed(2));
   };
   const handleRpmChange = (text: string) => {
-    // allow only numbers and one decimal
     if (!/^\d*\.?\d*$/.test(text)) return;
-
     setRpm(text);
   };
 
@@ -487,7 +425,6 @@ const useDashboard = () => {
     setLocationModal2(false);
   };
 
-  // Persist driver_type so selected value shows after app close
   const setDriverType = (value: "Solo" | "Team") => {
     setDriverTypeState(value);
     AsyncStorage.setItem(STORAGE_KEYS.DRIVER_TYPE, value);
@@ -496,7 +433,6 @@ const useDashboard = () => {
 
   const [currentRequest, setCurrentRequest] = useState();
 
-  // const [dutyModalVisible, setDutyModalVisible] = useState(false);
   const [badgeLayout, setBadgeLayout] = useState({
     x: 0,
     y: 0,
@@ -509,13 +445,10 @@ const useDashboard = () => {
     AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_DUTY_STATUS, option.status);
   };
 
-
-  // Replace multiple redundant effects with a single debounced-like effect or at least guarded one
   useEffect(() => {
     if (!persistedLoaded) return;
     UpdateRatingType();
   }, [selectedRatingValue, driverType]);
-
 
   return {
     userData,
@@ -525,7 +458,6 @@ const useDashboard = () => {
     trip,
     start,
     setStart,
-
     selectedAddress,
     setSelectedAddress,
     selectedAddress2,
@@ -545,7 +477,6 @@ const useDashboard = () => {
     selectDuty,
     setBadgeLayout,
     setDutyModalVisible,
-
     setLocationModal,
     setLocationModal2,
     handleRpmChange,
@@ -560,7 +491,6 @@ const useDashboard = () => {
     ratingLayout,
     ratingLayout1,
     setSelectedRating,
-
     badgeRef,
     locationModal,
     handleModalSubmit,

@@ -1,43 +1,43 @@
 import axios from "axios";
 import { BASE_URL } from ".";
 
- export const GET_API = async (
-   endpoint: string,
-   token?: string,
-   method: string = "GET",
-   setLoading?: (val: boolean) => void
- ) => {
-   try {
-     setLoading?.(true);
- 
-     const url = endpoint.startsWith("http")
-       ? endpoint
-       : `${BASE_URL}${endpoint}`;
- 
-     const response = await axios({
-       method,
-       url,
-       headers: {
-         "Content-Type": "application/json",
-         ...(token && { Authorization: `Bearer ${token}` }),
-       },
-     });
-      setLoading?.(false);
+export const GET_API = async (
+  endpoint: string,
+  token?: string,
+  method: string = "GET",
+  setLoading?: (val: boolean) => void
+) => {
+  try {
+    setLoading?.(true);
 
-     return response.data;
-   } catch (error: any) {
-     console.error(
-       "API Error:",
-       error?.response?.data || error?.message
-     );
-     return error?.response?.data || {
-       success: false,
-       message: "Something went wrong",
-     };
-   } finally {
-     setLoading?.(false);
-   }
- };
+    const url = endpoint.startsWith("http")
+      ? endpoint
+      : `${BASE_URL}${endpoint}`;
+
+    const response = await axios({
+      method,
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+    });
+    setLoading?.(false);
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "API Error:",
+      error?.response?.data || error?.message
+    );
+    return error?.response?.data || {
+      success: false,
+      message: "Something went wrong",
+    };
+  } finally {
+    setLoading?.(false);
+  }
+};
 
 export const POST_API = async (
   token: string,
@@ -55,15 +55,14 @@ export const POST_API = async (
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
-        // ❌ DO NOT set Content-Type for FormData
       },
       body: formData,
     });
-// console.log(formData, 'formadata')
+    // console.log(formData, 'formadata')
     const text = await response.text();
 
     try {
-        console.log(JSON.parse(text))
+      // console.log(JSON.parse(text))
       return JSON.parse(text);
     } catch {
       console.log('Non JSON response:', text);
@@ -77,7 +76,7 @@ export const POST_API = async (
     setLoading(false);
   }
 };
- 
+
 const objectToFormData = (obj: any) => {
   const formData = new FormData();
 

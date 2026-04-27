@@ -60,17 +60,13 @@ const LocationPicker: React.FC<Props> = ({ apiKey, visible, onSumit, onClose, on
     };
 
     const fetchPlaceDetails = async (placeId: string) => {
-        console.log("placeId", placeId);
 
         const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${apiKey}`;
 
         try {
             const response = await fetch(url);
-            console.log("s", response);
             const result = await response.json();
             if (result?.result?.geometry?.location) {
-                console.log("result", result);
-
                 const { lat, lng } = result.result.geometry.location;
                 const address = result.result.formatted_address || '';
                 setSelectedLocation({ latitude: lat, longitude: lng });
@@ -82,7 +78,6 @@ const LocationPicker: React.FC<Props> = ({ apiKey, visible, onSumit, onClose, on
     };
 
     const handleSelectPlace = (place: any) => {
-        console.log("place", place)
         setSearchText(place.description);
         setPlaces([]);
         fetchPlaceDetails(place.place_id);
@@ -92,20 +87,8 @@ const LocationPicker: React.FC<Props> = ({ apiKey, visible, onSumit, onClose, on
         <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={onClose}>
             <View style={styles.overlay}>
                 <View style={styles.container}>
-                    {/* <MapView
-                        style={styles.map}
-                        region={{
-                            latitude: selectedLocation?.latitude || 25.276987,
-                            longitude: selectedLocation?.longitude || 55.296249,
-                            latitudeDelta: 0.05,
-                            longitudeDelta: 0.05,
-                        }}>
-                        {selectedLocation && <Marker coordinate={selectedLocation} title="Selected Location" />}
-                    </MapView> */}
-
                     <View style={styles.searchContainer}>
                         <TouchableOpacity onPress={onClose} style={styles.closeIconWrapper}>
-                            {/* <Image source={imageIndex.c} style={styles.closeIcon} /> */}
                             <Text>X</Text>
                         </TouchableOpacity>
                         <View style={styles.searchBar}>
@@ -139,9 +122,6 @@ const LocationPicker: React.FC<Props> = ({ apiKey, visible, onSumit, onClose, on
                     </View>
 
                 </View>
-                {/* <TouchableOpacity style={styles.submitButton} onPress={onSumit}> */}
-                {/* <Text style={styles.submitButtonText}>Confirm Location</Text> */}
-                {/* </TouchableOpacity> */}
             </View>
 
         </Modal>
@@ -163,9 +143,6 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         marginHorizontal: 3,
 
-    },
-    map: {
-        flex: 1,
     },
     searchContainer: {
         position: 'absolute',
@@ -212,27 +189,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "black"
     },
-    submitButton: {
-        padding: 15,
-        backgroundColor: 'black',
-        alignItems: 'center',
-        borderRadius: 15,
-        marginHorizontal: 20,
-        marginBottom: 20,
-    },
-    submitButtonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
+
     closeIconWrapper: {
         alignItems: "flex-end",
         marginBottom: 20,
     },
-    closeIcon: {
-        width: 25,
-        height: 25,
-    }
+
 });
 
 export default LocationPicker;

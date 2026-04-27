@@ -1,10 +1,10 @@
 
 import { StyleSheet } from 'react-native';
-import { hp, wp } from '../../../utils/Constant';
+import { hp } from '../../../utils/Constant';
 import { color } from '../../../constant';
-  
+
 const styles = StyleSheet.create({
-   container: {
+  container: {
     flex: 1,
     backgroundColor: '#F7F9FC',
   },

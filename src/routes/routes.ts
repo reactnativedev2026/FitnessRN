@@ -5,10 +5,7 @@ import Splash from "../screen/auth/Splash/Splash";
 import OtpScreen from "../screen/auth/OTPScreen/OtpScreen";
 import PrivacyPolicy from "../screen/Profile/PrivacyPolicy";
 import Login from "../screen/auth/login/Login";
-import FaceLockcomplete from "../screen/FaceLockEnabledScreen/FaceLockEnabledScreen";
-import CreateNewInvoice from "../screen/CreateNewInvoice/CreateNewInvoice";
 import ProfileScreen from "../screen/Profile/ProfileScreen/ProfileScreen";
-import ClickUploadScreen from "../screen/BottomTab/CameraUpload/ClickUploadScreen";
 import SignUpUI from "../screen/auth/signUp/SignUp";
 import PasswordReset from "../screen/auth/passwordReset/PasswordReset";
 import CreateNewPassword from "../screen/auth/createNewPassword/CreateNewPassword";
@@ -21,13 +18,6 @@ const _routes: any = {
       name: ScreenNameEnum.SPLASH_SCREEN,
       Component: Splash,
     },
-
-    {
-      name: ScreenNameEnum.CreateNewInvoice,
-      Component: CreateNewInvoice,
-    },
-
-
 
     {
       name: ScreenNameEnum.Login,
@@ -46,24 +36,10 @@ const _routes: any = {
       Component: CreateNewPassword,
     },
 
-
-
-
-    {
-      name: ScreenNameEnum.FaceLockcomplete,
-      Component: FaceLockcomplete,
-    },
-
-
-
-
     {
       name: ScreenNameEnum.OtpScreen,
       Component: OtpScreen,
     },
-
-
-
 
     {
       name: ScreenNameEnum.Help,
@@ -76,10 +52,6 @@ const _routes: any = {
     {
       name: ScreenNameEnum.EditProfile,
       Component: ProfileScreen,
-    },
-    {
-      name: ScreenNameEnum.ClickUploadScreen,
-      Component: ClickUploadScreen,
     },
 
     {
@@ -100,16 +72,7 @@ const _routes: any = {
       name: ScreenNameEnum.NotificationsScreen,
       Component: NotificationsScreen,
     },
-
-
-
-
-
-
-
   ],
-
-
 };
 
 export default _routes;

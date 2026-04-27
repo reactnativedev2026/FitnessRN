@@ -8,46 +8,37 @@ import {
   Platform,
   TouchableOpacity,
   StyleSheet,
-  Image,
   Modal,
   TouchableWithoutFeedback,
   FlatList,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
- import TextInputField from '../../../compoent/TextInputField';
+import TextInputField from '../../../compoent/TextInputField';
 import CustomButton from '../../../compoent/CustomButton';
 import imageIndex from '../../../assets/imageIndex';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import StatusBarComponent from '../../../compoent/StatusBarCompoent';
 import CustomHeader from '../../../compoent/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
-import ScreenNameEnum from '../../../routes/screenName.enum';
 import LoadingModal from '../../../utils/Loader';
 import { color } from '../../../constant';
- import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import useProfileScreen from './useProfileScreen';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
-   
+
   const {
     credentials,
     errors,
     isLoading,
-    termsAccepted,
- 
     showLanguageModal,
-    usStates,
     languages,
-    setTermsAccepted,
-    setShowDatePicker,
-    setShowStateModal,
     setShowLanguageModal,
     handleChange,
     handleSignup,
   } = useProfileScreen();
 
- 
+
   const renderError = (field: keyof typeof errors) => {
     if (errors[field]) {
       return <Text style={styles.errorText}>{errors[field]}</Text>;
@@ -55,8 +46,8 @@ export default function ProfileScreen() {
     return null;
   };
 
- 
- 
+
+
 
   const renderLanguageItem = ({ item }: { item: string }) => (
     <TouchableOpacity
@@ -73,13 +64,13 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBarComponent />
-      
-      <CustomHeader 
-        menuIcon={imageIndex.back} 
-        leftPress={() => navigation.goBack()}  
+
+      <CustomHeader
+        menuIcon={imageIndex.back}
+        leftPress={() => navigation.goBack()}
         showRight={false}
       />
-      
+
       <KeyboardAvoidingView
         style={styles.keyboardAvoid}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -91,10 +82,10 @@ export default function ProfileScreen() {
           contentContainerStyle={styles.scrollContent}
         >
           <LoadingModal visible={isLoading} />
-          
+
           <View style={styles.formWrapper}>
             <View style={styles.formContainer}>
-               <Text style={styles.sectionTitle}>Personal Information</Text>
+              <Text style={styles.sectionTitle}>Personal Information</Text>
 
               <TextInputField
                 placeholder="Full Name"
@@ -102,7 +93,7 @@ export default function ProfileScreen() {
                 onChangeText={(text) => handleChange('fullName', text)}
                 firstLogo
                 img={imageIndex.Textprofile}
-               />
+              />
               {renderError('fullName')}
 
               <TextInputField
@@ -114,50 +105,8 @@ export default function ProfileScreen() {
                 error={!!errors.driverLicenseNumber}
               />
               {renderError('driverLicenseNumber')}
-              {/* <TextInputField
-                placeholder="issued State"
-                value={credentials.issuedState}
-                onChangeText={(text) => handleChange('issuedState', text)}
-                firstLogo
-                img={imageIndex.driver}
-                error={!!errors.issuedState}
-              />
-              {renderError('issuedState')} */}
-
-              {/* Issued State Dropdown */}
- 
-              {/* Date Picker */}
-              
-
-              {/* Language Dropdown */} 
-              {/* <Text style={{
-                color:"black" ,
-              
-                marginBottom:10,
-                marginTop:19 ,
-                fontWeight:"500"
-              }}>Language</Text>
-              <TouchableOpacity
-                style={[
-                  styles.dropdownContainer,
-                  errors.language && styles.dropdownError
-                ]}
-                onPress={() => setShowLanguageModal(true)}
-              >
-                <View style={styles.dropdownInner}>
-                  {credentials.language ? (
-                    <Text style={styles.dropdownText}>{credentials.language}</Text>
-                  ) : (
-                    <Text style={styles.dropdownPlaceholder}>Language</Text>
-                  )}
-                  <Icon name="keyboard-arrow-down" size={24} color="#666" />
-                </View>
-              </TouchableOpacity>
-              {renderError('language')} */}
-
               {/* Contact Details Section */}
               <Text style={styles.sectionTitle}>Contact Details</Text>
- 
 
               <TextInputField
                 placeholder="Phone Number"
@@ -171,7 +120,7 @@ export default function ProfileScreen() {
               />
               {renderError('mobile')}
 
-                <TextInputField
+              <TextInputField
                 placeholder="Email"
                 value={credentials.email}
                 onChangeText={(text) => handleChange('email', text)}
@@ -185,8 +134,8 @@ export default function ProfileScreen() {
 
               {/* FMCSA Verification Section */}
               <Text style={styles.sectionTitle}>FMCSA Verification</Text>
-              
-        
+
+
               <TextInputField
                 placeholder="MC Number"
                 value={credentials.mcNumber}
@@ -197,20 +146,20 @@ export default function ProfileScreen() {
               />
               {renderError('mcNumber')}
 
-                    <TextInputField
+              <TextInputField
                 placeholder="DOT Number"
                 value={credentials.dotNumber}
                 onChangeText={(text) => handleChange('dotNumber', text)}
                 firstLogo={false}
                 error={!!errors.dotNumber}
-                  editable={false}
+                editable={false}
               />
               {renderError('dotNumber')}
 
 
               {/* Company Details Section */}
               <Text style={styles.sectionTitle}>Company Details</Text>
-              
+
               <TextInputField
                 placeholder="Thompson Freight Logistics LLC"
                 firstLogo={false}
@@ -219,7 +168,7 @@ export default function ProfileScreen() {
                 error={!!errors.companyName}
               />
               {renderError('companyName')}
- 
+
             </View>
 
             {/* Submit Button */}
@@ -229,16 +178,11 @@ export default function ProfileScreen() {
             />
           </View>
 
-         
+
         </ScrollView>
       </KeyboardAvoidingView>
 
-    
 
-      {/* State Selection Modal */}
-   
-
-      {/* Language Selection Modal */}
       <Modal
         visible={showLanguageModal}
         transparent={true}
@@ -286,8 +230,8 @@ const styles = StyleSheet.create({
   formWrapper: {
     backgroundColor: '#FFF',
     marginHorizontal: 20,
-     shadowOffset: { width: 0, height: 2 },
-  
+    shadowOffset: { width: 0, height: 2 },
+
   },
   logo: {
     height: 44,

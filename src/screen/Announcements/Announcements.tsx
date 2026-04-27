@@ -71,7 +71,7 @@ const AnnouncementsScreen = () => {
             <Icon name="chevron-back" size={28} color="#fff" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Announcements</Text>
-          <View style={{ width: 40 }} /> {/* Placeholder to center title */}
+          <View style={{ width: 40 }} />
         </View>
       </LinearGradient>
 

@@ -1,4 +1,4 @@
-  import React from 'react';
+import React from 'react';
 import { View, Text, ScrollView, SafeAreaView, Image } from 'react-native';
 import StatusBarComponent from '../../../compoent/StatusBarCompoent';
 import CustomButton from '../../../compoent/CustomButton';
@@ -19,7 +19,6 @@ export default function Login() {
     handleChange,
     handleLogin,
   } = useLogin();
-// K@gmail.com
   return (
     <SafeAreaView style={styles.container}>
       <StatusBarComponent />
@@ -33,12 +32,9 @@ export default function Login() {
             style={{ height: 100, width: '90%', alignSelf: 'center' }}
             resizeMode="contain"
           />
-
-          {/* Title */}
           <Text style={styles.title}>Login</Text>
           <Text style={styles.subTitle}>Enter your Email and password</Text>
 
-          {/* Email Input */}
           <TextInputField
             placeholder="Email"
             text={credentials.email}
@@ -49,7 +45,6 @@ export default function Login() {
           />
           {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-          {/* Password Input */}
           <TextInputField
             placeholder="Password"
             text={credentials.password}

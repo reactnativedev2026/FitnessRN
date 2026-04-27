@@ -7,6 +7,7 @@ import { loginSuccess } from '../../../redux/feature/authSlice';
 import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ENDPOINT } from '../../../api/endpoints';
+// import messaging from '@react-native-firebase/messaging';
 
 interface Credentials {
   email: string;
@@ -29,7 +30,6 @@ const useLogin = () => {
     setCredentials((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: '' }));
   };
-  
 
   const validateFields = () => {
     const validationErrors: Partial<Credentials> = {};
@@ -45,18 +45,22 @@ const useLogin = () => {
     if (!validateFields()) return;
 
     try {
+      const fcmToken = await AsyncStorage.getItem('fcmToken') || '';
+
       const response = await loginApi(
         {
-          url: ENDPOINT.LOGIN, // endpoint relative to BaseUrl
-          body: credentials,
+          url: ENDPOINT.LOGIN,
+          body: {
+            ...credentials,
+            device_token: fcmToken,
+          },
         },
         setIsLoading
       );
-      console.log("response", response)
       if (response?.success) {
         dispatch(
           loginSuccess({
-            userData: response.data,          // ✅ full user object
+            userData: response.data,
             token: response.data.token,
           })
         );

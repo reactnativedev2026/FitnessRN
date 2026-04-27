@@ -1,4 +1,3 @@
-import axios from "axios";
 import { BASE_URL } from "..";
 import { errorToast, successToast } from "../../utils/customToast";
 import { ENDPOINT } from "../endpoints";
@@ -40,7 +39,7 @@ export const loginApi = async (
       body: JSON.stringify(param.body),
       redirect: 'follow',
     };
-
+    console.log(param.body, 'this is login body')
     const response = await fetch(`${BASE_URL}${param.url}`, requestOptions);
     const text = await response.text();
 
@@ -98,7 +97,6 @@ export const UpdteProfileApi = async (
     } else {
       errorToast(response.message || 'Signup failed');
     }
-
     return response;
   } catch (error: any) {
     errorToast(error.message || 'Signup failed');
@@ -201,8 +199,6 @@ export const POST_API = async (
   }
 };
 
-
-
 export const Privacypolicy = async (setLoading: any) => {
   setLoading(true);
   try {
@@ -221,7 +217,7 @@ export const Privacypolicy = async (setLoading: any) => {
 
     if (parsedResponse?.status == 1) {
       successToast(parsedResponse?.message);
-      return parsedResponse; // ✅ Return the data
+      return parsedResponse;
     }
 
   } catch (error: any) {
@@ -248,16 +244,13 @@ export const Termsconditions = async (setLoading: any) => {
     const textResponse = await response.text();
     const parsedResponse = JSON.parse(textResponse);
 
-    console.log("parsedResponse", parsedResponse);
-
     if (parsedResponse?.status == 1) {
       successToast(parsedResponse?.message);
-      return parsedResponse; // ✅ Return the data
+      return parsedResponse;
     }
 
 
   } catch (error: any) {
-    console.error('Privacy Policy error:', error);
     errorToast(error.message);
     return null;
   } finally {
