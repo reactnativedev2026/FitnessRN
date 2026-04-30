@@ -23,10 +23,8 @@ import useDashboard, { DUTY_OPTIONS } from "./useDashboard";
 import LoadingModal from "../../../utils/Loader";
 import CustomButton from "../../../compoent/CustomButton";
 import LocationPicker from "./locationPicker";
-import { MAP_API_KEY } from "@env";
 import ScreenNameEnum from "../../../routes/screenName.enum";
-
-const MapApiKey = MAP_API_KEY;
+import { MAP_API_KEY } from "@env";
 
 const DashboardScreen = () => {
   const {
@@ -526,14 +524,14 @@ const DashboardScreen = () => {
 
       <LocationPicker
         visible={locationModal}
-        apiKey={MapApiKey} // replace with actual key
+        apiKey={MAP_API_KEY} // replace with actual key
         onClose={() => setLocationModal(false)}
         onSumit={handleModalSubmit}
         onLocationSelected={handleLocationSelected}
       />
       <LocationPicker
         visible={locationModal2}
-        apiKey={MapApiKey} // replace with actual key
+        apiKey={MAP_API_KEY} // replace with actual key
         onClose={() => setLocationModal2(false)}
         onSumit={handleModalSubmit2}
         onLocationSelected={handleLocationSelected2}

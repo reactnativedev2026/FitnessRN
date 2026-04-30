@@ -157,13 +157,17 @@ const useDashboard = () => {
   const fetchAddress = async (lat: number, lng: number) => {
     try {
       const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${MAP_API_KEY}`;
+      console.log("📍 Fetching address for:", lat, lng);
       const response = await fetch(url);
       const result = await response.json();
+      console.log("📍 Geocode API Result Status:", result.status);
       if (result.results && result.results.length > 0) {
         return result.results[0].formatted_address;
+      } else {
+        console.log("⚠️ No address results found:", result.error_message || result.status);
       }
     } catch (error) {
-      console.log("Error fetching address:", error);
+      console.log("❌ Error fetching address:", error);
     }
     return null;
   };
@@ -173,8 +177,10 @@ const useDashboard = () => {
     getCurrentTripApi();
     getRatingApi();
     getLocation().then(async (res) => {
+      console.log("📍 Device Location received:", res);
       getDriver(res);
       if (!selectedAddress?.address) {
+        console.log("📍 Address missing, fetching from Google...");
         const address = await fetchAddress(res.latitude, res.longitude);
         if (address) {
           const location = {
@@ -182,9 +188,14 @@ const useDashboard = () => {
             longitude: res.longitude,
             address: address,
           };
+          console.log("✅ Setting selected address:", address);
           setSelectedAddress(location);
           AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_START_ADDRESS, JSON.stringify(location));
+        } else {
+          console.log("❌ Failed to fetch address from Google");
         }
+      } else {
+        console.log("📍 Address already present:", selectedAddress.address);
       }
     });
   }, [persistedLoaded]);
