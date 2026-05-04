@@ -8,7 +8,7 @@ import { ENDPOINT } from "../../../api/endpoints";
 import { GET_API, POST_API } from "../../../api/APIRequest";
 import { getLocation } from "../../../compoent/location";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { MAP_API_KEY } from "@env";
+const MAP_API_KEY = "";
 import { errorToast } from "../../../utils/customToast";
 
 
@@ -46,6 +46,8 @@ const useDashboard = () => {
   const [totalDriver, setTotalDriver] = useState("0");
   const [persistedLoaded, setPersistedLoaded] = useState(false);
   const [selectedDutyState, setSelectedDutyState] = useState(DUTY_OPTIONS[0]);
+  const [currentAnnouncement, setCurrentAnnouncement] = useState<any>(null);
+  const [isAnnouncementVisible, setIsAnnouncementVisible] = useState(false);
 
   const ChangeStatus = async (status: string, id: string, isSilent = false) => {
     const token = await AsyncStorage.getItem("token");
@@ -172,10 +174,64 @@ const useDashboard = () => {
     return null;
   };
 
+  const fetchAnnouncements = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) return;
+
+      const body = {
+        user_id: userData?.user_data?.id,
+      };
+
+      const response = await POST_API(token, body, ENDPOINT.GET_ANNOUNCEMENTS, () => { });
+
+      if (response && response.success && response.data && response.data.length > 0) {
+        // Show popup for any announcement where announcements_status is 0
+        const unreadAnnouncement = response.data.find((item: any) => item.announcements_status === 0 || item.announcements_status === "0");
+
+        if (unreadAnnouncement) {
+          setCurrentAnnouncement(unreadAnnouncement);
+          setIsAnnouncementVisible(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+    }
+  };
+
+  const markAnnouncementAsRead = async () => {
+    if (!currentAnnouncement) return;
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) return;
+
+      const body = {
+        user_id: userData?.user_data?.id,
+        announcement_id: currentAnnouncement.id,
+      };
+
+      const response = await POST_API(token, body, ENDPOINT.READ_ANNOUNCEMENT, setLoading);
+
+      if (response && response.success) {
+        setIsAnnouncementVisible(false);
+        setCurrentAnnouncement(null);
+      }
+    } catch (error) {
+      console.error("Error marking announcement as read:", error);
+    }
+  };
+
   useEffect(() => {
     if (!persistedLoaded) return;
     getCurrentTripApi();
     getRatingApi();
+    fetchAnnouncements();
+
+    // Start polling every 5 seconds
+    const interval = setInterval(() => {
+      fetchAnnouncements();
+    }, 5000);
+
     getLocation().then(async (res) => {
       console.log("📍 Device Location received:", res);
       getDriver(res);
@@ -198,6 +254,8 @@ const useDashboard = () => {
         console.log("📍 Address already present:", selectedAddress.address);
       }
     });
+
+    return () => clearInterval(interval);
   }, [persistedLoaded]);
   const [ratingData, setRatingData] = useState([]);
   const getRatingApi = async () => {
@@ -514,6 +572,10 @@ const useDashboard = () => {
     setRatingModalVisible1,
     driverType,
     setDriverType,
+    currentAnnouncement,
+    isAnnouncementVisible,
+    setIsAnnouncementVisible,
+    markAnnouncementAsRead,
   };
 };
 

@@ -17,7 +17,8 @@ export const ENDPOINT = {
   GET_CURRENT_TRIP:"user/get_current_duty_request",
   GET_ANNOUNCEMENTS: "user/get_announcements",
   GET_OFFERS: "user/get_offers",
-  CHANGE_RATING_STATUS: "user/change_rating_status"
+  CHANGE_RATING_STATUS: "user/change_rating_status",
+  READ_ANNOUNCEMENT: "user/read_announcement"
 
 
 };

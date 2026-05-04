@@ -38,7 +38,7 @@ const useAnnouncements = () => {
             };
 
             const response = await POST_API(token, body, ENDPOINT.GET_ANNOUNCEMENTS, setLoading);
-
+            console.log("response", response);
             if (response && response.success) {
                 setAnnouncements(response.data || []);
             }

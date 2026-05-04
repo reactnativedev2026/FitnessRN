@@ -24,7 +24,7 @@ import LoadingModal from "../../../utils/Loader";
 import CustomButton from "../../../compoent/CustomButton";
 import LocationPicker from "./locationPicker";
 import ScreenNameEnum from "../../../routes/screenName.enum";
-import { MAP_API_KEY } from "@env";
+const MAP_API_KEY = "";
 
 const DashboardScreen = () => {
   const {
@@ -78,6 +78,10 @@ const DashboardScreen = () => {
     ratingModalVisible1, setRatingModalVisible1,
     driverType,
     setDriverType,
+    currentAnnouncement,
+    isAnnouncementVisible,
+    setIsAnnouncementVisible,
+    markAnnouncementAsRead,
   } = useDashboard();
   const drivingModes: ("Solo" | "Team")[] = ["Solo", "Team"];
 
@@ -536,6 +540,53 @@ const DashboardScreen = () => {
         onSumit={handleModalSubmit2}
         onLocationSelected={handleLocationSelected2}
       />
+
+      <Modal
+        visible={isAnnouncementVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => { }}
+      >
+        <View style={styles.announcementOverlay}>
+          <View style={styles.announcementContainer}>
+            {/* Header bar */}
+            <View style={[
+              styles.announcementHeaderBar,
+              { backgroundColor: currentAnnouncement?.type === "Urgent" ? "#EE2E43" : "#34C759" }
+            ]}>
+              <Text style={styles.announcementHeaderText}>{currentAnnouncement?.type?.toUpperCase() || "ANNOUNCEMENT"}</Text>
+            </View>
+
+            <View style={styles.announcementBody}>
+              <View style={styles.announcementTitleRow}>
+                <View style={styles.announcementIconContainer}>
+                  <Icon name="warning" size={24} color="#000" />
+                </View>
+                <View style={{ flex: 1, marginLeft: 10 }}>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <Text style={styles.announcementTitle}>{currentAnnouncement?.title || "ALERT"}</Text>
+                    <Text style={styles.announcementTime}>now</Text>
+                  </View>
+                  <Text style={styles.announcementSubTitle}>{currentAnnouncement?.type || "Announcement"}</Text>
+                </View>
+              </View>
+
+              <ScrollView style={styles.announcementMessageContainer}>
+                <Text style={styles.announcementMessage}>
+                  {currentAnnouncement?.message}
+                </Text>
+              </ScrollView>
+
+              <TouchableOpacity
+                style={styles.announcementOkButton}
+                onPress={() => markAnnouncementAsRead()}
+              >
+                <Text style={styles.announcementOkText}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -744,6 +795,81 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: 14,
     fontWeight: "500",
+    color: "#000",
+  },
+  announcementOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  announcementContainer: {
+    width: "100%",
+    backgroundColor: "#E6EBF2",
+    borderRadius: 12,
+    overflow: "hidden",
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+  },
+  announcementHeaderBar: {
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  announcementHeaderText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    letterSpacing: 1,
+  },
+  announcementBody: {
+    padding: 20,
+  },
+  announcementTitleRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 15,
+  },
+  announcementIconContainer: {
+    marginTop: 2,
+  },
+  announcementTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000",
+  },
+  announcementTime: {
+    fontSize: 14,
+    color: "#666",
+  },
+  announcementSubTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000",
+    marginTop: 2,
+  },
+  announcementMessageContainer: {
+    maxHeight: 300,
+    marginBottom: 20,
+  },
+  announcementMessage: {
+    fontSize: 15,
+    color: "#333",
+    lineHeight: 22,
+  },
+  announcementOkButton: {
+    alignItems: "center",
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+    marginTop: 10,
+  },
+  announcementOkText: {
+    fontSize: 32,
+    fontWeight: "400",
     color: "#000",
   },
 });
