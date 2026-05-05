@@ -43,36 +43,39 @@ const useLogin = () => {
 
   const handleLogin = async () => {
     if (!validateFields()) return;
+    navigation.navigate(ScreenNameEnum.OtpScreen);
 
-    try {
-      const fcmToken = await AsyncStorage.getItem('fcmToken') || '';
 
-      const response = await loginApi(
-        {
-          url: ENDPOINT.LOGIN,
-          body: {
-            ...credentials,
-            device_token: fcmToken,
-          },
-        },
-        setIsLoading
-      );
-      if (response?.success) {
-        dispatch(
-          loginSuccess({
-            userData: response.data,
-            token: response.data.token,
-          })
-        );
-        await AsyncStorage.setItem('token', response.data.token);
-        successToast(response?.message || 'Login successful');
-        navigation.navigate(ScreenNameEnum.DrawerNavgation);
-      } else {
-        errorToast(response?.message || 'Login failed');
-      }
-    } catch (error: any) {
-      errorToast(error?.message || 'Login Error');
-    }
+
+    // try {
+    //   const fcmToken = await AsyncStorage.getItem('fcmToken') || '';
+
+    //   const response = await loginApi(
+    //     {
+    //       url: ENDPOINT.LOGIN,
+    //       body: {
+    //         ...credentials,
+    //         device_token: fcmToken,
+    //       },
+    //     },
+    //     setIsLoading
+    //   );
+    //   if (response?.success) {
+    //     dispatch(
+    //       loginSuccess({
+    //         userData: response.data,
+    //         token: response.data.token,
+    //       })
+    //     );
+    //     await AsyncStorage.setItem('token', response.data.token);
+    //     successToast(response?.message || 'Login successful');
+    //     navigation.navigate(ScreenNameEnum.DrawerNavgation);
+    //   } else {
+    //     errorToast(response?.message || 'Login failed');
+    //   }
+    // } catch (error: any) {
+    //   errorToast(error?.message || 'Login Error');
+    // }
   };
 
   return {

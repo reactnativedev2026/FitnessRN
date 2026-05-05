@@ -8,7 +8,7 @@ type StatusBarComponentProps = {
 };
 
 const StatusBarComponent: React.FC<StatusBarComponentProps> = ({
-  barStyle = 'dark-content', // dark text/icons for white background
+  barStyle = 'light-content', // dark text/icons for white background
   backgroundColor = 'black', // default app background
   translucent = false,
 }) => {
@@ -19,7 +19,7 @@ const StatusBarComponent: React.FC<StatusBarComponentProps> = ({
         backgroundColor={backgroundColor}
         translucent={translucent}
       />
-     </View>
+    </View>
   );
 };
 

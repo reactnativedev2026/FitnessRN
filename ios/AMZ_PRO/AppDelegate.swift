@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
 
     factory.startReactNative(
-      withModuleName: "AMZ_PRO",
+      withModuleName: "Kimbo",
       in: window,
       launchOptions: launchOptions
     )

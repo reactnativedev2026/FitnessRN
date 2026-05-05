@@ -1,13 +1,16 @@
 import { StyleSheet } from 'react-native';
+import { color } from '../../../constant';
+import { hp, wp } from '../../../utils/Constant';
 
 export const styles = StyleSheet.create({
   centerContent: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: color.primary
   },
   logo: {
-    width: 180,
-    height: 180,
+    width: wp(60),
+    height: hp(40),
   },
 });

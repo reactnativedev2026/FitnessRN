@@ -113,7 +113,8 @@ enum ScreenNameEnum {
   PresubscriberDetail = "presubscriberDetail",
   DetailScreen = "DetailScreen",
   AnnouncementsScreen = "AnnouncementsScreen",
-  OffersScreen = "OffersScreen"
+  OffersScreen = "OffersScreen",
+  RECENT_DELIVERIES = "RecentDeliveries"
 }
 
 export default ScreenNameEnum;

@@ -10,7 +10,7 @@ export interface ApiRequest {
   redirect?: any
 }
 
-export const BASE_URL = 'https://refound.com.au/amz_pro/api/';
+export const BASE_URL = 'https://refound.com.au/Kimbo/api/';
 export const GoogleClientId = '43208932533-6ktmlm2uusaqdgv42pj9u94eq9q6q8h7.apps.googleusercontent.com';
 
 export const callMultipleApis = async (requests: ApiRequest[]) => {
@@ -83,16 +83,19 @@ export const callApi = async (
 export const requestCameraPermissions = async () => {
   if (Platform.OS === 'android') {
     try {
-      const granted = await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
-      ]);
+      const permissions = [PermissionsAndroid.PERMISSIONS.CAMERA];
+      
+      // Add storage permissions only for older Android versions if needed, 
+      // but CAMERA is the main one for taking photos.
+      if (Platform.Version < 33) {
+        permissions.push(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
+      }
 
-      return (
-        granted['android.permission.CAMERA'] === PermissionsAndroid.RESULTS.GRANTED &&
-        granted['android.permission.READ_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED
-      );
+      const granted = await PermissionsAndroid.requestMultiple(permissions);
+
+      const cameraGranted = granted[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED;
+      
+      return cameraGranted;
     } catch (error) {
       console.warn('Permission request error:', error);
       return false;

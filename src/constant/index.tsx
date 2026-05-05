@@ -16,10 +16,10 @@ export const color = {
   white: '#fff',
   grey: "#A59F9F",
   black: '#000000',
-  primary: "#EE2E43",
+  primary: "#236CED",
   onBoarding: "#FFF0E3",
   red: "#B22222",
-
+  placeholderText: '#A7A7A8',
   protein: '#2CC59D',
   carb: '#56CCF2',
   fat: '#F2994A',
@@ -28,7 +28,7 @@ export const color = {
 
   primaryLight: '#8A84FF',
   secondary: '#FF6584',
-  background: '#F8F9FA',
+  background: '#010A16',
   cardBackground: '#FFFFFF',
   textPrimary: '#2D3436',
   textSecondary: '#636E72',

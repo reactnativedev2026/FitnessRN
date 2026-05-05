@@ -28,7 +28,7 @@ interface CustomButtonProps {
   height?: number;
   onPress?: (event: GestureResponderEvent) => void;
   disabled?: boolean;
-  button1?:any
+  button1?: any
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -51,31 +51,31 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   } as const;
 
   return (
- 
-      <TouchableOpacity
-        onPress={onPress}
-        disabled={disabled}
-style={[
-  styles.button,
-  { height: height },
-  button1,
-  style
-]}
-        activeOpacity={0.7}
-      >
-        <View style={[styles.content, { justifyContent: alignment[alignItm] }]}>
-          {leftIcon && <View style={styles.icon}>{leftIcon}</View>}
 
-          <Text
-            allowFontScaling={false}
-            style={[styles.text, { color: txtcolor }, textStyle]}
-          >
-            {title}
-          </Text>
-        </View>
-                
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled}
+      style={[
+        styles.button,
+        { height: height },
+        button1,
+        style
+      ]}
+      activeOpacity={0.7}
+    >
+      <View style={[styles.content, { justifyContent: alignment[alignItm] }]}>
+        {leftIcon && <View style={styles.icon}>{leftIcon}</View>}
 
-      </TouchableOpacity>
+        <Text
+          allowFontScaling={false}
+          style={[styles.text, { color: txtcolor }, textStyle]}
+        >
+          {title}
+        </Text>
+      </View>
+
+
+    </TouchableOpacity>
     // </LinearGradient>
   );
 };
@@ -87,11 +87,11 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     paddingHorizontal: 20,
-    backgroundColor:color.primary,
-    height:50,
-    borderRadius:10,
-    alignSelf:'center'
-    
+    backgroundColor: color.primary,
+    height: 50,
+    borderRadius: 20,
+    alignSelf: 'center'
+
   },
   content: {
     flexDirection: 'row',
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-     color:"white",
-    fontWeight:"bold"
+    color: "white",
+    fontWeight: "bold"
   },
 });
 

@@ -57,9 +57,7 @@ const AppNavigator: React.FC = () => {
             modalVisible={!isConnected}
             offlineText="No Internet! Please check your connection."
           /> */}
-          <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
-            <RegistrationRoutes />
-          </SafeAreaView>
+          <RegistrationRoutes />
           <ProfileWatcher />
           <Toast config={toastConfig} />
           <NotificationHandler />

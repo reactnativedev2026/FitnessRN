@@ -1,4 +1,4 @@
-import { View, TextInput, Image, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import imageIndex from '../assets/imageIndex';
@@ -6,12 +6,13 @@ import { color } from '../constant';
 import CountryFlag from "react-native-country-flag";
 
 export default function TextInputField({ ...props }) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  const [showPassword, setShowPassword] = useState(props.hide);
   const PasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   const onChangeText = (value: string) => {
     if (props.onChangeText) {
       props.onChangeText(value);
@@ -19,55 +20,44 @@ export default function TextInputField({ ...props }) {
   };
 
   return (
-<View
-  style={[
-    {
-      height: hp(7),
-      justifyContent: 'center',
-      marginVertical: 12,
-    },
-   ]}
->
+    <View style={styles.outerContainer}>
+      {/* Label positioned on the border */}
+      {props.placeholder && (
+        <View style={styles.labelContainer}>
+          <Text style={styles.labelText}>{props.placeholder}</Text>
+        </View>
+      )}
+
       <View
         style={[
-          {
-            flexDirection: 'row',
-            backgroundColor: '#F7F8F8',
-            borderColor: '#4038FF',
-            height: 58,
-            borderRadius: 15,
-            paddingHorizontal: 5,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            borderWidth:0,
-            marginTop: 5
-          },
+          styles.innerContainer,
+          isFocused && styles.focusedBorder,
           props.style,
-        ]}>
-
+        ]}
+      >
+        {/* Left Section (Flag/Logo) */}
         {props.firstLogo && (
-          <View
-            style={{
-              marginLeft: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '10%',
-            }}>
+          <View style={styles.leftSection}>
             {props.countryCode ? (
-              <CountryFlag 
-                isoCode={props.countryCode} 
-                size={14} 
-                style={{ borderRadius: 3 }} 
-              />
-
+              <TouchableOpacity 
+                style={styles.phoneSection}
+                onPress={props.onPrefixPress}
+                disabled={!props.onPrefixPress}
+              >
+                <CountryFlag
+                  isoCode={props.countryCode || 'US'}
+                  size={14}
+                  style={{ borderRadius: 2 }}
+                />
+                <Text style={styles.prefixText}> {props.prefix || '+1'}</Text>
+                <View style={styles.separator} />
+              </TouchableOpacity>
             ) : (
               <Image
                 source={props.img}
                 style={[
-                  { width: 22, height: 22 }, 
-                  props.isFlag && { width: 28, height: 18 },
-                  !props.isFlag && { tintColor: color.primary }, 
-                  props.imgStyle
+                  { width: 20, height: 20, tintColor: '#6F767E' },
+                  props.imgStyle,
                 ]}
                 resizeMode="contain"
               />
@@ -75,65 +65,36 @@ export default function TextInputField({ ...props }) {
           </View>
         )}
 
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: props.showEye ? '70%' : '85%',
-            marginLeft: props.firstLogo ? 0 : 15,
-            height: 50,
+        {/* Input Section */}
+        <TextInput
+          {...props}
+          placeholderTextColor={color.placeholderText}
+          style={[
+            styles.textInput,
+            props.textStyle,
+          ]}
+          onChangeText={onChangeText}
+          value={props.text || props.value}
+          placeholder={props.placeholder || ""} // Placeholder is now the floating label
+          secureTextEntry={props.secureTextEntry && !showPassword}
+          maxLength={props.maxLength}
+          keyboardType={props.type || props.keyboardType}
+          returnKeyType='done'
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          editable={props.editable}
+        />
 
-          }}>
-          {props.prefix && (
-            <Text style={{
-              color: 'black',
-              fontWeight: '500',
-              fontSize: 14,
-              marginRight: 5,
-              marginLeft: 5
-            }}>{props.prefix}</Text>
-          )}
-          <View style={{ width: '80%' }}>
-
-            <TextInput
-              placeholderTextColor={props.placeholderTextColor || "#ADA4A5"}
-              style={[
-                {
-                  color: 'black',
-                  fontWeight: '500',
-                  fontSize: 14,
-                  flex: 1,
-
-                },
-                props.textStyle,
-              ]}
-              onChangeText={onChangeText}
-              value={props.text || props.value} // Directly using parent `email` state
-              placeholder={props.placeholder}
-              secureTextEntry={showPassword}
-              maxLength={props.maxLength}
-              keyboardType={props.type || props.keyboardType}
-               returnKeyType='done'
-              autoFocus={false}
-              // onFocus={() => setIsFocused(true) || props.onFocus}
-              // onBlur={() => setIsFocused(false)}
-              editable={props.editable}
-            />
-          </View>
-        </View>
+        {/* Right Section (Eye Icon) */}
         {props.showEye && (
           <TouchableOpacity
             onPress={PasswordVisibility}
-            style={{
-              height: 42,
-              width: 42,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+            style={styles.eyeButton}
+          >
             <Image
-              source={!showPassword ? imageIndex.eye   : imageIndex.eye}
-              style={{ width: 24, height: 24, }}
-              tintColor={"#ADA4A5"}
+              source={showPassword ? imageIndex.eye : imageIndex.hide}
+              style={{ width: 22, height: 22 }}
+              tintColor={"#6F767E"}
             />
           </TouchableOpacity>
         )}
@@ -141,3 +102,68 @@ export default function TextInputField({ ...props }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  outerContainer: {
+    marginVertical: 15,
+    width: '100%',
+  },
+  labelContainer: {
+    position: 'absolute',
+    top: -10,
+    left: 20,
+    backgroundColor: '#010A16', // Match background color
+    paddingHorizontal: 5,
+    zIndex: 1,
+  },
+  labelText: {
+    color: '#6F767E',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  innerContainer: {
+    flexDirection: 'row',
+    height: 60,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#393B48', // Dark border color
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    backgroundColor: 'transparent',
+  },
+  focusedBorder: {
+    borderColor: color.primary,
+  },
+  leftSection: {
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  phoneSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  prefixText: {
+    color: color.white,
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 5,
+  },
+  separator: {
+    width: 1,
+    height: 20,
+    backgroundColor: '#23262F',
+    marginLeft: 10,
+    marginRight: 5,
+  },
+  textInput: {
+    flex: 1,
+    color: color.white,
+    fontSize: 15,
+    fontWeight: '500',
+    height: '100%',
+  },
+  eyeButton: {
+    padding: 5,
+  },
+});

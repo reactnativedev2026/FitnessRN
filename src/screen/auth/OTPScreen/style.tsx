@@ -6,14 +6,12 @@ import font from "../../../theme/font";
 
 export const styles = StyleSheet.create({
   container: {
-    // backgroundColor: '#FFF',
     padding: 15,
     flex: 1,
   },
   safeArea: {
     flex: 1,
     padding: 15,
-
   },
   backButton: {
     marginTop: 8,
@@ -26,18 +24,17 @@ export const styles = StyleSheet.create({
   txtHeading: {
     fontSize: 24,
     lineHeight: 36,
-    color: 'rgba(0, 0, 0, 1)',
+    color: color.white,
     marginTop: 10,
     fontWeight: "500",
     textAlign: 'center'
   },
   txtDes: {
-    color: '#9DB2BF',
+    color: color.grey,
     fontSize: 16,
     fontFamily: font.MonolithRegular,
     textAlign: 'center',
     marginTop: 5
-
   },
   headerSection: {
     height: hp(15),
@@ -46,7 +43,7 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: 'rgba(0, 0, 0, 1)',
+    color: color.white,
     lineHeight: 36,
     marginTop: 40,
   },
@@ -60,29 +57,29 @@ export const styles = StyleSheet.create({
   otpFieldContainer: {
     justifyContent: 'center',
     alignSelf: 'center',
-    marginTop: 2
+    marginTop: 20
   },
   cellWrapper: {
-    alignItems: 'center',      // center horizontally
-    justifyContent: 'center',  // center vertically
-    marginHorizontal: 8
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 5
   },
   cell: {
-    width: 60,
+    width: 45,
     alignItems: "center",
-    height: 60,
-    fontSize: 24,
-    lineHeight: Platform.OS === 'ios' ? 58 : 58, // Android usually needs more
+    height: 55,
+    fontSize: 22,
+    lineHeight: Platform.OS === 'ios' ? 52 : 52,
     borderWidth: 1.5,
-    borderColor: '#E9E9E9',
+    borderColor: '#393B48',
     textAlign: 'center',
-    color: '#000',
+    color: color.white,
     borderRadius: 12,
-    includeFontPadding: false,  // remove extra padding for Android
+    includeFontPadding: false,
+    backgroundColor: '#393B48',
   },
   focusCell: {
     borderColor: color.primary,
-    backgroundColor: 'white',
     textAlignVertical: 'center',
     justifyContent: "center",
     alignItems: "center",
@@ -90,6 +87,7 @@ export const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginTop: 18,
+    textAlign: 'center'
   },
   bannerContainer: {
     alignItems: 'center',
@@ -106,5 +104,16 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     alignSelf: 'center'
+  },
+  footerText: {
+    color: '#6F767E',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 40,
+    lineHeight: 18,
+  },
+  resendText: {
+    color: color.primary,
+    fontWeight: '700',
   },
 });

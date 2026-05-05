@@ -6,21 +6,11 @@ import { color } from '../../../constant';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F7F9FC',
+    backgroundColor: color.background,
+    paddingHorizontal: 20,
+    justifyContent: 'center'
   },
 
-  card: {
-    backgroundColor: '#FFF',
-    marginTop: hp(20),
-    marginHorizontal: 16,
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 8,
-  },
 
   logoText: {
     textAlign: 'center',
@@ -33,12 +23,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',
-    color: '#000',
+    color: color.white,
   },
 
   subTitle: {
     fontSize: 14,
-    color: '#9DB2BF',
+    color: color.grey,
     textAlign: 'center',
     marginTop: 6,
     marginBottom: 20,
@@ -66,13 +56,14 @@ const styles = StyleSheet.create({
 
   loginBtn: {
     marginTop: 25,
-    borderRadius: 25,
+    // borderRadius: 25,
   },
 
   errorText: {
     color: 'red',
     fontSize: 12,
-    marginTop: 5,
+    marginTop: -5,
+    marginBottom: 10
   },
 
   signUpContainer: {
@@ -83,13 +74,39 @@ const styles = StyleSheet.create({
 
   signUpText: {
     fontSize: 15,
-    color: '#9DB2BF',
+    color: color.grey,
   },
 
   signUpLink: {
     fontSize: 15,
     fontWeight: '700',
     color: '#3D5AFE',
+  },
+
+  tabContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#0E101F',
+    borderRadius: 15,
+    padding: 5,
+    marginVertical: 20,
+    width: '100%',
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderRadius: 12,
+  },
+  activeTab: {
+    backgroundColor: '#2E303D',
+  },
+  tabText: {
+    color: '#6F767E',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  activeTabText: {
+    color: color.white,
   },
 
 });

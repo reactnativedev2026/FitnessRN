@@ -3,6 +3,7 @@ import {
   View,
   Text,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CodeField, Cursor } from 'react-native-confirmation-code-field';
@@ -23,49 +24,47 @@ export default function OtpScreen() {
     value,
     isLoading,
     errorMessage,
+    timer,
     ref,
     props,
     getCellOnLayoutHandler,
     handleChangeText,
     handleVerifyOTP,
- 
- 
-   } = useOtpVerification();
-const nav = useNavigation()
+    handleResendOTP,
+  } = useOtpVerification();
+
+  const nav = useNavigation();
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
       <StatusBarComponent />
-      {/* <CustomHeader label="Back" /> */}
-         <CustomHeader label='Back' menuIcon={imageIndex.back} leftPress={()=>nav.goBack()}  showRight={false}/>
-    
+      <CustomHeader
+        label='Verify your email'
+        menuIcon={imageIndex.back}
+        leftPress={() => nav.goBack()}
+        showRight={false}
+      />
+
       <LoadingModal visible={isLoading} />
       <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View
-            style={{
-              backgroundColor: '#FFF',
-              marginTop: hp(4),
-              borderRadius: 15,
-              padding: 12,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.22,
-              shadowRadius: 3.7,
-              elevation: 8,
-            }}
-          >
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={{ flex: 1 }}>
             <View style={styles.headerSection}>
-              <Text style={styles.txtHeading}>Enter the verification code</Text>
               <Text style={styles.txtDes}>
-                We sent you a 4-digit code to Email
-                {/* We sent you a 4-digit code to +91 8305611387 */}
-                 {/* {phone} {country_code}  */}
-               </Text>
-              <Text style={[styles.txtDes,{
-                fontSize:20
-              }]}>
-             
-                {/* otp: {response?.data?.otp} */}
+                A verification code was sent to the address. Enter the code received below.
+              </Text>
+              
+              <Text style={[styles.txtDes, { marginTop: 30 }]}>
+                {timer > 0 ? (
+                  `You can resend the code in ${timer} sec.`
+                ) : (
+                  <Text style={styles.txtDes}>
+                    Didn't receive the code?{' '}
+                    <Text style={styles.resendText} onPress={handleResendOTP}>
+                      Resend OTP
+                    </Text>
+                  </Text>
+                )}
               </Text>
             </View>
 
@@ -74,10 +73,9 @@ const nav = useNavigation()
                 ref={ref}
                 {...props}
                 value={value}
-                      // blurOnSubmit={true}  // Keyboard dismiss on done
-  returnKeyType="done" 
+                returnKeyType="done"
                 onChangeText={handleChangeText}
-                cellCount={4}
+                cellCount={6}
                 keyboardType="number-pad"
                 textContentType="oneTimeCode"
                 renderCell={({ index, symbol, isFocused }) => (
@@ -94,17 +92,18 @@ const nav = useNavigation()
               {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
             </View>
 
-            <View style={{ marginTop: 15 }}>
-              <CustomButton title="OTP Verify" onPress={handleVerifyOTP} />
+            <View style={{ marginTop: 30 }}>
+              <CustomButton title="Continue" onPress={handleVerifyOTP} />
             </View>
-{/* <Text style={[styles.txtDes, {marginVertical:20, marginTop:30}]}>
-                Didn't receive the code? (00:15)
-                </Text> */}
-
           </View>
-           {/* <Text style={[styles.txtDes, {marginVertical:20, marginTop:30, color:color.primary}]}>Resend OTP</Text> */}
+
+          {/* Footer Text */}
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.footerText}>
+              By signing up, you agree to our privacy policy and terms of use and confirm that you are not a citizen of Iran, Cuba, North Korea, Syria
+            </Text>
+          </View>
         </ScrollView>
-       
       </View>
     </SafeAreaView>
   );

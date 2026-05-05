@@ -12,11 +12,25 @@ import CreateNewPassword from "../screen/auth/createNewPassword/CreateNewPasswor
 import DrawerNavigation from "../navigators/DrawerNavigation";
 import AboutUs from "../screen/Profile/About";
 import TearmsCodition from "../screen/Profile/TearmsCodition";
+import DashboardScreen from "../screen/BottomTab/DashBoard/Dashboard";
+import DashboardDetail from "../screen/BottomTab/DashBoard/DashboardDetail";
+import RecentDeliveries from "../screen/BottomTab/DashBoard/RecentDeliveries";
+import DeliveryMap from "../screen/BottomTab/DashBoard/DeliveryMap";
+import OrderDetails from "../screen/BottomTab/DashBoard/OrderDetails";
+
 const _routes: any = {
   REGISTRATION_ROUTE: [
     {
       name: ScreenNameEnum.SPLASH_SCREEN,
       Component: Splash,
+    },
+    {
+      name: ScreenNameEnum.MapScreen,
+      Component: DeliveryMap,
+    },
+    {
+      name: ScreenNameEnum.RaceDetail,
+      Component: OrderDetails,
     },
 
     {
@@ -55,8 +69,16 @@ const _routes: any = {
     },
 
     {
-      name: ScreenNameEnum.DrawerNavgation,
-      Component: DrawerNavigation,
+      name: ScreenNameEnum.DashBoardScreen,
+      Component: DashboardScreen,
+    },
+    {
+      name: ScreenNameEnum.DashBoardDetail,
+      Component: DashboardDetail,
+    },
+    {
+      name: ScreenNameEnum.RECENT_DELIVERIES,
+      Component: RecentDeliveries,
     },
 
     {

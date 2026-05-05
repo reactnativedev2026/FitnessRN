@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "AMZ_PRO.app"
-               BlueprintName = "AMZ_PRO"
-               ReferencedContainer = "container:AMZ_PRO.xcodeproj">
+               BuildableName = "Kimbo.app"
+               BlueprintName = "Kimbo"
+               ReferencedContainer = "container:Kimbo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "AMZ_PROTests.xctest"
-               BlueprintName = "AMZ_PROTests"
-               ReferencedContainer = "container:AMZ_PRO.xcodeproj">
+               BuildableName = "KimboTests.xctest"
+               BlueprintName = "KimboTests"
+               ReferencedContainer = "container:Kimbo.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "AMZ_PRO.app"
-            BlueprintName = "AMZ_PRO"
-            ReferencedContainer = "container:AMZ_PRO.xcodeproj">
+            BuildableName = "Kimbo.app"
+            BlueprintName = "Kimbo"
+            ReferencedContainer = "container:Kimbo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "AMZ_PRO.app"
-            BlueprintName = "AMZ_PRO"
-            ReferencedContainer = "container:AMZ_PRO.xcodeproj">
+            BuildableName = "Kimbo.app"
+            BlueprintName = "Kimbo"
+            ReferencedContainer = "container:Kimbo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

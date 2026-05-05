@@ -49,8 +49,8 @@ const NotificationHandler = () => {
   useEffect(() => {
     if (Platform.OS === 'android') {
       notifee.createChannel({
-        id: 'AMZ.channel',
-        name: 'AMZ Channel',
+        id: 'Kimbo.channel',
+        name: 'Kimbo Channel',
         importance: AndroidImportance.HIGH,
       }).then(() => {
         console.log('✅ Notifee channel created');
@@ -67,7 +67,7 @@ const NotificationHandler = () => {
         title: remoteMessage?.notification?.title || 'New Notification',
         body: remoteMessage?.notification?.body || 'You have a new message',
         android: {
-          channelId: 'AMZ.channel',
+          channelId: 'Kimbo.channel',
           importance: AndroidImportance.HIGH,
           pressAction: { id: 'default' },
         },

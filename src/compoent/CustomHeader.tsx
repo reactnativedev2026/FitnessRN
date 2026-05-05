@@ -17,21 +17,21 @@ interface Props {
   menuIcon?: any;
   label?: string;
   leftPress?: () => void;
-  isSearch?:any
+  isSearch?: any
 }
 
-const CustomHeader: React.FC<Props> = ({ isSearch,rightIcons = [], menuIcon, label, leftPress , showRight = true }) => {
+const CustomHeader: React.FC<Props> = ({ isSearch, rightIcons = [], menuIcon, label, leftPress, showRight = true }) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.header}>
       {/* Left Menu */}
-      <TouchableOpacity 
-      onPress={leftPress || (() => navigation.dispatch(DrawerActions.openDrawer()))}
-      
+      <TouchableOpacity
+        onPress={leftPress || (() => navigation.dispatch(DrawerActions.openDrawer()))}
+
       >
-        <Image  
-        source={menuIcon || imageIndex.menu} style={styles.leftIcon} resizeMode="contain" />
+        <Image
+          source={menuIcon || imageIndex.menu} style={styles.leftIcon} resizeMode="contain" />
       </TouchableOpacity>
 
       {/* Label / Title */}
@@ -46,14 +46,14 @@ const CustomHeader: React.FC<Props> = ({ isSearch,rightIcons = [], menuIcon, lab
           </TouchableOpacity>
           )
         } */}
-    
 
-        <TouchableOpacity onPress={() => {}}
-          // navigation.navigate(ScreenNameEnum.Notification)}
-          >
-          { showRight &&
-          <Image source={imageIndex.no1} style={styles.rightIcon} resizeMode="contain" />
-}
+
+        <TouchableOpacity onPress={() => { }}
+        // navigation.navigate(ScreenNameEnum.Notification)}
+        >
+          {showRight &&
+            <Image source={imageIndex.no1} style={styles.rightIcon} resizeMode="contain" />
+          }
         </TouchableOpacity>
 
         {/* <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.EditProfile)}>
@@ -69,11 +69,11 @@ export default CustomHeader;
 const styles = StyleSheet.create({
   header: {
     height: 60,
-     flexDirection: 'row',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal:15
-   },
+    paddingHorizontal: 15
+  },
   leftIcon: {
     height: 40,
     width: 40,
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   txtHeading: {
     fontWeight: '700',
     fontSize: 20,
-    color: '#000',
+    color: '#fff',
     textAlign: 'center',
     flex: 1,
   },
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     height: 25,
     width: 25,
     marginLeft: 15,
-    tintColor:color.primary
+    tintColor: color.white
 
   },
   rightIconAvatar: {
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     width: 30,
     marginLeft: 15,
     borderRadius: 15, // circular avatar
-    tintColor:"#5ED5DB"
+    tintColor: "#5ED5DB"
 
   },
 });

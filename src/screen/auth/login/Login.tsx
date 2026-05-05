@@ -1,5 +1,17 @@
-import React from 'react';
-import { View, Text, ScrollView, SafeAreaView, Image } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ImageBackground,
+  TouchableWithoutFeedback,
+  Keyboard
+} from 'react-native';
 import StatusBarComponent from '../../../compoent/StatusBarCompoent';
 import CustomButton from '../../../compoent/CustomButton';
 import LoadingModal from '../../../utils/Loader';
@@ -9,6 +21,8 @@ import styles from './style';
 import imageIndex from '../../../assets/imageIndex';
 import { color } from '../../../constant';
 import ScreenNameEnum from '../../../routes/screenName.enum';
+import { hp } from '../../../utils/Constant';
+import CountryPicker, { Country, CountryCode } from 'react-native-country-picker-modal';
 
 export default function Login() {
   const {
@@ -19,64 +33,136 @@ export default function Login() {
     handleChange,
     handleLogin,
   } = useLogin();
+
+  const [activeTab, setActiveTab] = useState<'email' | 'phone'>('email');
+  const [countryCode, setCountryCode] = useState<CountryCode>('US');
+  const [callingCode, setCallingCode] = useState<string>('1');
+  const [visible, setVisible] = useState<boolean>(false);
+
+  const onSelect = (country: Country) => {
+    setCountryCode(country.cca2);
+    setCallingCode(country.callingCode[0]);
+    setVisible(false);
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
       <StatusBarComponent />
       <LoadingModal visible={isLoading} />
 
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View style={styles.card}>
-          {/* Logo */}
-          <Image
-            source={imageIndex.appLogo}
-            style={{ height: 100, width: '90%', alignSelf: 'center' }}
-            resizeMode="contain"
-          />
-          <Text style={styles.title}>Login</Text>
-          <Text style={styles.subTitle}>Enter your Email and password</Text>
+      <CountryPicker
+        {...{
+          countryCode,
+          onSelect,
+        }}
+        visible={visible}
+        onClose={() => setVisible(false)}
+        withFilter
+        withFlag
+        withCallingCode
+        theme={{
+          backgroundColor: '#010A16',
+          onBackgroundTextColor: '#fff',
+          fontSize: 16,
+          filterPlaceholderTextColor: '#6F767E',
+          itemCountryNameTextStyle: { color: '#fff' }
+        }}
+        containerButtonStyle={{ display: 'none' }}
+      />
 
-          <TextInputField
-            placeholder="Email"
-            text={credentials.email}
-            onChangeText={(value: string) => handleChange('email', value)}
-            firstLogo={true}
-            img={imageIndex.Textphone}
-            autoFocus
-          />
-          {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-
-          <TextInputField
-            placeholder="Password"
-            text={credentials.password}
-            onChangeText={(value: string) => handleChange('password', value)}
-            firstLogo={true}
-            img={imageIndex.lock}
-            showEye={true}
-            secureTextEntry
-          />
-          {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-
-          <Text
-            style={{ color: '#000', textAlign: 'center', marginVertical: 10 }}
-            onPress={() => navigation.navigate(ScreenNameEnum.PasswordReset)}
-          >
-            Forgot your password?
-          </Text>
-
-          {/* Login Button */}
-          <View style={{ marginTop: 15 }}>
-            <CustomButton title="Login" onPress={handleLogin} style={styles.loginBtn} />
-          </View>
-        </View>
-      </ScrollView>
-
-      {/* Sign Up */}
-      <Text
-        style={{ color: '#909090', textAlign: 'center', marginBottom: 40 }}
-        onPress={() => navigation.navigate(ScreenNameEnum.Sinup)}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0} // Adjust if needed
       >
-        Don't have an account? <Text style={{ color: color.primary }}>Sign Up</Text>
-      </Text>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* Logo Section with Background Image */}
+            <ImageBackground
+              source={imageIndex.loginTop}
+              style={{
+                height: hp(35), // Slightly reduced to give more space for inputs
+                width: '100%',
+                justifyContent: 'flex-end',
+                paddingBottom: 20
+              }}
+              resizeMode="cover"
+            >
+              <Image
+                source={imageIndex.appLogo}
+                style={{ height: 100, width: '90%', alignSelf: 'center', marginBottom: 20 }}
+                resizeMode="contain"
+              />
+              <Text style={styles.title}>Login</Text>
+            </ImageBackground>
+
+            {/* Form Section */}
+            <View style={{ paddingHorizontal: 20, flex: 1 }}>
+              {/* Tab Switcher */}
+              <View style={styles.tabContainer}>
+                <TouchableOpacity
+                  style={[styles.tabButton, activeTab === 'email' && styles.activeTab]}
+                  onPress={() => setActiveTab('email')}
+                >
+                  <Text style={[styles.tabText, activeTab === 'email' && styles.activeTabText]}>
+                    Email
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.tabButton, activeTab === 'phone' && styles.activeTab]}
+                  onPress={() => setActiveTab('phone')}
+                >
+                  <Text style={[styles.tabText, activeTab === 'phone' && styles.activeTabText]}>
+                    Phone number
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Conditional Input Fields */}
+              {activeTab === 'email' ? (
+                <TextInputField
+                  placeholder="Email"
+                  text={credentials.email}
+                  onChangeText={(value: string) => handleChange('email', value)}
+                  firstLogo={true}
+                  img={imageIndex.email}
+                />
+               ) : (
+                <TextInputField
+                  placeholder="Phone"
+                  text={credentials.email}
+                  onChangeText={(value: string) => handleChange('email', value)}
+                  firstLogo={true}
+                  countryCode={countryCode}
+                  prefix={`+${callingCode}`}
+                  onPrefixPress={() => setVisible(true)}
+                />
+              )}
+              {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+
+              <TextInputField
+                placeholder="Password"
+                text={credentials.password}
+                onChangeText={(value: string) => handleChange('password', value)}
+                firstLogo={true}
+                img={imageIndex.lock}
+                showEye={true}
+                secureTextEntry
+              />
+              {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+
+              {/* Login Button */}
+              <View style={{ marginTop: 15, marginBottom: 30 }}>
+                <CustomButton title="Login" onPress={handleLogin} style={styles.loginBtn} />
+              </View>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
