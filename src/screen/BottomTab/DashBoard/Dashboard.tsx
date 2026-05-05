@@ -9,15 +9,18 @@ import {
   ScrollView,
   Platform,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import imageIndex from "../../../assets/imageIndex";
 import { color } from "../../../constant";
+import font from "../../../theme/font";
 import useDashboard from "./useDashboard";
 import LoadingModal from "../../../utils/Loader";
 import ScreenNameEnum from "../../../routes/screenName.enum";
 import { styles } from "./DashboardStyle";
 import DeliveryCard from "../../../compoent/DeliveryCard";
+import SwipeButton from 'rn-swipe-button';
 
 const DashboardScreen = () => {
   const {
@@ -25,6 +28,9 @@ const DashboardScreen = () => {
     loading,
     navigation,
     insets,
+    selectedDuty,
+    selectDuty,
+    DUTY_OPTIONS,
   } = useDashboard();
 
   return (
@@ -46,10 +52,11 @@ const DashboardScreen = () => {
               <Text style={styles.userName}>Hello {userData?.user_data?.user_name || 'Alex'} 👋</Text>
             </View>
             <View style={styles.headerIcons}>
-              <TouchableOpacity >
+              <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.NotificationsScreen as never)}
+              >
                 <Icon name="notifications-outline" size={24} color="#fff" />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton}>
+              <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate(ScreenNameEnum.ProfileSetup as never)}>
                 <Icon name="person-outline" size={24} color="#fff" />
               </TouchableOpacity>
             </View>
@@ -57,13 +64,33 @@ const DashboardScreen = () => {
         </ImageBackground>
 
         {/* Online Status Toggle */}
-        <View style={styles.onlineStatusContainer}>
-          <TouchableOpacity style={styles.goButton}>
-            <Image source={imageIndex.go} style={{ width: 50, height: 50 }} />
-            <Icon name="chevron-forward-outline" size={25} color={color.primary} />
-            <Icon name="chevron-forward-outline" size={25} color={color.primary} style={{ marginLeft: -15 }} />
-          </TouchableOpacity>
-          <Text style={styles.statusText}>online</Text>
+        <View style={{ marginHorizontal: 20, marginTop: 15 }}>
+          <SwipeButton
+            disabled={false}
+            swipeSuccessThreshold={70}
+            height={60}
+            width={Dimensions.get('window').width - 40}
+            title={selectedDuty.status === 'on_duty' ? "Swipe to go Offline" : "Swipe to go Online"}
+            shouldResetAfterSuccess={true}
+            resetAfterSuccessAnimDelay={100}
+            titleFadeOut={false}
+            onSwipeSuccess={() => {
+              const nextStatus = selectedDuty.status === 'on_duty' ? 'off_duty' : 'on_duty';
+              const duty = DUTY_OPTIONS.find(d => d.status === nextStatus);
+              if (duty) selectDuty(duty);
+            }}
+            railFillBackgroundColor={'transparent'}
+            railFillBorderColor={selectedDuty.status != 'on_duty' ? '#FF3B30' : color.primary}
+            thumbIconBackgroundColor={selectedDuty.status != 'on_duty' ? '#FF3B30' : color.primary}
+            thumbIconComponent={() => (
+              <Image source={imageIndex.go} style={{ width: 50, height: 50 }} />
+            )}
+            railBackgroundColor="#1C1F26"
+            railBorderColor="#393B48"
+            titleColor="#fff"
+            titleFontSize={16}
+            titleStyles={{ fontFamily: font.TrialBold }}
+          />
         </View>
 
         {/* Stats Section */}
@@ -98,16 +125,16 @@ const DashboardScreen = () => {
         <View style={styles.quickActionsRow}>
           <TouchableOpacity
             style={styles.actionCard}
-            onPress={() => navigation.navigate(ScreenNameEnum.DashBoardDetail as never)}
+            onPress={() => navigation.navigate(ScreenNameEnum.DashBoardDetail as never, { type: 'start' })}
           >
             <Image source={imageIndex.startdelivery} style={styles.actionImage} />
             <Text style={styles.actionText}>Start Delivery</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionCard}>
+          <TouchableOpacity style={styles.actionCard} onPress={() => navigation.navigate(ScreenNameEnum.DashBoardDetail as never, { type: 'update' })}>
             <Image source={imageIndex.status} style={styles.actionImage} />
             <Text style={styles.actionText}>Update Status</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionCard}>
+          <TouchableOpacity style={styles.actionCard} onPress={() => navigation.navigate(ScreenNameEnum.MapScreen)}>
             <Image source={imageIndex.viewMap} style={styles.actionImage} />
             <Text style={styles.actionText}>View Map</Text>
           </TouchableOpacity>

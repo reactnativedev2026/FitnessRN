@@ -5,9 +5,7 @@ import {
   TouchableOpacity,
   StatusBar,
   ScrollView,
-  Platform,
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
 import { color } from "../../../constant";
 import { styles } from "./DashboardStyle";
 import { useNavigation } from "@react-navigation/native";
@@ -17,8 +15,9 @@ import CustomHeader from "../../../compoent/CustomHeader";
 import imageIndex from "../../../assets/imageIndex";
 import ScreenNameEnum from "../../../routes/screenName.enum";
 
-const DashboardDetail = () => {
+const DashboardDetail = ({ route }: any) => {
   const navigation = useNavigation();
+  const { type } = route.params;
   const [activeTab, setActiveTab] = useState<'Assigned' | 'Completed'>('Assigned');
 
   const deliveryData = [
@@ -55,7 +54,7 @@ const DashboardDetail = () => {
       <StatusBar barStyle="light-content" />
 
       <CustomHeader
-        label='Start Delivery'
+        label={type === 'start' ? 'Start Delivery' : 'Update Status'}
         menuIcon={imageIndex.back}
         leftPress={() => navigation.goBack()}
       />

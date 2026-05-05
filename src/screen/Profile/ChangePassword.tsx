@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -14,7 +13,6 @@ import font from '../../theme/font';
 import { POST_API } from '../../api/APIRequest';
 import { ENDPOINT } from '../../api/endpoints';
 import { errorToast, successToast } from '../../utils/customToast';
-
 
 const ChangePasswordScreen = () => {
     const navigation = useNavigation()
@@ -63,7 +61,7 @@ const ChangePasswordScreen = () => {
             if (res.success) {
                 successToast(res?.message)
                 navigation.goBack()
-            }else{
+            } else {
                 errorToast(res.message)
             }
         } catch (error) {
@@ -92,9 +90,6 @@ const ChangePasswordScreen = () => {
                             value={oldpass}
                             onChangeText={setOldPass}
                         />
-
-
-
                     </View>
                     <View style={styles.inputContainer}>
                         <Image source={imageIndex.lock} style={styles.image} />

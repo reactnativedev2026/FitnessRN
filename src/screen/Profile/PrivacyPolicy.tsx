@@ -17,7 +17,9 @@ import LoadingModal from '../../utils/Loader';
 import { hp } from '../../utils/Constant';
 import font from '../../theme/font';
 import { Privacypolicy } from '../../api/authApi/AuthApi';
- 
+import { color } from '../../constant';
+import { useNavigation } from '@react-navigation/native';
+
 const PrivacyPolicy = () => {
   const [isLoading, setLoading] = useState(false);
   const [content, setContent] = useState<string>('');
@@ -30,7 +32,7 @@ const PrivacyPolicy = () => {
   const getPrivacyPolicy = async () => {
     try {
       const response = await Privacypolicy(setLoading);
-console.log("response?.data",response?.data)
+      console.log("response?.data", response?.data)
       if (
         response?.data &&
         Array.isArray(response.data) &&
@@ -45,13 +47,13 @@ console.log("response?.data",response?.data)
       setContent('<p>No content available</p>');
     }
   };
-
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <StatusBarComponent />
       {/* <LoadingModal visible={isLoading} /> */}
 
-      <CustomHeader label="Privacy Policy" />
+      <CustomHeader label="Privacy Policy" menuIcon={imageIndex.back} leftPress={() => navigation.goBack()} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -83,7 +85,7 @@ export default PrivacyPolicy;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: color.background,
   },
   contentContainer: {
     padding: 12,
@@ -99,26 +101,26 @@ const styles = StyleSheet.create({
   htmlStyles: {
     p: {
       fontSize: 14,
-      color: '#333',
+      color: '#9CA3AF',
       lineHeight: 24,
       fontWeight: '500',
       marginTop: 8,
-      fontFamily: font.MonolithRegular,
+      fontFamily: font.TrialRegular,
     },
     h1: {
       fontSize: 22,
-      color: '#000',
+      color: '#fff',
       marginBottom: 10,
-      fontFamily: font.MonolithRegular,
+      fontFamily: font.TrialBold,
     },
     h2: {
       fontSize: 18,
-      color: '#222',
+      color: '#fff',
       marginBottom: 8,
-      fontFamily: font.MonolithRegular,
+      fontFamily: font.TrialBold,
     },
     a: {
-      color: '#007bff',
+      color: '#0066FF',
     },
   },
   bodyText: {

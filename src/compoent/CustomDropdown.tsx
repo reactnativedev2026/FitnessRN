@@ -9,7 +9,6 @@ import {
   Image,
   Modal,
 } from "react-native";
-import { color } from "../constant";
 import font from "../theme/font";
 import imageIndex from "../assets/imageIndex";
 
@@ -24,6 +23,7 @@ interface CustomDropdownProps {
   onSelect: (value: string) => void;
   leftIcon?: React.ReactNode;
   search?: boolean;
+  isDark?: boolean;
 }
 
 const CustomDropdown: React.FC<CustomDropdownProps> = ({
@@ -32,6 +32,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
   onSelect,
   leftIcon,
   search = false,
+  isDark = false,
 }) => {
   const [value, setValue] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
@@ -44,26 +45,32 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={[styles.dropdown, leftIcon && { paddingLeft: 40 }]}
+        style={[
+          styles.dropdown, 
+          leftIcon && { paddingLeft: 40 },
+          isDark && { backgroundColor: '#1C2533', borderColor: '#393B48' }
+        ]}
         onPress={() => setVisible(true)}
       >
-        
+
         <Text
           style={[
             styles.selectedText,
             !value && { color: "#ADA4A5", fontFamily: font.MonolithRegular },
+            isDark && value && { color: '#fff' }
           ]}
         >
           {value
             ? data.find((item) => item.value === value)?.label
             : placeholder}
         </Text>
-        <Image source={imageIndex.arrowqdown} 
-        
-        style={{
-          height:22,
-          width:22,
-        }}
+        <Image source={imageIndex.arrowqdown}
+
+          style={{
+            height: 22,
+            width: 22,
+            tintColor: isDark ? '#fff' : undefined
+          }}
         />
       </TouchableOpacity>
 
@@ -79,10 +86,10 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
           activeOpacity={1}
           onPressOut={() => setVisible(false)}
         >
-          <View style={styles.dropdownContainer}>
+          <View style={[styles.dropdownContainer, isDark && { backgroundColor: '#1C1F26', borderColor: '#393B48', borderWidth: 1 }]}>
             {search && (
               <TextInput
-                style={styles.searchInput}
+                style={[styles.searchInput, isDark && { backgroundColor: '#1C2533', color: '#fff', borderColor: '#393B48' }]}
                 placeholder="Search..."
                 placeholderTextColor="#999"
                 value={searchText}
@@ -95,7 +102,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
               keyExtractor={(item) => item.value}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  style={styles.item}
+                  style={[styles.item, isDark && { borderColor: '#393B48' }]}
                   onPress={() => {
                     setValue(item.value);
                     onSelect(item.value);
@@ -103,7 +110,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
                     setSearchText("");
                   }}
                 >
-                  <Text style={styles.itemText}>{item.label}</Text>
+                  <Text style={[styles.itemText, isDark && { color: '#fff' }]}>{item.label}</Text>
                 </TouchableOpacity>
               )}
               ListEmptyComponent={
@@ -121,7 +128,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     marginTop: 15,
-    marginBottom:15
+    marginBottom: 15
   },
   dropdown: {
     height: 58,
@@ -130,9 +137,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     justifyContent: "space-between",
     borderWidth: 1,
-    borderColor: "#F7F8F8", 
-    flexDirection:"row" ,
-    alignItems:"center"
+    borderColor: "#F7F8F8",
+    flexDirection: "row",
+    alignItems: "center"
   },
   iconWrapper: {
     position: "absolute",

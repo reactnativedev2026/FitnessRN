@@ -4,9 +4,6 @@ import { LogBox, Text, } from 'react-native';
 import 'react-native-gesture-handler';
 import AppNavigator from './src/navigators/AppNavigator';
 import { TextInput } from 'react-native';
-// import 'react-native-reanimated';
-// "react-native-maps": "^1.26.14",
-// 
 
 LogBox.ignoreAllLogs();
 (Text as any).defaultProps = (Text as any).defaultProps || {};

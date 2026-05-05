@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ImageBackground,
   StatusBar,
-  Dimensions,
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -15,11 +14,25 @@ import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-
-const { width, height } = Dimensions.get('window');
+import ReportIssueModal from '../../../compoent/ReportIssueModal';
+import { useState } from 'react';
+import Toast from 'react-native-toast-message';
 
 const DeliveryMap = () => {
   const navigation = useNavigation();
+  const [showReportModal, setShowReportModal] = useState(false);
+
+  const handleReportSubmit = (data: any) => {
+    console.log('Issue Reported:', data);
+    setShowReportModal(false);
+    setTimeout(() => {
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Issue reported successfully! 👋',
+      });
+    }, 500);
+  };
 
   return (
     <View style={styles.container}>
@@ -39,6 +52,13 @@ const DeliveryMap = () => {
               onPress={() => navigation.goBack()}
             >
               <Icon name="chevron-back" size={24} color="#000" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.reportButton}
+              onPress={() => setShowReportModal(true)}
+            >
+              <Text style={styles.reportButtonText}>Report</Text>
             </TouchableOpacity>
           </View>
 
@@ -102,6 +122,12 @@ const DeliveryMap = () => {
           </View>
         </SafeAreaView>
       </ImageBackground>
+
+      <ReportIssueModal 
+        visible={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        onSubmit={handleReportSubmit}
+      />
     </View>
   );
 };
@@ -122,6 +148,25 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     paddingTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  reportButton: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  reportButtonText: {
+    color: '#FF4D4D',
+    fontWeight: '700',
+    fontSize: 14,
   },
   backButton: {
     width: 45,
@@ -141,7 +186,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     padding: 25,
-    paddingBottom: 40,
+    paddingBottom: 20,
+    marginHorizontal: 10
   },
   statsRow: {
     flexDirection: 'row',
@@ -211,7 +257,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#374151',
+    borderColor: color.primary,
     flexDirection: 'row',
     height: 56,
     alignItems: 'center',

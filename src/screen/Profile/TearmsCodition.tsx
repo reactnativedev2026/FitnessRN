@@ -17,7 +17,8 @@ import LoadingModal from '../../utils/Loader';
 import { hp } from '../../utils/Constant';
 import font from '../../theme/font';
 import { Termsconditions } from '../../api/authApi/AuthApi';
-  
+import { color } from '../../constant';
+
 const TearmsCodition = () => {
   const [isLoading, setLoading] = useState(false);
   const [content, setContent] = useState<string>('');
@@ -36,7 +37,7 @@ const TearmsCodition = () => {
         Array.isArray(response.data) &&
         response.data.length > 0
       ) {
-        console.log("response.data",response.data)
+        console.log("response.data", response.data)
         setContent(response.data[0]?.tac_text || '');
       } else {
         setContent('<p>No content available</p>');
@@ -52,7 +53,7 @@ const TearmsCodition = () => {
       <StatusBarComponent />
       <LoadingModal visible={isLoading} />
 
-      <CustomHeader label="Terms and Condition" />
+      <CustomHeader label="Terms and Condition" menuIcon={imageIndex.back} leftPress={() => navigation.goBack()} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -84,7 +85,7 @@ export default TearmsCodition;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: color.background,
   },
   contentContainer: {
     padding: 12,
@@ -100,26 +101,26 @@ const styles = StyleSheet.create({
   htmlStyles: {
     p: {
       fontSize: 14,
-      color: '#333',
+      color: '#9CA3AF',
       lineHeight: 24,
       fontWeight: '500',
       marginTop: 8,
-      fontFamily: font.MonolithRegular,
+      fontFamily: font.TrialRegular,
     },
     h1: {
       fontSize: 22,
-      color: '#000',
+      color: '#fff',
       marginBottom: 10,
-      fontFamily: font.MonolithRegular,
+      fontFamily: font.TrialBold,
     },
     h2: {
       fontSize: 18,
-      color: '#222',
+      color: '#fff',
       marginBottom: 8,
-      fontFamily: font.MonolithRegular,
+      fontFamily: font.TrialBold,
     },
     a: {
-      color: '#007bff',
+      color: '#0066FF',
     },
   },
   bodyText: {

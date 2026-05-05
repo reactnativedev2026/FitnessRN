@@ -11,6 +11,7 @@ import PasswordReset from "../screen/auth/passwordReset/PasswordReset";
 import CreateNewPassword from "../screen/auth/createNewPassword/CreateNewPassword";
 import DrawerNavigation from "../navigators/DrawerNavigation";
 import AboutUs from "../screen/Profile/About";
+import ProfileSettingsScreen from "../screen/Profile/ProfileSettingsScreen";
 import TearmsCodition from "../screen/Profile/TearmsCodition";
 import DashboardScreen from "../screen/BottomTab/DashBoard/Dashboard";
 import DashboardDetail from "../screen/BottomTab/DashBoard/DashboardDetail";
@@ -66,6 +67,10 @@ const _routes: any = {
     {
       name: ScreenNameEnum.EditProfile,
       Component: ProfileScreen,
+    },
+    {
+      name: ScreenNameEnum.ProfileSetup,
+      Component: ProfileSettingsScreen,
     },
 
     {

@@ -4,14 +4,13 @@ import {
   Text,
   Modal,
   StyleSheet,
-   Image,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StatusBarComponent from './StatusBarCompoent';
 import CustomButton from './CustomButton';
-import imageIndex from '../assets/imageIndex';
-  
-const  PostSuccessfull = ({ visible,butt, onClose, title, userImage,subTitle, onOpenChat }:any) => {
+
+const PostSuccessfull = ({ visible, butt, onClose, title, userImage, subTitle, onOpenChat }: any) => {
   return (
     <Modal
       animationType="fade"
@@ -23,23 +22,19 @@ const  PostSuccessfull = ({ visible,butt, onClose, title, userImage,subTitle, on
         <StatusBarComponent />
         <View style={styles.modalView}>
           {/* User Image */}
-          <Image 
-         source={userImage} 
-          
-            // source={imageIndex.post1}
-          style={styles.userImage} />
+          <Image
+            source={userImage}
+            style={styles.userImage} />
 
-          
-          {/* Booking Text */}
           <Text style={styles.title}> {title}!</Text>
           <Text style={styles.subTitle}>
-           {subTitle}
-           </Text>
+            {subTitle}
+          </Text>
 
-            <CustomButton title= {butt ||"Go to Home"}
-          onPress={onOpenChat}
-         />
-         
+          <CustomButton title={butt || "Go to Home"}
+            onPress={onOpenChat}
+          />
+
         </View>
       </SafeAreaView>
     </Modal>
@@ -104,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default  PostSuccessfull;
+export default PostSuccessfull;

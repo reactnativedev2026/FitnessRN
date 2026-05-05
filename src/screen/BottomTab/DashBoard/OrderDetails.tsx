@@ -21,6 +21,8 @@ import { launchCamera } from 'react-native-image-picker';
 import { requestCameraPermissions } from '../../../api';
 import SignaturePad from '../../../compoent/SignaturePad';
 import Svg, { Path } from 'react-native-svg';
+import ReportIssueModal from '../../../compoent/ReportIssueModal';
+import Toast from 'react-native-toast-message';
 
 const { width } = Dimensions.get('window');
 
@@ -35,7 +37,10 @@ const OrderDetails = () => {
   const [receiverName, setReceiverName] = useState('');
   const [showSignatureModal, setShowSignatureModal] = useState(false);
 
-  const renderTimeline = () => {
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+
+  const renderTimeline = (isModal = false) => {
     const steps = [
       { id: 'Assigned', label: 'Assigned', activeIcon: imageIndex.step1, inactiveIcon: imageIndex.step1 },
       { id: 'Accepted', label: 'Accepted', activeIcon: imageIndex.step2f, inactiveIcon: imageIndex.step2 },
@@ -44,10 +49,10 @@ const OrderDetails = () => {
     ];
 
     const getStatusIndex = (s: OrderStatus) => steps.findIndex(step => step.id === s);
-    const currentIndex = getStatusIndex(status);
+    const currentIndex = isModal ? 3 : getStatusIndex(status);
 
     return (
-      <View style={styles.timelineContainer}>
+      <View style={[styles.timelineContainer, isModal && { paddingHorizontal: 0 }]}>
         {steps.map((step, index) => {
           const isActive = index <= currentIndex;
           return (
@@ -55,15 +60,15 @@ const OrderDetails = () => {
               <View style={styles.timelineStep}>
                 <Image
                   source={isActive ? step.activeIcon : step.inactiveIcon}
-                  style={styles.stepIcon}
+                  style={[styles.stepIcon, isModal && { width: 35, height: 35 }]}
                   resizeMode="contain"
                 />
-                <Text style={[styles.stepLabel, { color: isActive ? color.primary : '#6F767E' }]}>
+                <Text style={[styles.stepLabel, { color: isActive ? (isModal ? '#3E8BFF' : color.primary) : '#6F767E' }, isModal && { fontSize: 8 }]}>
                   {step.label}
                 </Text>
               </View>
               {index < steps.length - 1 && (
-                <View style={[styles.timelineLine, { backgroundColor: index < currentIndex ? color.primary : '#393B48' }]} />
+                <View style={[styles.timelineLine, { backgroundColor: index < currentIndex ? (isModal ? '#3E8BFF' : color.primary) : '#393B48' }, isModal && { marginTop: -15 }]} />
               )}
             </React.Fragment>
           );
@@ -102,8 +107,25 @@ const OrderDetails = () => {
 
   const handleNextStatus = () => {
     if (status === 'Assigned') setStatus('Accepted');
-    else if (status === 'Accepted') setStatus('Arrived');
-    else if (status === 'Arrived') setShowDeliveryForm(true);
+    else if (status === 'Accepted') {
+      setStatus('Arrived');
+      setShowDeliveryForm(true);
+    }
+    // else if (status === 'Arrived')
+
+  };
+
+  const handleReportSubmit = (data: any) => {
+    console.log('Issue Reported:', data);
+    // Add API call here if needed
+    setShowReportModal(false);
+    setTimeout(() => {
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Issue reported successfully! 👋',
+      });
+    }, 500);
   };
 
   const isFormValid = receiverName.trim() !== '' && signature !== null;
@@ -191,11 +213,11 @@ const OrderDetails = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.actionButton, { backgroundColor: '#2CC59D' }]}
+              style={[styles.actionButton, { backgroundColor: '#34C759' }]}
               onPress={handleNextStatus}
             >
               <Text style={styles.actionButtonText}>
-                {status === 'Assigned' ? 'Mark Arrived' : status === 'Accepted' ? 'Mark Arrived' : 'Mark as Delivered'}
+                {status === 'Assigned' ? 'Mark as Accepted' : status === 'Accepted' ? 'Mark Arrived' : 'Mark as Delivered'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -253,6 +275,7 @@ const OrderDetails = () => {
               onPress={() => {
                 setStatus('Delivered');
                 setShowDeliveryForm(false);
+                setShowSuccessModal(true);
               }}
             >
               <Text style={styles.submitButtonText}>Submit</Text>
@@ -273,7 +296,7 @@ const OrderDetails = () => {
                   <Icon name="close" size={24} color="#000" />
                 </TouchableOpacity>
               </View>
-              <SignaturePad 
+              <SignaturePad
                 onSave={(path) => {
                   setSignature(path);
                   setShowSignatureModal(false);
@@ -284,11 +307,69 @@ const OrderDetails = () => {
           </View>
         </Modal>
 
+        {/* Success Modal */}
+        <Modal
+          visible={showSuccessModal}
+          transparent={true}
+          animationType="fade"
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.successModalContent}>
+              <Text style={styles.timerText}>3 seconds!</Text>
+
+              <Image source={imageIndex.success} style={styles.successIcon} />
+
+              <Text style={styles.successTitle}>Delivery Complete!</Text>
+
+              <View style={styles.modalStatusSection}>
+                <Text style={styles.modalSectionTitle}>Order Status</Text>
+                <Text style={styles.modalSectionSubtitle}>System generated timeline</Text>
+                {renderTimeline(true)}
+              </View>
+
+              <View style={styles.stopCard}>
+                <Text style={styles.stopNumber}>Stop #1</Text>
+                <Text style={styles.stopName}>Craig Carder</Text>
+                <Text style={styles.stopAddress}>123 Oak Street, Apt 4B</Text>
+              </View>
+
+              <View style={styles.stopCard}>
+                <Text style={styles.nextStopLabel}>Next Stop</Text>
+                <Text style={styles.stopName}>Michael Chen</Text>
+                <Text style={styles.stopAddress}>456 Maple Avenue, Suite 200</Text>
+              </View>
+
+              <TouchableOpacity style={styles.modalPrimaryButton}>
+                <Text style={styles.buttonText}>Go to Next Stop</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.modalSecondaryButton}
+                onPress={() => {
+                  setShowSuccessModal(false);
+                  navigation.goBack();
+                }}
+              >
+                <Text style={styles.buttonText}>Back to Route List</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
         {status !== 'Delivered' && !showDeliveryForm && (
-          <TouchableOpacity style={{ alignItems: 'center', marginTop: 20 }}>
+          <TouchableOpacity 
+            style={{ alignItems: 'center', marginTop: 20 }}
+            onPress={() => setShowReportModal(true)}
+          >
             <Text style={{ color: '#FF4D4D', fontWeight: '600' }}>Report Issue</Text>
           </TouchableOpacity>
         )}
+
+        <ReportIssueModal 
+          visible={showReportModal}
+          onClose={() => setShowReportModal(false)}
+          onSubmit={handleReportSubmit}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -388,7 +469,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   googleMapsButton: {
-    backgroundColor: '#0D1B2A',
+    backgroundColor: '#035093',
     borderRadius: 16,
     flexDirection: 'row',
     height: 56,
@@ -491,7 +572,103 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  successModalContent: {
+    backgroundColor: '#050B18',
+    width: '100%',
+    borderRadius: 30,
+    padding: 25,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  timerText: {
+    color: '#FF4D4D',
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 20,
+  },
+  successIcon: {
+    width: 70,
+    height: 70,
+    marginBottom: 20,
+  },
+  successTitle: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: '800',
+    marginBottom: 30,
+  },
+  modalStatusSection: {
+    width: '100%',
+    marginBottom: 25,
+  },
+  modalSectionTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  modalSectionSubtitle: {
+    color: '#fff',
+    fontSize: 12,
+    marginTop: 4,
+    marginBottom: 15,
+  },
+  stopCard: {
+    backgroundColor: '#23262F',
+    width: '100%',
+    borderRadius: 20,
+    padding: 15,
+    marginBottom: 15,
+  },
+  stopNumber: {
+    color: '#3E8BFF',
+    fontSize: 12,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  nextStopLabel: {
+    color: '#3E8BFF',
+    fontSize: 12,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  stopName: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  stopAddress: {
+    color: '#9CA3AF',
+    fontSize: 12,
+  },
+  modalPrimaryButton: {
+    backgroundColor: color.primary,
+    width: '100%',
+    height: 56,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  modalSecondaryButton: {
+    backgroundColor: '#23262F',
+    width: '100%',
+    height: 56,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 15,
   }
 });
+
 
 export default OrderDetails;

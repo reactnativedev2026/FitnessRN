@@ -12,13 +12,15 @@ import HTML from 'react-native-render-html';
 
 import imageIndex from '../../assets/imageIndex';
 import StatusBarComponent from '../../compoent/StatusBarCompoent';
-import CustomHeader from '../../compoent/CustomHeader'; 
+import CustomHeader from '../../compoent/CustomHeader';
 import { hp } from '../../utils/Constant';
-import font from '../../theme/font'; 
+import font from '../../theme/font';
 import { GET_API } from '../../api/APIRequest';
 import { ENDPOINT } from '../../api/endpoints';
 import AsyncStorage from '@react-native-async-storage/async-storage';
- 
+import { useNavigation } from '@react-navigation/native';
+import { color } from '../../constant';
+
 const AboutUs = () => {
   const [isLoading, setLoading] = useState(false);
   const [content, setContent] = useState<string>('');
@@ -30,10 +32,10 @@ const AboutUs = () => {
 
   const getPrivacyPolicy = async () => {
     try {
-       const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem('token');
 
-      const response = await GET_API(ENDPOINT.ABOUT_US, token,"GET",setLoading);
-console.log("response?.data",response?.data)
+      const response = await GET_API(ENDPOINT.ABOUT_US, token, "GET", setLoading);
+      console.log("response?.data", response?.data)
       if (
         response?.data &&
         Array.isArray(response.data) &&
@@ -48,13 +50,11 @@ console.log("response?.data",response?.data)
       setContent('<p>No content available</p>');
     }
   };
-
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <StatusBarComponent />
-      {/* <LoadingModal visible={isLoading} /> */}
-
-      <CustomHeader label="About Us" />
+      <CustomHeader label="About Us" menuIcon={imageIndex.back} leftPress={() => navigation.goBack()} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -86,7 +86,7 @@ export default AboutUs;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: color.background,
   },
   contentContainer: {
     padding: 12,

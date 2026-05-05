@@ -42,5 +42,10 @@ export default {
   step3f: require('./images/step3f.png'),
   step4f: require('./images/step4f.png'),
   bluebox: require('./images/boxBlue.png'),
-
+  success: require('./images/success.png'),
+  privacyCircle: require('./images/privacyCircle.png'),
+  profileCircle: require('./images/profileCircle.png'),
+  aboutusCircle: require('./images/aboutusCircle.png'),
+  notificationCircle: require('./images/notificationCircle.png'),
+  appearanceCircle: require('./images/appearanceCircle.png'),
 };

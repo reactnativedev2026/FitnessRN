@@ -20,7 +20,7 @@ const LogoutModal = ({ visible, onLogout, onCancel }: any) => {
             Log Out
           </Text>
           <Text allowFontScaling={false} style={styles.message}>
-           Are you sure want to log out?
+            Are you sure want to log out?
           </Text>
 
           <View style={styles.buttonContainer}>
@@ -29,7 +29,7 @@ const LogoutModal = ({ visible, onLogout, onCancel }: any) => {
             </TouchableOpacity> */}
 
             <TouchableOpacity style={styles.logoutButton}
-             onPress={onLogout}>
+              onPress={onLogout}>
               <Text allowFontScaling={false} style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
           </View>
@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: width * 0.85,
-    backgroundColor: '#fff',
-    borderRadius: 15,
+    backgroundColor: '#1C1F2E',
+    borderRadius: 25,
     padding: 25,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#EDEDED',
+    borderColor: 'rgba(255,255,255,0.1)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.1,
@@ -67,35 +67,36 @@ const styles = StyleSheet.create({
     top: 15,
     left: 15,
     zIndex: 1,
-    backgroundColor:'red',
-    height:25,
-    width:25,
-    borderRadius:15,
-    alignItems:'center',
-    justifyContent:'center'
+    backgroundColor: 'red',
+    height: 25,
+    width: 25,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   closeText: {
     fontSize: 22,
     color: '#fff',
-    lineHeight:25
+    lineHeight: 25
   },
   title: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: '700',
     marginBottom: 10,
-     textAlign: 'center',
-    color: '#333',
-    marginTop:30
+    textAlign: 'center',
+    color: '#fff',
+    fontFamily: font.TrialBold,
+    marginTop: 20
   },
   message: {
-    fontSize: 15,
-    color: '#666',
+    fontSize: 16,
+    color: '#9CA3AF',
     textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: 25,
-        fontWeight: '500',
-
-   },
+    lineHeight: 24,
+    marginBottom: 30,
+    fontWeight: '500',
+    fontFamily: font.TrialRegular,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -106,26 +107,33 @@ const styles = StyleSheet.create({
     backgroundColor: color.primary,
     paddingVertical: 12,
     marginLeft: 10,
-    borderRadius: 25,
+    borderRadius: 10,
     alignItems: 'center',
+    shadowColor: '#FF4B4B',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   logoutText: {
     color: '#fff',
     fontSize: 15,
     fontFamily: font.TrialBold,
-   },
+  },
   cancelButton: {
     flex: 1,
-    backgroundColor: '#EDEDED',
-    paddingVertical: 12,
-    marginRight: 10,
-    borderRadius: 25,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    paddingVertical: 14,
+    marginRight: 12,
+    borderRadius: 15,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
   },
   cancelText: {
-    color: '#333',
-    fontSize: 16,
-    fontFamily: font.MonolithRegular,
+    color: '#fff',
+    fontSize: 15,
+    fontFamily: font.TrialRegular,
     fontWeight: '600',
   },
 });
