@@ -2,7 +2,6 @@ import React from 'react';
 import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
 import imageIndex from '../assets/imageIndex';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
-import ScreenNameEnum from '../routes/screenName.enum';
 import { color } from '../constant';
 
 interface RightIcon {
@@ -17,10 +16,11 @@ interface Props {
   menuIcon?: any;
   label?: string;
   leftPress?: () => void;
-  isSearch?: any
+  isSearch?: any;
+  showRight?: boolean;
 }
 
-const CustomHeader: React.FC<Props> = ({ isSearch, rightIcons = [], menuIcon, label, leftPress, showRight = true }) => {
+const CustomHeader: React.FC<Props> = ({ isSearch, rightIcons = [], menuIcon, label, leftPress, showRight = false }) => {
   const navigation = useNavigation();
 
   return (
@@ -28,10 +28,9 @@ const CustomHeader: React.FC<Props> = ({ isSearch, rightIcons = [], menuIcon, la
       {/* Left Menu */}
       <TouchableOpacity
         onPress={leftPress || (() => navigation.dispatch(DrawerActions.openDrawer()))}
-
       >
         <Image
-          source={menuIcon || imageIndex.menu} style={styles.leftIcon} resizeMode="contain" />
+          source={menuIcon || imageIndex.back} style={styles.leftIcon} resizeMode="contain" />
       </TouchableOpacity>
 
       {/* Label / Title */}
@@ -49,7 +48,6 @@ const CustomHeader: React.FC<Props> = ({ isSearch, rightIcons = [], menuIcon, la
 
 
         <TouchableOpacity onPress={() => { }}
-        // navigation.navigate(ScreenNameEnum.Notification)}
         >
           {showRight &&
             <Image source={imageIndex.no1} style={styles.rightIcon} resizeMode="contain" />
@@ -63,6 +61,7 @@ const CustomHeader: React.FC<Props> = ({ isSearch, rightIcons = [], menuIcon, la
     </View>
   );
 };
+
 
 export default CustomHeader;
 

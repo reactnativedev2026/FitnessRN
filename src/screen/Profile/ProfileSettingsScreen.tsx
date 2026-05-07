@@ -12,7 +12,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import imageIndex from '../../assets/imageIndex';
-import { color } from '../../constant';
 import font from '../../theme/font';
 import ScreenNameEnum from '../../routes/screenName.enum';
 import LogoutModal from '../../compoent/LogoutModal';
@@ -41,12 +40,12 @@ const ProfileSettingsScreen = () => {
       icon: imageIndex.notificationCircle,
       onPress: () => navigation.navigate(ScreenNameEnum.NotificationsSetting as never),
     },
-    {
-      id: 3,
-      title: 'Appearance',
-      icon: imageIndex.appearanceCircle,
-      onPress: () => { }, // Placeholder for now
-    },
+    // {
+    //   id: 3,
+    //   title: 'Appearance',
+    //   icon: imageIndex.appearanceCircle,
+    //   onPress: () => { }, // Placeholder for now
+    // },
     {
       id: 4,
       title: 'About us',
@@ -58,6 +57,12 @@ const ProfileSettingsScreen = () => {
       title: 'Privacy Policy',
       icon: imageIndex.privacyCircle,
       onPress: () => navigation.navigate(ScreenNameEnum.PrivacyPolicy as never),
+    },
+    {
+      id: 6,
+      title: 'Terms & Conditions',
+      icon: imageIndex.aboutusCircle,
+      onPress: () => navigation.navigate(ScreenNameEnum.LegalPoliciesScreen as never),
     },
   ];
 

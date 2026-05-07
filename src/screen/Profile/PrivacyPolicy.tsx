@@ -13,7 +13,6 @@ import HTML from 'react-native-render-html';
 import imageIndex from '../../assets/imageIndex';
 import StatusBarComponent from '../../compoent/StatusBarCompoent';
 import CustomHeader from '../../compoent/CustomHeader';
-import LoadingModal from '../../utils/Loader';
 import { hp } from '../../utils/Constant';
 import font from '../../theme/font';
 import { Privacypolicy } from '../../api/authApi/AuthApi';
@@ -40,11 +39,11 @@ const PrivacyPolicy = () => {
       ) {
         setContent(response.data[0]?.privacy_policy_text || '');
       } else {
-        setContent('<p>No content available</p>');
+        // setContent('<p>No content available</p>');
       }
     } catch (error) {
       console.log('Privacy Policy Error:', error);
-      setContent('<p>No content available</p>');
+      // setContent('<p>No content available</p>');
     }
   };
   const navigation = useNavigation();
@@ -54,14 +53,13 @@ const PrivacyPolicy = () => {
       {/* <LoadingModal visible={isLoading} /> */}
 
       <CustomHeader label="Privacy Policy" menuIcon={imageIndex.back} leftPress={() => navigation.goBack()} />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
       >
         <View style={styles.illustrationWrapper}>
           <Image
-            source={imageIndex.aboutus}
+            source={imageIndex.helpPrva}
             style={styles.illustration}
             resizeMode="contain"
           />
@@ -74,7 +72,7 @@ const PrivacyPolicy = () => {
             tagsStyles={styles.htmlStyles}
           />
         ) : (
-          <Text style={styles.bodyText}>No privacy policy available.</Text>
+          <Text style={styles.bodyText}>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy. This Privacy Policy has been created with the help of the</Text>
         )}
       </ScrollView>
     </SafeAreaView>
@@ -126,7 +124,7 @@ const styles = StyleSheet.create({
   bodyText: {
     fontSize: 14,
     lineHeight: 20,
-    color: '#666',
+    color: '#fff',
     fontFamily: font.MonolithRegular,
   },
 });

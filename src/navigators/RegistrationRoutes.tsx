@@ -33,6 +33,7 @@ export type RegistrationStackParamList = {
   [ScreenNameEnum.CaptureSuccess]: undefined;
   [ScreenNameEnum.Patient_Driver]: undefined;
   [ScreenNameEnum.RaceDetail]: undefined;
+  [ScreenNameEnum.NotificationsSetting]: undefined;
   DrawerNavDriver: undefined;
   DrawerNav: undefined;
 };

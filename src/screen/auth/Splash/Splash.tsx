@@ -9,8 +9,6 @@ import imageIndex from '../../../assets/imageIndex';
 import StatusBarComponent from '../../../compoent/StatusBarCompoent';
 import { styles } from './style';
 import { useDispatch } from 'react-redux';
-import { restoreLogin } from '../../../redux/feature/authSlice';
-// import { getAuthData } from '../../../Api/apiRequest';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RegistrationStackParamList } from '../../../navigators/RegistrationRoutes';
@@ -41,11 +39,11 @@ const Splash: React.FC = () => {
         //   navigation.replace(ScreenNameEnum.HomeDashboard);
         // } else {
         //   console.log('[Splash] No session found, navigating to Onboarding');
-        navigation.navigate(ScreenNameEnum.Login);
+        navigation.replace(ScreenNameEnum.Login);
         // }
       } catch (error) {
         console.error('Splash check failed:', error);
-        navigation.navigate(ScreenNameEnum.Login);
+        navigation.replace(ScreenNameEnum.Login);
       }
     }, 2000);
 

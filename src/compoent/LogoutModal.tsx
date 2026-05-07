@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     borderRadius: 10,
     alignItems: 'center',
-    shadowColor: '#FF4B4B',
+    shadowColor: color.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -139,3 +139,6 @@ const styles = StyleSheet.create({
 });
 
 export default memo(LogoutModal);
+
+
+

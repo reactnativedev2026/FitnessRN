@@ -18,8 +18,10 @@ import { hp } from '../../utils/Constant';
 import font from '../../theme/font';
 import { Termsconditions } from '../../api/authApi/AuthApi';
 import { color } from '../../constant';
+import { useNavigation } from '@react-navigation/native';
 
 const TearmsCodition = () => {
+  const navigation = useNavigation();
   const [isLoading, setLoading] = useState(false);
   const [content, setContent] = useState<string>('');
   const { width } = useWindowDimensions();
@@ -40,11 +42,11 @@ const TearmsCodition = () => {
         console.log("response.data", response.data)
         setContent(response.data[0]?.tac_text || '');
       } else {
-        setContent('<p>No content available</p>');
+        // setContent('<p>No content available</p>');
       }
     } catch (error) {
       console.log('Privacy Policy Error:', error);
-      setContent('<p>No content available</p>');
+      // setContent('<p>No content available</p>');
     }
   };
 
@@ -74,7 +76,7 @@ const TearmsCodition = () => {
             tagsStyles={styles.htmlStyles}
           />
         ) : (
-          <Text style={styles.bodyText}>No privacy policy available.</Text>
+          <Text style={styles.bodyText}>The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural</Text>
         )}
       </ScrollView>
     </SafeAreaView>
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
   bodyText: {
     fontSize: 14,
     lineHeight: 20,
-    color: '#666',
+    color: '#fff',
     fontFamily: font.MonolithRegular,
   },
 });

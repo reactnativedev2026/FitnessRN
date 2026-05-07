@@ -106,7 +106,6 @@ const DeliveryMap = () => {
               </View>
             </View>
 
-            {/* Action Buttons */}
             <TouchableOpacity
               style={styles.primaryButton}
               onPress={() => navigation.navigate(ScreenNameEnum.RaceDetail as never)}
@@ -123,7 +122,7 @@ const DeliveryMap = () => {
         </SafeAreaView>
       </ImageBackground>
 
-      <ReportIssueModal 
+      <ReportIssueModal
         visible={showReportModal}
         onClose={() => setShowReportModal(false)}
         onSubmit={handleReportSubmit}

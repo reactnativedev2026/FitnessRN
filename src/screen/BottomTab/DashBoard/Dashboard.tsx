@@ -63,7 +63,6 @@ const DashboardScreen = () => {
           </View>
         </ImageBackground>
 
-        {/* Online Status Toggle */}
         <View style={{ marginHorizontal: 20, marginTop: 15 }}>
           <SwipeButton
             disabled={false}

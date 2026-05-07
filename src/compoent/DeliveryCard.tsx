@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { color } from '../constant';
 import imageIndex from '../assets/imageIndex';
 import { styles as dashboardStyles } from '../screen/BottomTab/DashBoard/DashboardStyle';

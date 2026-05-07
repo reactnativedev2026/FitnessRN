@@ -3,15 +3,17 @@ import {
   View,
   Text,
   ScrollView,
-  SafeAreaView,
   Image,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ImageBackground,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  useWindowDimensions,
+  Dimensions
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import StatusBarComponent from '../../../compoent/StatusBarCompoent';
 import CustomButton from '../../../compoent/CustomButton';
 import LoadingModal from '../../../utils/Loader';
@@ -38,6 +40,13 @@ export default function Login() {
   const [countryCode, setCountryCode] = useState<CountryCode>('US');
   const [callingCode, setCallingCode] = useState<string>('1');
   const [visible, setVisible] = useState<boolean>(false);
+
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+  const isLandscape = windowWidth > windowHeight;
+
+  // Use screen height for portrait to prevent jumping when keyboard opens
+  const screenHeight = Dimensions.get('screen').height;
+  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.35;
 
   const onSelect = (country: Country) => {
     setCountryCode(country.cca2);
@@ -73,19 +82,19 @@ export default function Login() {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0} // Adjust if needed
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ flexGrow: 1 }}
             keyboardShouldPersistTaps="handled"
+            removeClippedSubviews={false}
           >
             {/* Logo Section with Background Image */}
             <ImageBackground
               source={imageIndex.loginTop}
               style={{
-                height: hp(35), // Slightly reduced to give more space for inputs
+                height: logoSectionHeight,
                 width: '100%',
                 justifyContent: 'flex-end',
                 paddingBottom: 20
@@ -131,7 +140,7 @@ export default function Login() {
                   firstLogo={true}
                   img={imageIndex.email}
                 />
-               ) : (
+              ) : (
                 <TextInputField
                   placeholder="Phone"
                   text={credentials.email}

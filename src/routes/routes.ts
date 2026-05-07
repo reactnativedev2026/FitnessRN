@@ -18,6 +18,7 @@ import DashboardDetail from "../screen/BottomTab/DashBoard/DashboardDetail";
 import RecentDeliveries from "../screen/BottomTab/DashBoard/RecentDeliveries";
 import DeliveryMap from "../screen/BottomTab/DashBoard/DeliveryMap";
 import OrderDetails from "../screen/BottomTab/DashBoard/OrderDetails";
+import NotificationsSetting from "../screen/Profile/NotificationsSetting";
 
 const _routes: any = {
   REGISTRATION_ROUTE: [
@@ -98,6 +99,10 @@ const _routes: any = {
     {
       name: ScreenNameEnum.NotificationsScreen,
       Component: NotificationsScreen,
+    },
+    {
+      name: ScreenNameEnum.NotificationsSetting,
+      Component: NotificationsSetting,
     },
   ],
 };

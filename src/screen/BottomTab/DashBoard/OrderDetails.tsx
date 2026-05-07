@@ -36,7 +36,6 @@ const OrderDetails = () => {
   const [signature, setSignature] = useState<string | null>(null);
   const [receiverName, setReceiverName] = useState('');
   const [showSignatureModal, setShowSignatureModal] = useState(false);
-
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
 
@@ -357,7 +356,7 @@ const OrderDetails = () => {
         </Modal>
 
         {status !== 'Delivered' && !showDeliveryForm && (
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{ alignItems: 'center', marginTop: 20 }}
             onPress={() => setShowReportModal(true)}
           >
@@ -365,7 +364,7 @@ const OrderDetails = () => {
           </TouchableOpacity>
         )}
 
-        <ReportIssueModal 
+        <ReportIssueModal
           visible={showReportModal}
           onClose={() => setShowReportModal(false)}
           onSubmit={handleReportSubmit}

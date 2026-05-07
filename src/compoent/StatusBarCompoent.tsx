@@ -8,18 +8,16 @@ type StatusBarComponentProps = {
 };
 
 const StatusBarComponent: React.FC<StatusBarComponentProps> = ({
-  barStyle = 'light-content', // dark text/icons for white background
-  backgroundColor = 'black', // default app background
-  translucent = false,
+  barStyle = 'light-content',
+  backgroundColor = 'transparent',
+  translucent = true,
 }) => {
   return (
-    <View style={[styles.container, { backgroundColor }]}>
-      <StatusBar
-        barStyle={barStyle}
-        backgroundColor={backgroundColor}
-        translucent={translucent}
-      />
-    </View>
+    <StatusBar
+      barStyle={barStyle}
+      backgroundColor={backgroundColor}
+      translucent={translucent}
+    />
   );
 };
 

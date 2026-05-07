@@ -5,8 +5,10 @@ import imageIndex from "../../assets/imageIndex";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StatusBarComponent from "../../compoent/StatusBarCompoent";
 import { color } from "../../constant";
+import { useNavigation } from "@react-navigation/native";
 
 const NotificationsSetting = () => {
+  const navigation = useNavigation();
   // All switch states in single object
   const [settings, setSettings] = useState({
     generalNotification: true,
@@ -47,7 +49,10 @@ const NotificationsSetting = () => {
     <SafeAreaView edges={['top']} style={styles.container}>
       <StatusBarComponent />
       <CustomHeader
-       label="Notifications"  />
+        label="Notifications"
+        menuIcon={imageIndex.back}
+        leftPress={() => navigation.goBack()}
+      />
 
       <FlatList
         data={notificationOptions}
@@ -64,7 +69,7 @@ export default NotificationsSetting;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#050B18',
   },
   switchContainer: {
     width: 45,
@@ -85,11 +90,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginVertical: 10,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.05)',
   },
   optionText: {
     fontSize: 16,
-    color: "#1D3A70",
-    // fontFamily: fonts.bold,
+    color: "#fff",
     lineHeight: 15,
   },
 });

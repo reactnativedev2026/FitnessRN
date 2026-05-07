@@ -1,13 +1,7 @@
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { loginApi } from '../../../api/authApi/AuthApi';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-import { errorToast, successToast } from '../../../utils/customToast';
-import { loginSuccess } from '../../../redux/feature/authSlice';
 import { useDispatch } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ENDPOINT } from '../../../api/endpoints';
-// import messaging from '@react-native-firebase/messaging';
 
 interface Credentials {
   email: string;
@@ -38,8 +32,6 @@ const useLogin = () => {
     setErrors(validationErrors);
     return Object.keys(validationErrors).length === 0;
   };
-
-  const dispatch = useDispatch()
 
   const handleLogin = async () => {
     if (!validateFields()) return;

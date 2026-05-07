@@ -4,6 +4,10 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  useWindowDimensions,
+  Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CodeField, Cursor } from 'react-native-confirmation-code-field';
@@ -34,6 +38,12 @@ export default function OtpScreen() {
   } = useOtpVerification();
 
   const nav = useNavigation();
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+  const isLandscape = windowWidth > windowHeight;
+  const screenHeight = Dimensions.get('screen').height;
+
+  // Stable height for header section
+  const headerHeight = isLandscape ? windowHeight * 0.2 : screenHeight * 0.15;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
@@ -46,65 +56,74 @@ export default function OtpScreen() {
       />
 
       <LoadingModal visible={isLoading} />
-      <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
-          <View style={{ flex: 1 }}>
-            <View style={styles.headerSection}>
-              <Text style={styles.txtDes}>
-                A verification code was sent to the address. Enter the code received below.
-              </Text>
-              
-              <Text style={[styles.txtDes, { marginTop: 30 }]}>
-                {timer > 0 ? (
-                  `You can resend the code in ${timer} sec.`
-                ) : (
-                  <Text style={styles.txtDes}>
-                    Didn't receive the code?{' '}
-                    <Text style={styles.resendText} onPress={handleResendOTP}>
-                      Resend OTP
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.container}>
+          <ScrollView 
+            showsVerticalScrollIndicator={false} 
+            contentContainerStyle={{ flexGrow: 1 }}
+            removeClippedSubviews={false}
+          >
+            <View style={{ flex: 1 }}>
+              <View style={[styles.headerSection, { height: headerHeight }]}>
+                <Text style={styles.txtDes}>
+                  A verification code was sent to the address. Enter the code received below.
+                </Text>
+                
+                <Text style={[styles.txtDes, { marginTop: 30 }]}>
+                  {timer > 0 ? (
+                    `You can resend the code in ${timer} sec.`
+                  ) : (
+                    <Text style={styles.txtDes}>
+                      Didn't receive the code?{' '}
+                      <Text style={styles.resendText} onPress={handleResendOTP}>
+                        Resend OTP
+                      </Text>
                     </Text>
-                  </Text>
-                )}
+                  )}
+                </Text>
+              </View>
+
+              <View style={styles.otpFieldContainer}>
+                <CodeField
+                  ref={ref}
+                  {...props}
+                  value={value}
+                  returnKeyType="done"
+                  onChangeText={handleChangeText}
+                  cellCount={6}
+                  keyboardType="number-pad"
+                  textContentType="oneTimeCode"
+                  renderCell={({ index, symbol, isFocused }) => (
+                    <View key={index} style={styles.cellWrapper}>
+                      <Text
+                        style={[styles.cell, isFocused && styles.focusCell]}
+                        onLayout={getCellOnLayoutHandler(index)}
+                      >
+                        {symbol || (isFocused ? <Cursor /> : null)}
+                      </Text>
+                    </View>
+                  )}
+                />
+                {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+              </View>
+
+              <View style={{ marginTop: 30 }}>
+                <CustomButton title="Continue" onPress={handleVerifyOTP} />
+              </View>
+            </View>
+
+            {/* Footer Text */}
+            <View style={{ marginBottom: 20 }}>
+              <Text style={styles.footerText}>
+                By signing up, you agree to our privacy policy and terms of use and confirm that you are not a citizen of Iran, Cuba, North Korea, Syria
               </Text>
             </View>
-
-            <View style={styles.otpFieldContainer}>
-              <CodeField
-                ref={ref}
-                {...props}
-                value={value}
-                returnKeyType="done"
-                onChangeText={handleChangeText}
-                cellCount={6}
-                keyboardType="number-pad"
-                textContentType="oneTimeCode"
-                renderCell={({ index, symbol, isFocused }) => (
-                  <View key={index} style={styles.cellWrapper}>
-                    <Text
-                      style={[styles.cell, isFocused && styles.focusCell]}
-                      onLayout={getCellOnLayoutHandler(index)}
-                    >
-                      {symbol || (isFocused ? <Cursor /> : null)}
-                    </Text>
-                  </View>
-                )}
-              />
-              {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-            </View>
-
-            <View style={{ marginTop: 30 }}>
-              <CustomButton title="Continue" onPress={handleVerifyOTP} />
-            </View>
-          </View>
-
-          {/* Footer Text */}
-          <View style={{ marginBottom: 20 }}>
-            <Text style={styles.footerText}>
-              By signing up, you agree to our privacy policy and terms of use and confirm that you are not a citizen of Iran, Cuba, North Korea, Syria
-            </Text>
-          </View>
-        </ScrollView>
-      </View>
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
