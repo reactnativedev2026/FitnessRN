@@ -11,7 +11,8 @@ import { styles } from './style';
 import { useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { RegistrationStackParamList } from '../../../navigators/RegistrationRoutes';
+import { restoreLogin } from '../../../redux/feature/authSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Splash: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RegistrationStackParamList>>();
@@ -31,19 +32,23 @@ const Splash: React.FC = () => {
     // Timer for navigation
     const timer = setTimeout(async () => {
       try {
-        // const storedAuth = await getAuthData();
+        const authData = await AsyncStorage.getItem('authData');
 
-        // if (storedAuth?.token) {
-        //   dispatch(restoreLogin(storedAuth));
-        //   console.log('[Splash] User session restored, navigating to Home');
-        //   navigation.replace(ScreenNameEnum.HomeDashboard);
-        // } else {
-        //   console.log('[Splash] No session found, navigating to Onboarding');
-        navigation.replace(ScreenNameEnum.Login);
-        // }
+        if (authData) {
+          const parsedData = JSON.parse(authData);
+          if (parsedData?.token) {
+            dispatch(restoreLogin(parsedData));
+            console.log('[Splash] User session restored, navigating to Home');
+            navigation.replace(ScreenNameEnum.DashBoardScreen as any);
+            return;
+          }
+        }
+
+        console.log('[Splash] No session found, navigating to Login');
+        navigation.replace(ScreenNameEnum.Login as any);
       } catch (error) {
         console.error('Splash check failed:', error);
-        navigation.replace(ScreenNameEnum.Login);
+        navigation.replace(ScreenNameEnum.Login as any);
       }
     }, 2000);
 
@@ -66,8 +71,6 @@ const Splash: React.FC = () => {
           />
         </Animated.View>
       </View>
-
-
     </SafeAreaView>
   );
 };

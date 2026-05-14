@@ -1,6 +1,5 @@
 import { View, TextInput, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import imageIndex from '../assets/imageIndex';
 import { color } from '../constant';
 import CountryFlag from "react-native-country-flag";
@@ -39,7 +38,7 @@ export default function TextInputField({ ...props }) {
         {props.firstLogo && (
           <View style={styles.leftSection}>
             {props.countryCode ? (
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.phoneSection}
                 onPress={props.onPrefixPress}
                 disabled={!props.onPrefixPress}

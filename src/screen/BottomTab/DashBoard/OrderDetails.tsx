@@ -17,7 +17,7 @@ import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
 import CustomHeader from '../../../compoent/CustomHeader';
 
-import { launchCamera } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import { requestCameraPermissions } from '../../../api';
 import SignaturePad from '../../../compoent/SignaturePad';
 import Svg, { Path } from 'react-native-svg';
@@ -84,23 +84,23 @@ const OrderDetails = () => {
         return;
       }
 
-      const result = await launchCamera({
-        mediaType: 'photo',
-        quality: 0.5,
-        includeBase64: false,
+      const image = await ImagePicker.openCamera({
+        width: 1000,
+        height: 1000,
+        cropping: true,
+        compressImageQuality: 0.5,
       });
 
-      if (result.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (result.errorCode) {
-        console.log('ImagePicker Error: ', result.errorMessage);
-        alert('Error: ' + result.errorMessage);
-      } else if (result.assets && result.assets.length > 0 && result.assets[0].uri) {
-        setCapturedPhoto(result.assets[0].uri);
+      if (image && image.path) {
+        setCapturedPhoto(image.path);
       }
-    } catch (error) {
-      console.error('Photo capture error:', error);
-      alert('An unexpected error occurred while taking the photo.');
+    } catch (error: any) {
+      if (error.code === 'E_PICKER_CANCELLED') {
+        console.log('User cancelled image picker');
+      } else {
+        console.error('Photo capture error:', error);
+        alert('An unexpected error occurred while taking the photo.');
+      }
     }
   };
 

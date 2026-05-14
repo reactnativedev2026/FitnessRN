@@ -2,10 +2,10 @@ export const ENDPOINT = {
 
   SIGN_UP: "auth/signup",
   LOGIN: "auth/login",
-  UPDATE_PROFILE: "auth/update-profile",
-  FORGOT_PASSWORD: 'auth/forgotPassword',
+  UPDATE_PROFILE: "profile/update",
+  FORGOT_PASSWORD: 'auth/forgot-password',
   VERIFY_OTP: "auth/verify-otp",
-  CREATE_NEW_PASSWORD: "auth/createNewPassword",
+  RESET_PASSWORD: "auth/reset-password",
   CHANGE_PASSWORD:'auth/change-password',
   GET_PROFILE: "auth/get-profile",
   ABOUT_US: "common/get_about_us",

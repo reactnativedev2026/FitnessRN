@@ -3,25 +3,27 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
+  Image,
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
   useWindowDimensions,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CodeField, Cursor } from 'react-native-confirmation-code-field';
 
 import CustomButton from '../../../compoent/CustomButton';
 import StatusBarComponent from '../../../compoent/StatusBarCompoent';
-import CustomHeader from '../../../compoent/CustomHeader';
 import LoadingModal from '../../../utils/Loader';
 import { useOtpVerification } from './useOTPVerification';
-import { styles } from './style';
-import { hp } from '../../../utils/Constant';
+import { styles as otpStyles } from './style';
+import loginStyles from '../login/style';
 import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
-import { useNavigation } from '@react-navigation/native';
 
 export default function OtpScreen() {
   const {
@@ -35,58 +37,62 @@ export default function OtpScreen() {
     handleChangeText,
     handleVerifyOTP,
     handleResendOTP,
+    navigation
   } = useOtpVerification();
 
-  const nav = useNavigation();
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const isLandscape = windowWidth > windowHeight;
   const screenHeight = Dimensions.get('screen').height;
-
-  // Stable height for header section
-  const headerHeight = isLandscape ? windowHeight * 0.2 : screenHeight * 0.15;
+  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.35;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
       <StatusBarComponent />
-      <CustomHeader
-        label='Verify your email'
-        menuIcon={imageIndex.back}
-        leftPress={() => nav.goBack()}
-        showRight={false}
-      />
-
       <LoadingModal visible={isLoading} />
+
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
-        <View style={styles.container}>
-          <ScrollView 
-            showsVerticalScrollIndicator={false} 
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={{ flexGrow: 1 }}
-            removeClippedSubviews={false}
+            keyboardShouldPersistTaps="handled"
           >
-            <View style={{ flex: 1 }}>
-              <View style={[styles.headerSection, { height: headerHeight }]}>
-                <Text style={styles.txtDes}>
-                  A verification code was sent to the address. Enter the code received below.
-                </Text>
-                
-                <Text style={[styles.txtDes, { marginTop: 30 }]}>
-                  {timer > 0 ? (
-                    `You can resend the code in ${timer} sec.`
-                  ) : (
-                    <Text style={styles.txtDes}>
-                      Didn't receive the code?{' '}
-                      <Text style={styles.resendText} onPress={handleResendOTP}>
-                        Resend OTP
-                      </Text>
-                    </Text>
-                  )}
-                </Text>
-              </View>
+            {/* Logo Section with Background Image */}
+            <ImageBackground
+              source={imageIndex.loginTop}
+              style={{
+                height: logoSectionHeight,
+                width: '100%',
+                justifyContent: 'flex-end',
+                paddingBottom: 20
+              }}
+              resizeMode="cover"
+            >
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{ position: 'absolute', top: 20, left: 20, zIndex: 1 }}
+              >
+                <Image source={imageIndex.back} style={{ width: 24, height: 24, }} />
+              </TouchableOpacity>
 
-              <View style={styles.otpFieldContainer}>
+              <Image
+                source={imageIndex.appLogo}
+                style={{ height: 100, width: '90%', alignSelf: 'center', marginBottom: 20 }}
+                resizeMode="contain"
+              />
+              <Text style={loginStyles.title}>Verify OTP</Text>
+            </ImageBackground>
+
+            {/* Form Section */}
+            <View style={{ paddingHorizontal: 20, flex: 1, marginTop: 20 }}>
+              <Text style={loginStyles.subTitle}>
+                A verification code was sent to the address. Enter the code received below.
+              </Text>
+
+              <View style={otpStyles.otpFieldContainer}>
                 <CodeField
                   ref={ref}
                   {...props}
@@ -97,9 +103,9 @@ export default function OtpScreen() {
                   keyboardType="number-pad"
                   textContentType="oneTimeCode"
                   renderCell={({ index, symbol, isFocused }) => (
-                    <View key={index} style={styles.cellWrapper}>
+                    <View key={index} style={otpStyles.cellWrapper}>
                       <Text
-                        style={[styles.cell, isFocused && styles.focusCell]}
+                        style={[otpStyles.cell, isFocused && otpStyles.focusCell]}
                         onLayout={getCellOnLayoutHandler(index)}
                       >
                         {symbol || (isFocused ? <Cursor /> : null)}
@@ -107,22 +113,28 @@ export default function OtpScreen() {
                     </View>
                   )}
                 />
-                {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+                {errorMessage ? <Text style={otpStyles.errorText}>{errorMessage}</Text> : null}
               </View>
 
-              <View style={{ marginTop: 30 }}>
-                <CustomButton title="Continue" onPress={handleVerifyOTP} />
-              </View>
-            </View>
-
-            {/* Footer Text */}
-            <View style={{ marginBottom: 20 }}>
-              <Text style={styles.footerText}>
-                By signing up, you agree to our privacy policy and terms of use and confirm that you are not a citizen of Iran, Cuba, North Korea, Syria
+              <Text style={[loginStyles.subTitle, { marginTop: 20 }]}>
+                {timer > 0 ? (
+                  `You can resend the code in ${timer} sec.`
+                ) : (
+                  <Text style={loginStyles.subTitle}>
+                    Didn't receive the code?{' '}
+                    <Text style={[loginStyles.subTitle, { color: color.primary, fontWeight: '700' }]} onPress={handleResendOTP}>
+                      Resend OTP
+                    </Text>
+                  </Text>
+                )}
               </Text>
+
+              <View style={{ marginTop: 30, marginBottom: 30 }}>
+                <CustomButton title="Continue" onPress={handleVerifyOTP} style={loginStyles.loginBtn} />
+              </View>
             </View>
           </ScrollView>
-        </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

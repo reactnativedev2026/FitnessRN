@@ -72,22 +72,47 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.formContainer}>
             <TextInputField
-              placeholder="Full Name"
-              text={credentials.fullName}
-              onChangeText={(text: string) => handleChange('fullName', text)}
+              placeholder="First Name"
+              text={credentials.firstName}
+              onChangeText={(text: string) => handleChange('firstName', text)}
               firstLogo
               img={imageIndex.Textprofile}
             />
-            {errors.fullName && <Text style={styles.errorText}>{errors.fullName}</Text>}
+            {errors.firstName && <Text style={styles.errorText}>{errors.firstName}</Text>}
+
+            <TextInputField
+              placeholder="Last Name"
+              text={credentials.lastName}
+              onChangeText={(text: string) => handleChange('lastName', text)}
+              firstLogo
+              img={imageIndex.Textprofile}
+            />
+            {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
 
             <TextInputField
               placeholder="Email"
               text={credentials.email}
-              onChangeText={(text: string) => handleChange('email', text)}
+              editable={false}
               firstLogo
               img={imageIndex.email}
             />
-            {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+
+            <TextInputField
+              placeholder="Mobile Number"
+              text={credentials.mobile}
+              editable={false}
+              firstLogo
+              img={imageIndex.Textphone}
+            />
+
+            {/* <TextInputField
+              placeholder="Address"
+              text={credentials.address}
+              onChangeText={(text: string) => handleChange('address', text)}
+              firstLogo
+              img={imageIndex.box}
+            />
+            {errors.address && <Text style={styles.errorText}>{errors.address}</Text>} */}
           </View>
 
           {/* Submit Button */}
@@ -146,13 +171,6 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     marginTop: 10,
-  },
-  label: {
-    color: '#9CA3AF',
-    fontSize: 14,
-    marginBottom: 8,
-    marginLeft: 4,
-    fontWeight: '500',
   },
   buttonContainer: {
     marginTop: 'auto',

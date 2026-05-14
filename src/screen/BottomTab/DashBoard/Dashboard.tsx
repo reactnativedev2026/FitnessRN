@@ -49,7 +49,7 @@ const DashboardScreen = () => {
           <View style={styles.headerContent}>
             <View>
               <Text style={styles.welcomeText}>Welcome back!</Text>
-              <Text style={styles.userName}>Hello {userData?.user_data?.user_name || 'Alex'} 👋</Text>
+              <Text style={styles.userName}>Hello {userData?.name || 'Alex'} 👋</Text>
             </View>
             <View style={styles.headerIcons}>
               <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.NotificationsScreen as never)}
@@ -57,7 +57,14 @@ const DashboardScreen = () => {
                 <Icon name="notifications-outline" size={24} color="#fff" />
               </TouchableOpacity>
               <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate(ScreenNameEnum.ProfileSetup as never)}>
-                <Icon name="person-outline" size={24} color="#fff" />
+                {userData?.profile_image ? (
+                  <Image
+                    source={{ uri: userData.profile_image }}
+                    style={{ width: 40, height: 40, borderRadius: 20 }}
+                  />
+                ) : (
+                  <Icon name="person-outline" size={24} color="#fff" />
+                )}
               </TouchableOpacity>
             </View>
           </View>

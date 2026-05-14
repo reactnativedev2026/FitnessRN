@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
   },
   userName: {
     color: color.white,
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '700',
     marginTop: 4,
   },

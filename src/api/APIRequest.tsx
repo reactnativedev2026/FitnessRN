@@ -1,11 +1,15 @@
-import axios from "axios";
 import { BASE_URL } from ".";
 
-export const GET_API = async (
+/**
+ * Common API Request handler
+ */
+export const API_CALL = async (
   endpoint: string,
-  token?: string,
-  method: string = "GET",
-  setLoading?: (val: boolean) => void
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
+  body: any = null,
+  token: string | null = null,
+  setLoading: ((v: boolean) => void) | null = null,
+  isFormData: boolean = false
 ) => {
   try {
     setLoading?.(true);
@@ -14,70 +18,78 @@ export const GET_API = async (
       ? endpoint
       : `${BASE_URL}${endpoint}`;
 
-    const response = await axios({
-      method,
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
-      },
-    });
-    setLoading?.(false);
-
-    return response.data;
-  } catch (error: any) {
-    console.error(
-      "API Error:",
-      error?.response?.data || error?.message
-    );
-    return error?.response?.data || {
-      success: false,
-      message: "Something went wrong",
+    const headers: any = {
+      'Accept': 'application/json',
     };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    let requestBody = null;
+
+    if (method !== 'GET' && body) {
+      if (isFormData) {
+        requestBody = objectToFormData(body);
+        // ❌ DO NOT set Content-Type for FormData, fetch will handle it
+      } else {
+        headers['Content-Type'] = 'application/json';
+        requestBody = JSON.stringify(body);
+      }
+    }
+
+    const response = await fetch(url, {
+      method,
+      headers,
+      body: requestBody,
+    });
+
+    const text = await response.text();
+    
+    try {
+      const json = JSON.parse(text);
+      return { ...json, success: response.ok };
+    } catch {
+      console.log('Non JSON response:', text);
+      return { success: response.ok, message: text || 'Something went wrong' };
+    }
+  } catch (error: any) {
+    console.error(`API Error [${method} ${endpoint}]:`, error);
+    return { success: false, message: error?.message || 'Network error' };
   } finally {
     setLoading?.(false);
   }
 };
 
+/**
+ * Wrapper for GET requests
+ */
+export const GET_API = async (
+  endpoint: string,
+  token?: string,
+  method: string = "GET", // kept for compatibility
+  setLoading?: (val: boolean) => void
+) => {
+  return API_CALL(endpoint, 'GET', null, token, setLoading);
+};
+
+/**
+ * Wrapper for POST requests
+ */
 export const POST_API = async (
   token: string,
   body: any,
-  endpoint,
-  setLoading: (v: boolean) => void
+  endpoint: string,
+  setLoading: (v: boolean) => void,
+  isFormData: boolean = true
 ) => {
-  try {
-    setLoading(true);
-
-    const formData = objectToFormData(body);
-
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-      },
-      body: formData,
-    });
-    // console.log(formData, 'formadata')
-    const text = await response.text();
-
-    try {
-      // console.log(JSON.parse(text))
-      return JSON.parse(text);
-    } catch {
-      console.log('Non JSON response:', text);
-      return null;
-    }
-
-  } catch (error) {
-    console.log('Add Invoice Error:', error);
-    return null;
-  } finally {
-    setLoading(false);
-  }
+  return API_CALL(endpoint, 'POST', body, token, setLoading, isFormData);
 };
 
-const objectToFormData = (obj: any) => {
+/**
+ * Helper to convert object to FormData
+ */
+export const objectToFormData = (obj: any) => {
   const formData = new FormData();
 
   Object.keys(obj).forEach(key => {

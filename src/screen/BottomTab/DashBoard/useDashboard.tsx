@@ -58,7 +58,7 @@ const useDashboard = () => {
 
     const loaderFunc = isSilent ? () => { } : setLoading;
     const param: any = {
-      user_id: userData?.user_data?.id,
+      user_id: userData?.id,
       duty_request_id: id || trip?.id,
       status: status || selectedDutyState.status,
       rating: selectedRatingValue?.rating,
@@ -180,7 +180,7 @@ const useDashboard = () => {
       if (!token) return;
 
       const body = {
-        user_id: userData?.user_data?.id,
+        user_id: userData?.id,
       };
 
       const response = await POST_API(token, body, ENDPOINT.GET_ANNOUNCEMENTS, () => { });
@@ -206,7 +206,7 @@ const useDashboard = () => {
       if (!token) return;
 
       const body = {
-        user_id: userData?.user_data?.id,
+        user_id: userData?.id,
         announcement_id: currentAnnouncement.id,
       };
 
@@ -298,7 +298,7 @@ const useDashboard = () => {
     const param = {
       latitude: res?.latitude,
       longitude: res?.longitude,
-      user_id: userData?.user_data?.id,
+      user_id: userData?.id,
     };
     const dd = await POST_API(
       token,
@@ -346,7 +346,7 @@ const useDashboard = () => {
 
           setSelectedRatingState({
             rating:
-              rating?.data?.rating == null ? userData?.user_data?.rating : rating?.data?.rating,
+              rating?.data?.rating == null ? userData?.rating : rating?.data?.rating,
           });
           if (rating?.data?.driver_type === "Solo" || rating?.data?.driver_type === "Team") {
             setDriverTypeState(rating.data.driver_type);

@@ -90,13 +90,13 @@ const ProfileSettingsScreen = () => {
         <View style={styles.profileSection}>
           <View style={styles.avatarContainer}>
             <Image
-              source={userData?.user_data?.profile_image ? { uri: userData.user_data.profile_image } : imageIndex.profile}
+              source={userData?.profile_image ? { uri: userData.profile_image } : imageIndex.profile}
               style={styles.avatar}
             />
           </View>
-          <Text style={styles.userName}>{userData?.user_data?.user_name || 'Anita Torres'}</Text>
-          <Text style={styles.userDetails}>{userData?.user_data?.mobile_number || '+9383380527910'}</Text>
-          <Text style={styles.userDetails}>{userData?.user_data?.email || 'sharon_ray@icloud.com'}</Text>
+          <Text style={styles.userName}>{userData?.name || 'Anita Torres'}</Text>
+          <Text style={styles.userDetails}>{userData?.mobile_number || '+9383380527910'}</Text>
+          <Text style={styles.userDetails}>{userData?.email || 'sharon_ray@icloud.com'}</Text>
         </View>
 
         {/* Menu Items Section */}

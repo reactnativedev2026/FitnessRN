@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { ApiCall, } from '../../../api/authApi/AuthApi';
-import { errorToast } from '../../../utils/customToast';
+import { authForgotPassword } from '../../../api/authApi/AuthApi';
+import { errorToast, successToast } from '../../../utils/customToast';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-import { ENDPOINT } from '../../../api/endpoints';
 
 interface Credentials {
   email: string;
@@ -13,21 +12,13 @@ const useForgot = () => {
   const [credentials, setCredentials] = useState<Credentials>({ email: '' });
   const [errors, setErrors] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleChange = (field: string, value: string) => {
     setCredentials(prev => ({ ...prev, [field]: value }));
     setErrors(prev => ({ ...prev, [field]: '' }));
-
-    if (field === 'email') {
-      if (!value.trim()) {
-        setErrors(prev => ({ ...prev, email: 'Email is required.' }));
-      } else if (!emailRegex.test(value)) {
-        setErrors(prev => ({ ...prev, email: 'Enter a valid email address.' }));
-      }
-    }
   };
 
   const handleForgot = async () => {
@@ -44,13 +35,22 @@ const useForgot = () => {
       setErrors(validationErrors);
       return;
     }
+
     try {
-      let endPonit =ENDPOINT.FORGOT_PASSWORD
-      const params :any = { email , };
-      const response = await ApiCall(endPonit,params, setIsLoading);
+      const body = {
+        login: email,
+        role: 'driver'
+      };
+
+      const response = await authForgotPassword(body, setIsLoading);
+
       if (response.success) {
-        // Navigate to OTP screen if needed
-       navigation.navigate(ScreenNameEnum.OtpScreen, { response: response?.data });
+        successToast(response.message || 'OTP sent successfully');
+        navigation.navigate(ScreenNameEnum.CreateNewPassword, {
+          loginData: body,
+        });
+      } else {
+        errorToast(response.message || 'Failed to send OTP');
       }
     } catch (error: any) {
       errorToast(error.message || 'Something went wrong');

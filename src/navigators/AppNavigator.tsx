@@ -6,7 +6,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from '../redux/store';
 import Toast from 'react-native-toast-message';
 import toastConfig from '../utils/customToast';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileWatcher from '../compoent/ProfileWatcher';
 import NotificationHandler from './../../NotificationHandler'
 import { PermissionsAndroid, Platform } from 'react-native';

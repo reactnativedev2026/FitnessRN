@@ -2,20 +2,21 @@ import { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-import { ApiCall } from '../../../api/authApi/AuthApi';
+import { authVerifyOtp } from '../../../api/authApi/AuthApi';
 import { errorToast, successToast } from '../../../utils/customToast';
-import { ENDPOINT } from '../../../api/endpoints';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../../../redux/feature/authSlice';
 
 export const useOtpVerification = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const route: any = useRoute();
-  const { response } = route.params || {};
+  const { loginData, type } = route.params || {};
+  const dispatch = useDispatch();
 
   const [value, setValue] = useState(''); // OTP input
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(60); // Start with 60 seconds
-  const [userId, setUserId] = useState<string | null>(null);
 
   const cellCount = 6; // Number of OTP digits
 
@@ -46,19 +47,10 @@ export const useOtpVerification = () => {
 
     try {
       setIsLoading(true);
-      const endPoint = ENDPOINT.RESEND_OTP || ENDPOINT.LOGIN; // Fallback to login if resend not defined
-      const params = {
-        email: response?.email, // Assuming email is available in response
-        user_id: response?.user_id
-      };
-
-      // Mocking resend or using login api if that's how it works
-      // const res = await ApiCall(endPoint, params, setIsLoading);
-      // if (res.success) {
+      // Implementation for resend if needed
       successToast('OTP Resent Successfully!');
       setTimer(60);
       setValue('');
-      // }
     } catch (error: any) {
       errorToast(error.message || 'Failed to resend OTP');
     } finally {
@@ -72,27 +64,45 @@ export const useOtpVerification = () => {
       setErrorMessage(`Please enter ${cellCount}-digit OTP`);
       return;
     }
-    navigation.navigate(ScreenNameEnum.DashBoardScreen)
-    // try {
-    //   setIsLoading(true);
-    //   const endPoint = ENDPOINT.VERIFY_OTP;
-    //   const params = {
-    //     otp: value,               // OTP entered by the user
-    //     user_id: response?.user_id // user ID from previous API response
-    //   };
 
-    //   const res = await ApiCall(endPoint, params, setIsLoading);
-    //   if (res.success) {
-    //     successToast('OTP Verified Successfully!');
-    //     navigation.navigate(ScreenNameEnum.CreateNewPassword, { userId: response?.user_id });
-    //   } else {
-    //     errorToast(res.message || 'OTP verification failed');
-    //   }
-    // } catch (error: any) {
-    //   errorToast(error.message || 'Something went wrong');
-    // } finally {
-    //   setIsLoading(false);
-    // }
+    try {
+      const body = {
+        login: loginData?.login,
+        role: loginData?.role || 'driver',
+        otp: value,
+      };
+
+      const response = await authVerifyOtp(body, setIsLoading);
+      console.log('OTP Verification Response:', response);
+
+      if (response?.success) {
+        successToast(response?.message || 'OTP Verified Successfully!');
+
+        if (type === 'forgot_password') {
+          navigation.navigate(ScreenNameEnum.CreateNewPassword, {
+            loginData,
+            otp: value
+          });
+          return;
+        }
+
+        dispatch(
+          loginSuccess({
+            userData: response.data.user,
+            token: response.data.token,
+          })
+        );
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: ScreenNameEnum.DashBoardScreen }],
+        });
+      } else {
+        errorToast(response?.message || 'OTP verification failed');
+      }
+    } catch (error: any) {
+      errorToast(error.message || 'Something went wrong');
+    }
   };
 
   return {
@@ -108,6 +118,6 @@ export const useOtpVerification = () => {
     handleVerifyOTP,
     handleResendOTP,
     navigation,
-    response
+    loginData
   };
 };

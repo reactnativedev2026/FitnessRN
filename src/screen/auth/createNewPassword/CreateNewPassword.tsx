@@ -1,155 +1,135 @@
+import React from 'react';
 import {
   View,
   Text,
-   StyleSheet,
   ScrollView,
-
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  useWindowDimensions,
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
-import React, { useState } from 'react';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import StatusBarComponent from '../../../compoent/StatusBarCompoent';
-import CustomHeader from '../../../compoent/CustomHeader';
-import imageIndex from '../../../assets/imageIndex';
+import CustomButton from '../../../compoent/CustomButton';
+import TextInputField from '../../../compoent/TextInputField';
 import LoadingModal from '../../../utils/Loader';
 import useCreateNewPassword from './useCreateNewPassword';
-import TextInputField from '../../../compoent/TextInputField';
-import ResponsiveSize from '../../../utils/ResponsiveSize';
-import CustomButton from '../../../compoent/CustomButton';
-import { wp } from '../../../utils/Constant';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import PasswordSuccessfullyModal from '../../../compoent/PasswordSuccessfullyModal';
+import imageIndex from '../../../assets/imageIndex';
+import { color } from '../../../constant';
+import styles from '../login/style';
 
 export default function CreateNewPassword() {
-  const { credentials,
+  const {
+    credentials,
     errors,
     isLoading,
     handleChange,
     handleResetPass,
-    navigation, } = useCreateNewPassword();
-  const [modalVisible, setModalVisible] = useState(false);
+    navigation,
+  } = useCreateNewPassword();
+
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+  const isLandscape = windowWidth > windowHeight;
+  const screenHeight = Dimensions.get('screen').height;
+  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.35;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
       <StatusBarComponent />
-      <View style={{ marginTop: 5 }}>
-        {/* <CustomHeader label="Back" /> */}
-        <CustomHeader label='Back' menuIcon={imageIndex.back} leftPress={() => navigation.goBack()} showRight={false} />
+      <LoadingModal visible={isLoading} />
 
-      </View>
-      <ScrollView showsVerticalScrollIndicator={false} >
-        {isLoading ? <LoadingModal /> : null}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* Logo Section with Background Image */}
+            <ImageBackground
+              source={imageIndex.loginTop}
+              style={{
+                height: logoSectionHeight,
+                width: '100%',
+                justifyContent: 'flex-end',
+                paddingBottom: 20
+              }}
+              resizeMode="cover"
+            >
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{ position: 'absolute', top: 20, left: 20, zIndex: 1 }}
+              >
+                <Image source={imageIndex.back} style={{ width: 24, height: 24, }} />
+              </TouchableOpacity>
 
-        <View
-          style={{
-            backgroundColor: '#FFF',        // White background
-            marginTop: hp(4),               // Responsive top margin
-            marginHorizontal: 15,           // Horizontal margin
-            borderColor: '#ccc',            // Add border color for better visibility
-            borderRadius: 20,               // Rounded corners (optional but recommended)
-            shadowColor: '#000',            // iOS shadow
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.12,
-            shadowRadius: 3.84,
-            elevation: 8,
-          }}>
-
-          <View style={{ marginTop: 5, }}>
-            <Text style={{
-              fontWeight: '700',
-              fontSize: 24,
-              lineHeight: 36,
-              color: 'rgba(0, 0, 0, 1)',
-              textAlign: 'center',
-              marginTop: 8
-            }}>Create New Password</Text>
-            <Text style={{
-              fontWeight: '400',
-              fontSize: 16,
-              color: '#9DB2BF',
-              marginTop: 5,
-              lineHeight: 20,
-              textAlign: 'center'
-            }}>
-              Your new password must be different from previous used passwords.
-            </Text>
-          </View>
-          <View style={{ marginHorizontal: 15, marginTop: ResponsiveSize.marginTop(18), paddingVertical: hp(2), }}>
-            <TextInputField
-              lable={"Password"}
-              text={credentials.password}
-              placeholder={'Password'}
-              onChangeText={(value: string) => handleChange('password', value)} // Handles email input dynamically
-
-              firstLogo={true}
-              showEye={true}
-              img={imageIndex.lock}
-            />
-            {errors.password ? <Text style={{ color: 'red', fontSize: 14, marginTop: 8 }}>{errors.password}</Text> : null}
-            <View style={{ marginTop: 12 }}>
-              <TextInputField
-                lable={"Confirm Password"}
-                text={credentials.confirmPassword}
-                onChangeText={(value: string) => handleChange('confirmPassword', value)} // Handles email input dynamically
-                placeholder={'Confirm Password'}
-                firstLogo={true}
-                showEye={true}
-                img={imageIndex.lock}
+              <Image
+                source={imageIndex.appLogo}
+                style={{ height: 100, width: '90%', alignSelf: 'center', marginBottom: 20 }}
+                resizeMode="contain"
               />
+              <Text style={styles.title}>Create New Password</Text>
+            </ImageBackground>
+
+            {/* Form Section */}
+            <View style={{ paddingHorizontal: 20, flex: 1, marginTop: 20 }}>
+              <Text style={styles.subTitle}>
+                Your new password must be different from previous used passwords.
+              </Text>
+
+              <View style={{ marginTop: 15 }}>
+                <TextInputField
+                  placeholder="Enter OTP"
+                  text={credentials.otp}
+                  onChangeText={(value: string) => handleChange('otp', value)}
+                  firstLogo={true}
+                  img={imageIndex.email}
+                  keyboardType="number-pad"
+                />
+                {errors.otp && <Text style={styles.errorText}>{errors.otp}</Text>}
+
+                <View style={{ marginTop: 15 }}>
+                  <TextInputField
+                    placeholder="New Password"
+                    text={credentials.password}
+                    onChangeText={(value: string) => handleChange('password', value)}
+                    firstLogo={true}
+                    img={imageIndex.lock}
+                    showEye={true}
+                    secureTextEntry
+                  />
+                  {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+                </View>
+
+                <View style={{ marginTop: 15 }}>
+                  <TextInputField
+                    placeholder="Confirm Password"
+                    text={credentials.confirmPassword}
+                    onChangeText={(value: string) => handleChange('confirmPassword', value)}
+                    firstLogo={true}
+                    img={imageIndex.lock}
+                    showEye={true}
+                    secureTextEntry
+                  />
+                  {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
+                </View>
+              </View>
+
+              <View style={{ marginTop: 30, marginBottom: 30 }}>
+                <CustomButton title="Save" onPress={handleResetPass} style={styles.loginBtn} />
+              </View>
             </View>
-            {errors.confirmPassword ? <Text style={{ color: 'red', fontSize: 14, marginTop: 10 }}>{errors.confirmPassword}</Text> : null}
-          </View>
-
-          <View style={{
-            justifyContent: 'flex-start', marginBottom: 10,
-            marginHorizontal: 15,
-
-          }}>
-            <CustomButton
-              title={'Save'}
-              onPress={() => {
-               handleResetPass()
-               }}
-
-            />
-
-          </View>
-        </View>
-
-        <PasswordSuccessfullyModal
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          onOpenChat={() => {
-            setModalVisible(false);
-
-            handleResetPass()
-          }}
-        />
-      </ScrollView>
-
-
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-const Styles = StyleSheet.create({
-  text: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '700',
-    color: 'rgba(255, 77, 76, 1)',
-    bottom: 2
-  },
-  btn: {
-    alignSelf: 'center',
-    backgroundColor: '#E8442E',
-    height: 55,
-
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 30,
-    width: wp(90),
-  },
-});
-
-

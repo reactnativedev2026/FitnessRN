@@ -2,7 +2,6 @@ import React from "react";
 import {
   StatusBar,
   FlatList,
-  View,
 } from "react-native";
 import { styles } from "./DashboardStyle";
 import { useNavigation } from "@react-navigation/native";
@@ -32,7 +31,7 @@ const RecentDeliveries = () => {
         menuIcon={imageIndex.back}
         leftPress={() => navigation.goBack()}
       />
-      
+
       <FlatList
         data={deliveryData}
         keyExtractor={(item, index) => index.toString()}

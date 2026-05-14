@@ -1,7 +1,6 @@
-import { BASE_URL } from "..";
 import { errorToast, successToast } from "../../utils/customToast";
 import { ENDPOINT } from "../endpoints";
-
+import { API_CALL } from "../APIRequest";
 
 interface ApiParam {
   url: string;
@@ -12,51 +11,76 @@ interface ApiParam {
 interface ApiResponse {
   success: boolean;
   message?: string;
-  [key: string]: any; // For any extra fields returned by API
+  [key: string]: any; 
 }
 
 /**
- * Generic POST API function
+ * Generic POST API function (JSON by default)
  */
-export const loginApi = async (
+export const commonPostApi = async (
   param: ApiParam,
   setLoading: (loading: boolean) => void
 ): Promise<ApiResponse> => {
+  return API_CALL(param.url, 'POST', param.body, param.token, setLoading, false);
+};
+
+/**
+ * Professional Login API function
+ */
+export const authLogin = async (
+  body: any,
+  setLoading: (loading: boolean) => void
+): Promise<ApiResponse> => {
   try {
-    setLoading(true);
+    const response = await commonPostApi({ url: ENDPOINT.LOGIN, body }, setLoading);
+    return response;
+  } catch (error: any) {
+    return { success: false, message: error.message || 'Login failed' };
+  }
+};
 
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-    });
+/**
+ * Professional Verify OTP API function
+ */
+export const authVerifyOtp = async (
+  body: any,
+  setLoading: (loading: boolean) => void
+): Promise<ApiResponse> => {
+  try {
+    const response = await commonPostApi({ url: ENDPOINT.VERIFY_OTP, body }, setLoading);
+    return response;
+  } catch (error: any) {
+    return { success: false, message: error.message || 'OTP Verification failed' };
+  }
+};
 
-    if (param.token || param.body.token) {
-      headers.append('Authorization', `Bearer ${param.token || param.body.token}`);
-    }
+/**
+ * Professional Forgot Password API function
+ */
+export const authForgotPassword = async (
+  body: any,
+  setLoading: (loading: boolean) => void
+): Promise<ApiResponse> => {
+  try {
+    const response = await commonPostApi({ url: ENDPOINT.FORGOT_PASSWORD, body }, setLoading);
+    return response;
+  } catch (error: any) {
+    return { success: false, message: error.message || 'Forgot password failed' };
+  }
+};
 
-    const requestOptions: RequestInit = {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(param.body),
-      redirect: 'follow',
-    };
-    console.log(param.body, 'this is login body')
-    const response = await fetch(`${BASE_URL}${param.url}`, requestOptions);
-    const text = await response.text();
-
-    let resJson: ApiResponse;
-    try {
-      resJson = JSON.parse(text);
-
-    } catch {
-      resJson = { success: false, message: text };
-    }
-    console.log(resJson, 'this is res')
-    return resJson;
-  } catch (error) {
-    console.error('POST API Error:', error);
-    return { success: false, message: 'Network error' };
-  } finally {
-    setLoading(false);
+/**
+ * Professional Reset Password API function
+ */
+export const authResetPassword = async (
+  body: any,
+  setLoading: (loading: boolean) => void
+): Promise<ApiResponse> => {
+  try {
+    const response = await commonPostApi({ url: ENDPOINT.RESET_PASSWORD, body }, setLoading);
+    return response;
+  } catch (error: any) {
+    return { success: false, message: error.message || 'Reset password failed' };
   }
 };
 
@@ -68,10 +92,10 @@ export const signupApi = async (
   setLoading: (loading: boolean) => void
 ): Promise<ApiResponse> => {
   try {
-    const response = await loginApi({ url: ENDPOINT.SIGN_UP, body }, setLoading);
+    const response = await commonPostApi({ url: ENDPOINT.SIGN_UP, body }, setLoading);
 
     if (response.success) {
-      successToast('Successfully registered. As soon as possible our customer service will call you back.');
+      successToast('Successfully registered.');
     } else {
       errorToast(response.message || 'Signup failed');
     }
@@ -83,177 +107,74 @@ export const signupApi = async (
   }
 };
 
-
+/**
+ * Update Profile API function
+ */
 export const UpdteProfileApi = async (
   body: any,
-  token,
+  token: string,
   setLoading: (loading: boolean) => void
 ): Promise<ApiResponse> => {
   try {
-    const response = await loginApi({ url: ENDPOINT.UPDATE_PROFILE, body, token }, setLoading);
+    const response = await commonPostApi({ url: ENDPOINT.UPDATE_PROFILE, body, token }, setLoading);
 
     if (response.success) {
       successToast(response.message);
     } else {
-      errorToast(response.message || 'Signup failed');
+      errorToast(response.message || 'Update failed');
     }
     return response;
   } catch (error: any) {
-    errorToast(error.message || 'Signup failed');
-    return { success: false, message: error.message || 'Signup failed' };
+    errorToast(error.message || 'Update failed');
+    return { success: false, message: error.message || 'Update failed' };
   }
 };
+
+/**
+ * Generic API Call wrapper
+ */
 export const ApiCall = async (
   endPonit: any,
   body: any,
   setLoading: (loading: boolean) => void
 ): Promise<ApiResponse> => {
   try {
-    setLoading(true)
-    const response = await loginApi({ url: endPonit, body }, setLoading);
-
-    if (response.success) {
-      successToast('Successfully registered. As soon as possible our customer service will call you back.');
-    } else {
-      errorToast(response.message || 'Signup failed');
-    }
-
+    const response = await commonPostApi({ url: endPonit, body }, setLoading);
     return response;
   } catch (error: any) {
-    errorToast(error.message || 'Signup failed');
-    return { success: false, message: error.message || 'Signup failed' };
+    errorToast(error.message || 'API Call failed');
+    return { success: false, message: error.message || 'API Call failed' };
   }
 };
 
-
-const objectToFormData = (obj: any) => {
-  const formData = new FormData();
-
-  Object.keys(obj).forEach(key => {
-    const value = obj[key];
-
-    if (value === null || value === undefined) return;
-
-    // Image / File handling
-    if (typeof value === 'object' && value?.path) {
-      formData.append(key, {
-        uri: value.path,
-        type: value.mime || 'image/jpeg',
-        name: value.filename || `${key}.jpg`,
-      } as any);
-    }
-
-    // Array handling
-    else if (Array.isArray(value)) {
-      value.forEach((item, index) => {
-        formData.append(`${key}[${index}]`, String(item));
-      });
-    }
-
-    // Normal fields
-    else {
-      formData.append(key, String(value));
-    }
-  });
-
-  return formData;
-};
-
-
-export const POST_API = async (
-  token: string,
-  body: any,
-  endpoint,
-  setLoading: (v: boolean) => void
-) => {
-  try {
-    setLoading(true);
-
-    const formData = objectToFormData(body);
-
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-        // ❌ DO NOT set Content-Type for FormData
-      },
-      body: formData,
-    });
-    // console.log(formData, 'formadata')
-    const text = await response.text();
-
-    try {
-      console.log(JSON.parse(text))
-      return JSON.parse(text);
-    } catch {
-      console.log('Non JSON response:', text);
-      return null;
-    }
-
-  } catch (error) {
-    console.log('Add Invoice Error:', error);
-    return null;
-  } finally {
-    setLoading(false);
-  }
-};
-
+/**
+ * Privacy Policy
+ */
 export const Privacypolicy = async (setLoading: any) => {
-  setLoading(true);
   try {
-    const response = await fetch(`${BASE_URL}common/get_privacy_policy`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const textResponse = await response.text();
-    const parsedResponse = JSON.parse(textResponse);
-
-    console.log("parsedResponse", parsedResponse);
-
-    if (parsedResponse?.status == 1) {
-      successToast(parsedResponse?.message);
-      return parsedResponse;
+    const response = await API_CALL('common/get_privacy_policy', 'GET', null, null, setLoading);
+    if (response?.success) {
+      successToast(response?.message);
+      return response;
     }
-
   } catch (error: any) {
-    console.error('Privacy Policy error:', error);
     errorToast(error.message);
     return null;
-  } finally {
-    setLoading(false);
   }
 };
 
-
+/**
+ * Terms and Conditions
+ */
 export const Termsconditions = async (setLoading: any) => {
-  setLoading(true);
   try {
-    const response = await fetch(`${BASE_URL}common/get_terms_and_condition`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const textResponse = await response.text();
-    const parsedResponse = JSON.parse(textResponse);
-
-    if (parsedResponse?.status == 1) {
-      successToast(parsedResponse?.message);
-      return parsedResponse;
+    const response = await API_CALL('common/get_terms_and_condition', 'GET', null, null, setLoading);
+    if (response?.success) {
+      successToast(response?.message);
+      return response;
     }
-
-
   } catch (error: any) {
     errorToast(error.message);
     return null;
-  } finally {
-    setLoading(false);
   }
 };

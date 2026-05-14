@@ -1,88 +1,101 @@
 import React from 'react';
-import { View, Text, ScrollView, Image } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  useWindowDimensions,
+  Dimensions,
+  TouchableOpacity
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import StatusBarCompoent from '../../../compoent/StatusBarCompoent';
-import CustomHeader from '../../../compoent/CustomHeader';
+import StatusBarComponent from '../../../compoent/StatusBarCompoent';
 import CustomButton from '../../../compoent/CustomButton';
 import TextInputField from '../../../compoent/TextInputField';
 import LoadingModal from '../../../utils/Loader';
 import useForgot from './useForgot';
 import imageIndex from '../../../assets/imageIndex';
+import { color } from '../../../constant';
+import styles from '../login/style';
 
 export default function PasswordReset() {
   const { credentials, errors, isLoading, handleChange, handleForgot, navigation } = useForgot();
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+  const isLandscape = windowWidth > windowHeight;
+  const screenHeight = Dimensions.get('screen').height;
+  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.35;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <StatusBarCompoent />
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
+      <StatusBarComponent />
+      <LoadingModal visible={isLoading} />
 
-        <View style={{ marginTop: 18 }}>
-          <CustomHeader
-            label="Back"
-            menuIcon={imageIndex.back}
-            leftPress={() => navigation.goBack()}
-            showRight={false}
-          />
-        </View>
-               <LoadingModal visible={isLoading} />
-
-        <View
-          style={{
-            backgroundColor: '#FFF',
-            marginTop: hp(4),
-            marginHorizontal: 15,
-            borderRadius: 20,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.12,
-            shadowRadius: 3.84,
-            elevation: 8,
-            paddingVertical: 20,
-            paddingHorizontal: 15,
-          }}
-        >
-          <Text style={{ fontWeight: '700', fontSize: 24, lineHeight: 36, textAlign: 'center' }}>
-            Password Reset
-          </Text>
-          <Text
-            style={{
-              fontWeight: '400',
-              fontSize: 16,
-              color: '#9DB2BF',
-              marginTop: 4,
-              lineHeight: 20,
-              textAlign: 'center',
-            }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
           >
-            Please enter your email to reset your password
-          </Text>
+            {/* Logo Section with Background Image */}
+            <ImageBackground
+              source={imageIndex.loginTop}
+              style={{
+                height: logoSectionHeight,
+                width: '100%',
+                justifyContent: 'flex-end',
+                paddingBottom: 20
+              }}
+              resizeMode="cover"
+            >
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{ position: 'absolute', top: 20, left: 20, zIndex: 1 }}
+              >
+                <Image source={imageIndex.back} style={{ width: 24, height: 24, }} />
+              </TouchableOpacity>
 
-          <View style={{ marginTop: 15 }}>
-            <TextInputField
-              placeholder="Email"
-              text={credentials.email}
-              img={imageIndex.mess}
-              firstLogo
-              onChangeText={value => handleChange('email', value)}
-            />
-            {errors.email && (
-              <Text style={{ color: 'red', marginTop: 5, marginLeft: 5 }}>{errors.email}</Text>
-            )}
-          </View>
+              <Image
+                source={imageIndex.appLogo}
+                style={{ height: 100, width: '90%', alignSelf: 'center', marginBottom: 20 }}
+                resizeMode="contain"
+              />
+              <Text style={styles.title}>Forgot Password</Text>
+            </ImageBackground>
 
-          <View style={{ marginTop: 20 }}>
-            <CustomButton title="Send" onPress={handleForgot} />
-          </View>
-        </View>
+            {/* Form Section */}
+            <View style={{ paddingHorizontal: 20, flex: 1, marginTop: 20 }}>
+              <Text style={styles.subTitle}>
+                Please enter your email to reset your password
+              </Text>
 
-        <Image
-          source={imageIndex.resetPassword}
-          resizeMode="contain"
-          style={{ width: '70%', height: hp(50), alignSelf: 'center', marginVertical: 30 }}
-        />
-      </ScrollView>
+              <View style={{ marginTop: 15 }}>
+                <TextInputField
+                  placeholder="Email"
+                  text={credentials.email}
+                  onChangeText={(value: string) => handleChange('email', value)}
+                  firstLogo={true}
+                  img={imageIndex.email}
+                  keyboardType="email-address"
+                />
+                {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+              </View>
+
+              <View style={{ marginTop: 30, marginBottom: 30 }}>
+                <CustomButton title="Send" onPress={handleForgot} style={styles.loginBtn} />
+              </View>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

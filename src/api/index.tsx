@@ -10,7 +10,7 @@ export interface ApiRequest {
   redirect?: any
 }
 
-export const BASE_URL = 'https://refound.com.au/Kimbo/api/';
+export const BASE_URL = 'https://kimbo.aitechnotech.in/api/';
 export const GoogleClientId = '43208932533-6ktmlm2uusaqdgv42pj9u94eq9q6q8h7.apps.googleusercontent.com';
 
 export const callMultipleApis = async (requests: ApiRequest[]) => {

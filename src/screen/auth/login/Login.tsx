@@ -22,18 +22,18 @@ import TextInputField from '../../../compoent/TextInputField';
 import styles from './style';
 import imageIndex from '../../../assets/imageIndex';
 import { color } from '../../../constant';
-import ScreenNameEnum from '../../../routes/screenName.enum';
-import { hp } from '../../../utils/Constant';
 import CountryPicker, { Country, CountryCode } from 'react-native-country-picker-modal';
+import ScreenNameEnum from '../../../routes/screenName.enum';
 
 export default function Login() {
   const {
     credentials,
     errors,
     isLoading,
-    navigation,
     handleChange,
     handleLogin,
+    clearErrors,
+    navigation,
   } = useLogin();
 
   const [activeTab, setActiveTab] = useState<'email' | 'phone'>('email');
@@ -115,7 +115,10 @@ export default function Login() {
               <View style={styles.tabContainer}>
                 <TouchableOpacity
                   style={[styles.tabButton, activeTab === 'email' && styles.activeTab]}
-                  onPress={() => setActiveTab('email')}
+                  onPress={() => {
+                    setActiveTab('email');
+                    clearErrors();
+                  }}
                 >
                   <Text style={[styles.tabText, activeTab === 'email' && styles.activeTabText]}>
                     Email
@@ -123,7 +126,10 @@ export default function Login() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.tabButton, activeTab === 'phone' && styles.activeTab]}
-                  onPress={() => setActiveTab('phone')}
+                  onPress={() => {
+                    setActiveTab('phone');
+                    clearErrors();
+                  }}
                 >
                   <Text style={[styles.tabText, activeTab === 'phone' && styles.activeTabText]}>
                     Phone number
@@ -133,25 +139,33 @@ export default function Login() {
 
               {/* Conditional Input Fields */}
               {activeTab === 'email' ? (
-                <TextInputField
-                  placeholder="Email"
-                  text={credentials.email}
-                  onChangeText={(value: string) => handleChange('email', value)}
-                  firstLogo={true}
-                  img={imageIndex.email}
-                />
+                <>
+                  <TextInputField
+                    placeholder="Email"
+                    text={credentials.email}
+                    onChangeText={(value: string) => handleChange('email', value)}
+                    firstLogo={true}
+                    img={imageIndex.email}
+                    keyboardType="email-address"
+                  />
+                  {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+                </>
               ) : (
-                <TextInputField
-                  placeholder="Phone"
-                  text={credentials.email}
-                  onChangeText={(value: string) => handleChange('email', value)}
-                  firstLogo={true}
-                  countryCode={countryCode}
-                  prefix={`+${callingCode}`}
-                  onPrefixPress={() => setVisible(true)}
-                />
+                <>
+                  <TextInputField
+                    placeholder="Phone"
+                    text={credentials.phone}
+                    onChangeText={(value: string) => handleChange('phone', value)}
+                    firstLogo={true}
+                    countryCode={countryCode}
+                    prefix={`+${callingCode}`}
+                    onPrefixPress={() => setVisible(true)}
+                    keyboardType="phone-pad"
+                    maxLength={10}
+                  />
+                  {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
+                </>
               )}
-              {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
               <TextInputField
                 placeholder="Password"
@@ -164,9 +178,18 @@ export default function Login() {
               />
               {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
+              <TouchableOpacity
+                onPress={() => navigation.navigate(ScreenNameEnum.PasswordReset)}
+                style={{ alignSelf: 'flex-end', marginTop: 10 }}
+              >
+                <Text style={{ color: color.primary, fontWeight: '600', fontSize: 14 }}>
+                  Forgot Password?
+                </Text>
+              </TouchableOpacity>
+
               {/* Login Button */}
               <View style={{ marginTop: 15, marginBottom: 30 }}>
-                <CustomButton title="Login" onPress={handleLogin} style={styles.loginBtn} />
+                <CustomButton title="Login" onPress={() => handleLogin(activeTab)} style={styles.loginBtn} />
               </View>
             </View>
           </ScrollView>

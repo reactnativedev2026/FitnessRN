@@ -9,10 +9,13 @@ import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../../redux/feature/authSlice';
 
 interface Credentials {
+  firstName: string;
+  lastName: string;
   email: string;
-  fullName: string;
-  profileImage: string | null;
   mobile: string;
+  phoneCode: string;
+  address: string;
+  profileImage: string | null;
 }
 
 interface ValidationErrors {
@@ -20,30 +23,36 @@ interface ValidationErrors {
 }
 
 const useProfileScreen = () => {
-  const { userData } = useSelector((state: any) => state.auth);
+  const { userData, token } = useSelector((state: any) => state.auth);
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const [credentials, setCredentials] = useState<Credentials>({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     email: '',
-    profileImage: null,
     mobile: '',
+    phoneCode: '',
+    address: '',
+    profileImage: null,
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (userData?.user_data) {
+    if (userData) {
       setCredentials({
-        fullName: userData.user_data.user_name ?? '',
-        email: userData.user_data.email ?? '',
-        mobile: userData.user_data.mobile_number ?? '',
-        profileImage: userData.user_data.profile_image ?? null,
+        firstName: userData.first_name ?? '',
+        lastName: userData.last_name ?? '',
+        email: userData.email ?? '',
+        mobile: userData.mobile_number ?? '',
+        phoneCode: userData.phone_code ?? '+91',
+        address: userData.address ?? '',
+        profileImage: userData.profile_image ?? null,
       });
     }
-  }, [userData?.user_data]);
+  }, [userData]);
 
   const handleChange = (field: keyof Credentials, value: any) => {
     setCredentials((prev) => ({ ...prev, [field]: value }));
@@ -52,18 +61,11 @@ const useProfileScreen = () => {
     }
   };
 
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   const validateFields = (): boolean => {
     const validationErrors: ValidationErrors = {};
-    const { email, fullName } = credentials;
-
-    if (!fullName.trim()) validationErrors.fullName = 'Full name is required';
-    if (!email.trim()) validationErrors.email = 'Email is required';
-    else if (!validateEmail(email)) validationErrors.email = 'Please enter a valid email';
+    if (!credentials.firstName.trim()) validationErrors.firstName = 'First name is required';
+    if (!credentials.lastName.trim()) validationErrors.lastName = 'Last name is required';
+    // if (!credentials.address.trim()) validationErrors.address = 'Address is required';
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -74,30 +76,27 @@ const useProfileScreen = () => {
 
   const handleUpdateProfile = async () => {
     if (!validateFields()) return;
-    return;
+
     setIsLoading(true);
     setErrors({});
-    const token = await AsyncStorage.getItem('token');
 
     try {
-      const updateData = {
+      const body = {
+        first_name: credentials.firstName.trim(),
+        last_name: credentials.lastName.trim(),
         email: credentials.email.trim(),
-        user_name: credentials.fullName.trim(),
-        // profile_image: credentials.profileImage, // Handle based on API requirements
+        phone_code: credentials.phoneCode,
+        mobile_number: credentials.mobile,
+        address: credentials.address.trim(),
       };
 
-      const response = await UpdteProfileApi(updateData, token, setIsLoading);
+      const response = await UpdteProfileApi(body, token, setIsLoading);
+      console.log('Profile Update API Response:', response);
 
       if (response.success) {
         dispatch(
           loginSuccess({
-            userData: {
-              user_data: {
-                ...userData.user_data,
-                ...updateData,
-                // profile_image: credentials.profileImage // update if changed
-              }
-            },
+            userData: response.data,
             token: token,
           })
         );
