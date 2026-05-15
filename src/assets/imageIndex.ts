@@ -48,4 +48,5 @@ export default {
   aboutusCircle: require('./images/aboutusCircle.png'),
   notificationCircle: require('./images/notificationCircle.png'),
   appearanceCircle: require('./images/appearanceCircle.png'),
+  kimboVideo: require('./kimbo.mp4'),
 };

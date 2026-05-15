@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, ImageBackground, View, Text } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Animated, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FastImage from '@d11/react-native-fast-image';
 import ScreenNameEnum from '../../../routes/screenName.enum';
@@ -15,7 +14,7 @@ import { restoreLogin } from '../../../redux/feature/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Splash: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<RegistrationStackParamList>>();
+  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   // Animation reference

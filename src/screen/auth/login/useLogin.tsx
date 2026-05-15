@@ -3,8 +3,6 @@ import { useNavigation } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import { useDispatch } from 'react-redux';
 import { authLogin } from '../../../api/authApi/AuthApi';
-import { loginSuccess } from '../../../redux/feature/authSlice';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { errorToast, successToast } from '../../../utils/customToast';
 
 interface Credentials {
@@ -23,7 +21,6 @@ const useLogin = () => {
   const [errors, setErrors] = useState<Partial<Credentials>>({});
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation<any>();
-  const dispatch = useDispatch();
 
   const handleChange = (field: keyof Credentials, value: string) => {
     setCredentials((prev) => ({ ...prev, [field]: value }));

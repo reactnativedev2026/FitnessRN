@@ -18,7 +18,7 @@ export const ENDPOINT = {
   GET_ANNOUNCEMENTS: "user/get_announcements",
   GET_OFFERS: "user/get_offers",
   CHANGE_RATING_STATUS: "user/change_rating_status",
-  READ_ANNOUNCEMENT: "user/read_announcement"
-
-
+  READ_ANNOUNCEMENT: "user/read_announcement",
+  GET_SETTINGS: "settings",
+  UPDATE_SETTINGS: "settings/update"
 };

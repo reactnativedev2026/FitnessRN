@@ -46,11 +46,6 @@ const ChangePasswordScreen = () => {
 
     const handleSubmit = async () => {
         try {
-            // let data = {
-            //     oldpassw: "1234567",
-            //     password: "1234567",
-            //     confirmPassword: "1234567"
-            // }
             let data = {
                 old_password: oldpass,
                 password: password,
@@ -77,9 +72,7 @@ const ChangePasswordScreen = () => {
 
             />
             <View style={{ marginHorizontal: 12, flex: 1 }}>
-
                 <View style={{ marginTop: 35 }}>
-
                     <View style={styles.inputContainer}>
                         <Image source={imageIndex.lock} style={styles.image} />
                         <TextInput

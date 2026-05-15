@@ -8,7 +8,7 @@ import { ENDPOINT } from "../../../api/endpoints";
 import { GET_API, POST_API } from "../../../api/APIRequest";
 import { getLocation } from "../../../compoent/location";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-const MAP_API_KEY = "";
+const MAP_API_KEY = "AIzaSyDgFGS91BvviXh_f-nmvtEggUHJcaGyUwA";
 import { errorToast } from "../../../utils/customToast";
 
 

@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Animated,
   Easing,
-  Dimensions,
   Image
 } from 'react-native';
 import imageIndex from '../../assets/imageIndex';
@@ -66,7 +65,6 @@ const LoadingModal = ({ visible = true, message = "Loading..." }: any) => {
   });
 
   if (!visible) return null;
-
   return (
     <Modal transparent animationType="fade" visible={visible}>
       <View style={styles.overlay}>

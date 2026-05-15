@@ -4,10 +4,11 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
   StatusBar,
   Image,
+  Linking,
 } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { color } from '../../../constant';
@@ -16,11 +17,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import ReportIssueModal from '../../../compoent/ReportIssueModal';
 import { useState } from 'react';
+import useDashboard from './useDashboard';
+
 import Toast from 'react-native-toast-message';
 
 const DeliveryMap = () => {
   const navigation = useNavigation();
   const [showReportModal, setShowReportModal] = useState(false);
+  const { selectedAddress } = useDashboard();
+
+
+  const handleCall = () => {
+    const phoneNumber = '+162234567890';
+    Linking.openURL(`tel:${phoneNumber}`);
+  };
+
 
   const handleReportSubmit = (data: any) => {
     console.log('Issue Reported:', data);
@@ -38,89 +49,112 @@ const DeliveryMap = () => {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-      {/* Map Background */}
-      <ImageBackground
-        source={imageIndex.navigationMap}
-        style={styles.mapBackground}
-        resizeMode="cover"
+      {/* Google Map Background */}
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={styles.map}
+        loadingEnabled={true}
+        initialRegion={{
+          latitude: selectedAddress?.latitude || 22.7196,
+          longitude: selectedAddress?.longitude || 75.8577,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
       >
-        <SafeAreaView style={styles.safeArea}>
-          {/* Header */}
-          <View style={styles.header}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => navigation.goBack()}
-            >
-              <Icon name="chevron-back" size={24} color="#000" />
-            </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.reportButton}
-              onPress={() => setShowReportModal(true)}
-            >
-              <Text style={styles.reportButtonText}>Report</Text>
-            </TouchableOpacity>
+
+        <Marker
+          coordinate={{
+            latitude: selectedAddress?.latitude || 22.7196,
+            longitude: selectedAddress?.longitude || 75.8577,
+          }}
+          title={selectedAddress?.address ? "Current Location" : "Pickup Location"}
+          description={selectedAddress?.address || "Sapphire House, Indore"}
+        />
+
+      </MapView>
+
+      <SafeAreaView style={styles.safeArea} pointerEvents="box-none">
+
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Icon name="chevron-back" size={24} color="#000" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.reportButton}
+            onPress={() => setShowReportModal(true)}
+          >
+            <Text style={styles.reportButtonText}>Report</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Bottom Card */}
+        <View style={styles.bottomCard}>
+          {/* Stats Row */}
+          <View style={styles.statsRow}>
+            <View>
+              <Text style={styles.statLabel}>Estimated Time</Text>
+              <Text style={styles.statValue}>15 min</Text>
+            </View>
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={styles.statLabel}>Distance</Text>
+              <Text style={styles.statValue}>4.2 km</Text>
+            </View>
           </View>
 
-          {/* Bottom Card */}
-          <View style={styles.bottomCard}>
-            {/* Stats Row */}
-            <View style={styles.statsRow}>
-              <View>
-                <Text style={styles.statLabel}>Estimated Time</Text>
-                <Text style={styles.statValue}>15 min</Text>
+          {/* Address Section */}
+          <View style={styles.addressSection}>
+            {/* Pickup */}
+            <View style={styles.addressRow}>
+              <View style={styles.timelineContainer}>
+                <View style={styles.dot} />
+                <View style={styles.dashedLine} />
               </View>
-              <View style={{ alignItems: 'flex-end' }}>
-                <Text style={styles.statLabel}>Distance</Text>
-                <Text style={styles.statValue}>4.2 km</Text>
+              <View style={styles.addressTextWrapper}>
+                <Text style={styles.addressLabel}>Pickup Location</Text>
+                <Text style={styles.addressValue} numberOfLines={1}>
+                  Sapphire House, 402 A, B, C, Sapna Sangeeta...
+                </Text>
               </View>
             </View>
 
-            {/* Address Section */}
-            <View style={styles.addressSection}>
-              {/* Pickup */}
-              <View style={styles.addressRow}>
-                <View style={styles.timelineContainer}>
-                  <View style={styles.dot} />
-                  <View style={styles.dashedLine} />
-                </View>
-                <View style={styles.addressTextWrapper}>
-                  <Text style={styles.addressLabel}>Pickup Location</Text>
-                  <Text style={styles.addressValue} numberOfLines={1}>
-                    Sapphire House, 402 A, B, C, Sapna Sangeeta...
-                  </Text>
-                </View>
+            {/* Drop */}
+            <View style={styles.addressRow}>
+              <View style={styles.timelineContainer}>
+                <View style={[styles.dot, { backgroundColor: '#FFD700' }]} />
               </View>
-
-              {/* Drop */}
-              <View style={styles.addressRow}>
-                <View style={styles.timelineContainer}>
-                  <View style={[styles.dot, { backgroundColor: '#FFD700' }]} />
-                </View>
-                <View style={styles.addressTextWrapper}>
-                  <Text style={styles.addressLabel}>Drop Location</Text>
-                  <Text style={styles.addressValue} numberOfLines={1}>
-                    Shivampuri Colony, Indore, Madhya Pradesh 452014...
-                  </Text>
-                </View>
+              <View style={styles.addressTextWrapper}>
+                <Text style={styles.addressLabel}>Drop Location</Text>
+                <Text style={styles.addressValue} numberOfLines={1}>
+                  Shivampuri Colony, Indore, Madhya Pradesh 452014...
+                </Text>
               </View>
             </View>
-
-            <TouchableOpacity
-              style={styles.primaryButton}
-              onPress={() => navigation.navigate(ScreenNameEnum.RaceDetail as never)}
-            >
-              <Image source={imageIndex.send} style={{ height: 20, width: 20, marginRight: 10 }} />
-              <Text style={styles.buttonText}>Start Navigation</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.secondaryButton}>
-              <Icon name="call-outline" size={24} color="#fff" style={{ marginRight: 10 }} />
-              <Text style={styles.buttonText}>Call Client</Text>
-            </TouchableOpacity>
           </View>
-        </SafeAreaView>
-      </ImageBackground>
+
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={() => navigation.navigate(ScreenNameEnum.RaceDetail as never)}
+          >
+            <Image source={imageIndex.send} style={{ height: 20, width: 20, marginRight: 10 }} />
+            <Text style={styles.buttonText}>Start Navigation</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={handleCall}
+          >
+            <Icon name="call-outline" size={24} color="#fff" style={{ marginRight: 10 }} />
+            <Text style={styles.buttonText}>Call Client</Text>
+          </TouchableOpacity>
+
+        </View>
+      </SafeAreaView>
 
       <ReportIssueModal
         visible={showReportModal}
@@ -135,11 +169,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  mapBackground: {
+  map: {
     flex: 1,
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
   },
+
+
   safeArea: {
     flex: 1,
     justifyContent: 'space-between',

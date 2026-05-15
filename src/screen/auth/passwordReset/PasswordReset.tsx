@@ -34,7 +34,6 @@ export default function PasswordReset() {
     <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
       <StatusBarComponent />
       <LoadingModal visible={isLoading} />
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
@@ -88,7 +87,6 @@ export default function PasswordReset() {
                 />
                 {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
               </View>
-
               <View style={{ marginTop: 30, marginBottom: 30 }}>
                 <CustomButton title="Send" onPress={handleForgot} style={styles.loginBtn} />
               </View>

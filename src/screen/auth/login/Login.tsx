@@ -14,6 +14,7 @@ import {
   Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Video from 'react-native-video';
 import StatusBarComponent from '../../../compoent/StatusBarCompoent';
 import CustomButton from '../../../compoent/CustomButton';
 import LoadingModal from '../../../utils/Loader';
@@ -55,9 +56,20 @@ export default function Login() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
       <StatusBarComponent />
       <LoadingModal visible={isLoading} />
+
+      <Video
+        source={imageIndex.kimboVideo}
+        style={styles.backgroundVideo}
+        muted={true}
+        repeat={true}
+        resizeMode="cover"
+        rate={1.0}
+        ignoreSilentSwitch="obey"
+      />
+      <View style={[styles.backgroundVideo, { backgroundColor: 'rgba(0,0,0,0.5)' }]} />
 
       <CountryPicker
         {...{
@@ -90,9 +102,8 @@ export default function Login() {
             keyboardShouldPersistTaps="handled"
             removeClippedSubviews={false}
           >
-            {/* Logo Section with Background Image */}
-            <ImageBackground
-              source={imageIndex.loginTop}
+            {/* Logo Section */}
+            <View
               style={{
                 height: logoSectionHeight,
                 width: '100%',
@@ -107,7 +118,7 @@ export default function Login() {
                 resizeMode="contain"
               />
               <Text style={styles.title}>Login</Text>
-            </ImageBackground>
+            </View>
 
             {/* Form Section */}
             <View style={{ paddingHorizontal: 20, flex: 1 }}>
