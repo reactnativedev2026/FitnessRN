@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TextInput,
   View,
+  RefreshControl,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { styles } from "./DashboardStyle";
@@ -19,13 +20,21 @@ import { GET_API } from "../../../api/APIRequest";
 import { ENDPOINT } from "../../../api/endpoints";
 import LoadingModal from "../../../utils/Loader";
 import ScreenNameEnum from "../../../routes/screenName.enum";
+import EmptyListMessage from "../../../compoent/EmptyListMessage";
 
 const RecentDeliveries = ({ route }: any) => {
   const navigation = useNavigation();
   const { status } = route?.params || {};
   const [deliveries, setDeliveries] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDeliveries();
+    setRefreshing(false);
+  };
 
   const getHeaderLabel = () => {
     switch (status) {
@@ -109,6 +118,14 @@ const RecentDeliveries = ({ route }: any) => {
       <FlatList
         data={filteredDeliveries}
         keyExtractor={(item, index) => index.toString()}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#fff"
+            colors={['#fff']}
+          />
+        }
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}>
             <DeliveryCard
@@ -120,6 +137,12 @@ const RecentDeliveries = ({ route }: any) => {
             />
           </TouchableOpacity>
         )}
+        ListEmptyComponent={
+          <EmptyListMessage 
+            message={`No ${getHeaderLabel().toLowerCase()} found.`} 
+            icon={status === 'delivered' ? 'checkmark-done-circle-outline' : 'cube-outline'}
+          />
+        }
         contentContainerStyle={{ paddingBottom: 40, paddingTop: 10 }}
         showsVerticalScrollIndicator={false}
       />

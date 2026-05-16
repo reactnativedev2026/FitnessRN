@@ -10,6 +10,7 @@ import {
   Platform,
   ImageBackground,
   Dimensions,
+  RefreshControl,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import imageIndex from "../../../assets/imageIndex";
@@ -32,6 +33,8 @@ const DashboardScreen = () => {
     selectDuty,
     DUTY_OPTIONS,
     dashboardData,
+    refreshing,
+    onRefresh,
   } = useDashboard();
 
   return (
@@ -39,7 +42,17 @@ const DashboardScreen = () => {
       <LoadingModal visible={loading} />
       <StatusBar barStyle="light-content" />
 
-      <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={color.primary}
+            colors={[color.primary]}
+          />
+        }
+      >
         {/* Header Section */}
         <ImageBackground source={imageIndex.dashboardTop}
           style={[

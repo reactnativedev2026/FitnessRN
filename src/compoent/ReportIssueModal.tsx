@@ -10,44 +10,65 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
 } from 'react-native';
 import { color } from '../constant';
 import font from '../theme/font';
-import CustomDropdown from './CustomDropdown';
 import CustomButton from './CustomButton';
 import Toast from 'react-native-toast-message';
 import toastConfig from '../utils/customToast';
+import ImagePicker from 'react-native-image-crop-picker';
+import { requestCameraPermissions } from '../api';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const { width } = Dimensions.get('window');
 
 interface ReportIssueModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (data: { issueType: string; description: string }) => void;
+  onSubmit: (data: { issue_note: string; issue_photo: string | null }) => void;
 }
 
 const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ visible, onClose, onSubmit }) => {
-  const [issueType, setIssueType] = useState('');
-  const [description, setDescription] = useState('');
+  const [note, setNote] = useState('');
+  const [photo, setPhoto] = useState<string | null>(null);
 
-  const issueCategories = [
-    { label: 'Technical Issue', value: 'Technical Issue' },
-    { label: 'Delivery Issue', value: 'Delivery Issue' },
-    { label: 'App Crash', value: 'App Crash' },
-    { label: 'Payment Problem', value: 'Payment Problem' },
-    { label: 'Other', value: 'Other' },
-  ];
+  const handleTakePhoto = async () => {
+    try {
+      const hasPermission = await requestCameraPermissions();
+      if (!hasPermission) {
+        alert('Camera permission is required to take photos.');
+        return;
+      }
+
+      const image = await ImagePicker.openCamera({
+        width: 1000,
+        height: 1000,
+        cropping: true,
+        includeBase64: true,
+        compressImageQuality: 0.5,
+      });
+
+      if (image && image.data) {
+        setPhoto(`data:${image.mime};base64,${image.data}`);
+      }
+    } catch (error: any) {
+      if (error.code !== 'E_PICKER_CANCELLED') {
+        console.error('Photo capture error:', error);
+      }
+    }
+  };
 
   const handleSubmit = () => {
-    if (issueType && description) {
-      onSubmit({ issueType, description });
-      setIssueType('');
-      setDescription('');
+    if (note.trim()) {
+      onSubmit({ issue_note: note, issue_photo: photo });
+      setNote('');
+      setPhoto(null);
     } else {
       Toast.show({
         type: 'error',
         text1: 'Required',
-        text2: 'Please fill all details before submitting.',
+        text2: 'Please provide a note describing the issue.',
       });
     }
   };
@@ -73,25 +94,32 @@ const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ visible, onClose, o
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-              <Text style={styles.label}>Category</Text>
-              <CustomDropdown
-                data={issueCategories}
-                placeholder="Select issue category"
-                onSelect={(val) => setIssueType(val)}
-                isDark={true}
-              />
-
-              <Text style={styles.label}>Description</Text>
+              <Text style={styles.label}>Issue Note <Text style={{ color: 'red' }}>*</Text></Text>
               <TextInput
                 style={styles.textArea}
-                placeholder="Describe your issue here..."
+                placeholder="Describe your issue here (e.g., door locked, customer not available)..."
                 placeholderTextColor="#6F767E"
                 multiline={true}
                 numberOfLines={5}
-                value={description}
-                onChangeText={setDescription}
+                value={note}
+                onChangeText={setNote}
                 textAlignVertical="top"
               />
+
+              <Text style={styles.label}>Issue Photo (Optional)</Text>
+              <TouchableOpacity style={styles.photoContainer} onPress={handleTakePhoto}>
+                {photo ? (
+                  <View style={{ alignItems: 'center' }}>
+                    <Image source={{ uri: photo }} style={styles.previewImage} />
+                    <Text style={styles.photoActionText}>Tap to retake</Text>
+                  </View>
+                ) : (
+                  <View style={{ alignItems: 'center' }}>
+                    <Icon name="camera-outline" size={32} color="#9CA3AF" />
+                    <Text style={styles.photoActionText}>Tap to take photo</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
 
               <View style={styles.buttonWrapper}>
                 <CustomButton
@@ -169,12 +197,34 @@ const styles = StyleSheet.create({
     backgroundColor: '#1C2533',
     borderRadius: 16,
     padding: 16,
-    height: 140,
+    height: 120,
     fontSize: 15,
     fontFamily: font.MonolithRegular,
     color: color.white,
     borderWidth: 1,
     borderColor: '#393B48',
+  },
+  photoContainer: {
+    backgroundColor: '#1C2533',
+    borderRadius: 16,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#393B48',
+    borderStyle: 'dashed',
+    marginTop: 5,
+  },
+  previewImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  photoActionText: {
+    color: '#9CA3AF',
+    fontSize: 13,
+    fontFamily: font.MonolithRegular,
   },
   buttonWrapper: {
     marginTop: 30,

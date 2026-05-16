@@ -58,7 +58,6 @@ export default function ProfileScreen() {
           contentContainerStyle={styles.scrollContent}
         >
           <LoadingModal visible={isLoading} />
-
           <View style={styles.photoSection}>
             <View style={styles.avatarWrapper}>
               <Image

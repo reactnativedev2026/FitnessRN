@@ -19,7 +19,6 @@ const ChangePasswordScreen = () => {
     const [isLoading, setLoading] = useState(false)
     const isLogin = useSelector((state: any) => state?.auth);
     const [modalVisible, setModalVisible] = useState(false);
-
     const [oldpass, setOldPass] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -125,8 +124,6 @@ const ChangePasswordScreen = () => {
                     />
                 </View>
             </View>
-
-
 
             <PasswordSuccessfullyModal
                 visible={modalVisible}

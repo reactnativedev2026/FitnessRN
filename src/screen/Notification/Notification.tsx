@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../compoent/CustomHeader';
 import imageIndex from '../../assets/imageIndex';
@@ -10,6 +10,7 @@ import { GET_API } from '../../api/APIRequest';
 import { ENDPOINT } from '../../api/endpoints';
 import { logout } from '../../redux/feature/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import EmptyListMessage from '../../compoent/EmptyListMessage';
 
 const NotificationItem = ({ item, isUnread, onPress }: { item: any; isUnread: boolean; onPress: () => void }) => {
   const formattedDate = item.created_at || item.date || '';
@@ -40,6 +41,13 @@ const NotificationsScreen = () => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [readIds, setReadIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchNotifications();
+    setRefreshing(false);
+  };
 
   useEffect(() => {
     loadReadStatus();
@@ -100,6 +108,14 @@ const NotificationsScreen = () => {
         <FlatList
           data={notifications}
           keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={color.primary}
+              colors={[color.primary]}
+            />
+          }
           renderItem={({ item }) => {
             const isUnread = !readIds.includes(item.id?.toString());
             return (
@@ -113,9 +129,10 @@ const NotificationsScreen = () => {
           contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, paddingTop: 20 }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>No notifications found</Text>
-            </View>
+            <EmptyListMessage 
+              message="No notifications found yet." 
+              icon="notifications-off-outline" 
+            />
           }
         />
       )}

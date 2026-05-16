@@ -24,5 +24,8 @@ export const ENDPOINT = {
   DASHBOARD: "driver/dashboard",
   DELIVERIES: "driver/deliveries",
   DELIVERY_DETAIL: "driver/deliveries/",
+  ACCEPT_DELIVERY: "driver/deliveries/", // /id/accept
+  START_DELIVERY: "driver/deliveries/",  // /id/start
+  REPORT_ISSUE: "driver/deliveries/", // /id/issue
   NOTIFICATIONS: "driver/notifications"
 };

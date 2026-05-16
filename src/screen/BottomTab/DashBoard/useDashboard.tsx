@@ -48,6 +48,7 @@ const useDashboard = () => {
   const [currentAnnouncement, setCurrentAnnouncement] = useState<any>(null);
   const [isAnnouncementVisible, setIsAnnouncementVisible] = useState(false);
   const [dashboardData, setDashboardData] = useState<any>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const ChangeStatus = async (status: string, id: string, isSilent = false) => {
     const token = await AsyncStorage.getItem("token");
@@ -236,11 +237,11 @@ const useDashboard = () => {
     getRatingApi();
     fetchAnnouncements();
 
-    // Start polling every 5 seconds
+    // Start polling every 30 seconds
     const interval = setInterval(() => {
       fetchAnnouncements(true); // pass true for silent
       fetchDashboardData(true); // pass true for silent
-    }, 5000);
+    }, 30000);
 
     getLocation().then(async (res) => {
       console.log("📍 Device Location received:", res);
@@ -279,7 +280,6 @@ const useDashboard = () => {
 
       const loaderFunc = isSilent ? () => { } : setLoading;
       const response = await GET_API(ENDPOINT.DASHBOARD, token, "GET", loaderFunc);
-      console.log("📊 DASHBOARD API RESPONSE:", response);
       if (response && response.success) {
         setDashboardData(response.data);
       } else {
@@ -290,6 +290,22 @@ const useDashboard = () => {
       }
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([
+        fetchDashboardData(true),
+        fetchAnnouncements(true),
+        getCurrentTripApi(),
+        getRatingApi(),
+      ]);
+    } catch (error) {
+      console.error("Refresh error:", error);
+    } finally {
+      setRefreshing(false);
     }
   };
 
@@ -635,6 +651,8 @@ const useDashboard = () => {
     setIsAnnouncementVisible,
     markAnnouncementAsRead,
     dashboardData,
+    refreshing,
+    onRefresh,
   };
 };
 

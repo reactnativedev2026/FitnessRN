@@ -79,6 +79,21 @@ const DashboardDetail = ({ route }: any) => {
         </TouchableOpacity>
       </View>
 
+      {/* // --- get all assinged  orderCardApi
+      // --- search API in assigned order
+      // --- accept order API
+      // --- get all completed orderCardApi
+      // --- search api in complete order
+      // --- get all pending orderCardApi
+      // --- seach api in pending order
+      // --- add pull to refresh on Dashboard
+      // --- notification setting get
+      // --- update notification setting
+      // --- pull to refresh on notification
+      // --- get all notification API
+      // --- mark as a read API */}
+
+
       <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 10 }}>
         {filteredData.map((item, index) => (
           <DetailDeliveryCard

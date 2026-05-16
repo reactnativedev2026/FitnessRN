@@ -18,6 +18,7 @@ import { GET_API } from '../../../api/APIRequest';
 import { ENDPOINT } from '../../../api/endpoints';
 import LoadingModal from '../../../utils/Loader';
 import moment from 'moment';
+import ScreenNameEnum from '../../../routes/screenName.enum';
 
 const DeliveryDetail = () => {
   const navigation = useNavigation();
@@ -160,7 +161,10 @@ const DeliveryDetail = () => {
         {/* Action Buttons */}
         {delivery?.shipment_status !== 'delivered' && (
           <View style={styles.actionContainer}>
-            <TouchableOpacity style={styles.primaryButton}>
+            <TouchableOpacity 
+              style={styles.primaryButton}
+              onPress={() => navigation.navigate(ScreenNameEnum.RaceDetail as any, { deliveryId: delivery?.id } as any)}
+            >
               <Text style={styles.buttonText}>Update Status</Text>
             </TouchableOpacity>
           </View>

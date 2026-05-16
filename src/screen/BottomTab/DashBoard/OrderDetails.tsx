@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,20 +9,25 @@ import {
   TextInput,
   Dimensions,
   Modal,
+  Linking
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
 import CustomHeader from '../../../compoent/CustomHeader';
-
 import ImagePicker from 'react-native-image-crop-picker';
 import { requestCameraPermissions } from '../../../api';
 import SignaturePad from '../../../compoent/SignaturePad';
 import Svg, { Path } from 'react-native-svg';
 import ReportIssueModal from '../../../compoent/ReportIssueModal';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GET_API, POST_API } from '../../../api/APIRequest';
+import { ENDPOINT } from '../../../api/endpoints';
+import LoadingModal from '../../../utils/Loader';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const { width } = Dimensions.get('window');
 
@@ -30,6 +35,11 @@ type OrderStatus = 'Assigned' | 'Accepted' | 'Arrived' | 'Delivered';
 
 const OrderDetails = () => {
   const navigation = useNavigation();
+  const route: any = useRoute();
+  const { deliveryId } = route.params || {};
+
+  const [loading, setLoading] = useState(false);
+  const [delivery, setDelivery] = useState<any>(null);
   const [status, setStatus] = useState<OrderStatus>('Assigned');
   const [showDeliveryForm, setShowDeliveryForm] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
@@ -38,6 +48,121 @@ const OrderDetails = () => {
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+
+  useEffect(() => {
+    if (deliveryId) {
+      fetchDeliveryDetail();
+    }
+  }, [deliveryId]);
+
+  const fetchDeliveryDetail = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) return;
+
+      const response = await GET_API(`${ENDPOINT.DELIVERY_DETAIL}${deliveryId}`, token, "GET", setLoading);
+      if (response && response.success) {
+        console.log("Delivery Detail: ", response.data);
+        setDelivery(response.data);
+        const apiStatus = response.data?.shipment_status;
+        if (apiStatus === 'assigned') setStatus('Assigned');
+        else if (apiStatus === 'accepted') setStatus('Accepted');
+        else if (apiStatus === 'arrived') setStatus('Arrived');
+        else if (apiStatus === 'delivered') setStatus('Delivered');
+      }
+    } catch (error) {
+      console.error("Error fetching delivery detail:", error);
+    }
+  };
+
+  const handleNextStatus = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) return;
+
+      if (status === 'Assigned') {
+        const res = await POST_API(token, {}, `${ENDPOINT.ACCEPT_DELIVERY}${deliveryId}/accept`, setLoading, false);
+        if (res && res.success) {
+          setStatus('Accepted');
+          Toast.show({ type: 'success', text1: 'Success', text2: 'Delivery Accepted!' });
+        }
+      } else if (status === 'Accepted') {
+        const res = await POST_API(token, {}, `${ENDPOINT.START_DELIVERY}${deliveryId}/start`, setLoading, false);
+        if (res && res.success) {
+          setStatus('Arrived');
+          Toast.show({ type: 'success', text1: 'Success', text2: 'Delivery Started!' });
+        }
+      } else if (status === 'Arrived') {
+        setShowDeliveryForm(true);
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const handleReportSubmit = async (data: any) => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) return;
+      // console.log(token, 'token');
+      const response = await POST_API(
+        token,
+        data,
+        `${ENDPOINT.REPORT_ISSUE}${deliveryId}/issue`,
+        setLoading,
+        false
+      );
+
+      if (response && response.success) {
+        setShowReportModal(false);
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Issue reported successfully! 👋',
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response?.message || 'Failed to report issue.',
+        });
+      }
+    } catch (error) {
+      console.error('Error reporting issue:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'An unexpected error occurred.',
+      });
+    }
+  };
+
+  const handleOpenMaps = () => {
+    const { latitude, longitude } = delivery?.destination || {};
+    if (latitude && longitude) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+      Linking.openURL(url);
+    } else {
+      Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${delivery?.destination?.address}`);
+    }
+  };
+
+  const handleCall = () => {
+    const phone = delivery?.contact_phone;
+    if (phone) {
+      Linking.openURL(`tel:${phone}`);
+    }
+  };
+
+  const handleCopyAddress = (address: string) => {
+    if (!address) return;
+    Clipboard.setString(address);
+    Toast.show({
+      type: 'success',
+      text1: 'Copied!',
+      text2: 'Address copied to clipboard!',
+    });
+  };
 
   const renderTimeline = (isModal = false) => {
     const steps = [
@@ -104,33 +229,11 @@ const OrderDetails = () => {
     }
   };
 
-  const handleNextStatus = () => {
-    if (status === 'Assigned') setStatus('Accepted');
-    else if (status === 'Accepted') {
-      setStatus('Arrived');
-      setShowDeliveryForm(true);
-    }
-    // else if (status === 'Arrived')
-
-  };
-
-  const handleReportSubmit = (data: any) => {
-    console.log('Issue Reported:', data);
-    // Add API call here if needed
-    setShowReportModal(false);
-    setTimeout(() => {
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Issue reported successfully! 👋',
-      });
-    }, 500);
-  };
-
   const isFormValid = receiverName.trim() !== '' && signature !== null;
 
   return (
     <SafeAreaView style={styles.container}>
+      <LoadingModal visible={loading} />
       <CustomHeader
         label='Order Details'
         menuIcon={imageIndex.back}
@@ -145,48 +248,50 @@ const OrderDetails = () => {
           </View>
 
           <View style={styles.cardContent}>
-            <Text style={styles.infoLabel}>Pickup Location</Text>
-            <Text style={styles.infoValue}>1234 Elm Street Springfield, IL 62701</Text>
+            <Text style={styles.infoLabel}>Tracking ID: {delivery?.tracking_number}</Text>
+            <Text style={styles.infoValue}>{delivery?.origin?.address}</Text>
 
             <View style={styles.row}>
               <View style={styles.col}>
-                <Text style={styles.infoLabel}>Name</Text>
-                <Text style={styles.infoValue}>Rahul Verma</Text>
+                <Text style={styles.infoLabel}>Client Name</Text>
+                <Text style={styles.infoValue}>{delivery?.client_name || 'N/A'}</Text>
               </View>
               <View style={styles.col}>
                 <Text style={styles.infoLabel}>Receiver Name</Text>
-                <Text style={styles.infoValue}>Ayesha Khan</Text>
+                <Text style={styles.infoValue}>{delivery?.contact_person || 'N/A'}</Text>
               </View>
             </View>
 
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.infoLabel}>Postal Code</Text>
-                <Text style={styles.infoValue}>452001</Text>
+                <Text style={styles.infoValue}>{delivery?.origin?.postcode || 'N/A'}</Text>
               </View>
               <View style={styles.col}>
-                <Text style={styles.infoLabel}>Receiver Phone Number</Text>
-                <Text style={styles.infoValue}>+91 98765 43210</Text>
+                <Text style={styles.infoLabel}>Receiver Phone</Text>
+                <Text style={styles.infoValue}>{delivery?.contact_phone || 'N/A'}</Text>
               </View>
             </View>
 
             <View style={styles.row}>
               <View style={styles.col}>
-                <Text style={styles.infoLabel}>Height</Text>
-                <Text style={styles.infoValue}>4.5 ft</Text>
+                <Text style={styles.infoLabel}>Package Type</Text>
+                <Text style={styles.infoValue}>{delivery?.package_type || 'N/A'}</Text>
               </View>
               <View style={styles.col}>
-                <Text style={styles.infoLabel}>Weight</Text>
-                <Text style={styles.infoValue}>6.2 kg</Text>
+                <Text style={styles.infoLabel}>Quantity</Text>
+                <Text style={styles.infoValue}>{delivery?.quantity || '0'} Units</Text>
               </View>
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15 }}>
-              <Text style={styles.infoLabel}>Pickup Address </Text>
-              <Icon name="copy-outline" size={16} color="#fff" />
+              <Text style={styles.infoLabel}>Drop Address </Text>
+              <TouchableOpacity onPress={() => handleCopyAddress(delivery?.destination?.address)}>
+                <Icon name="copy-outline" size={16} color="#fff" />
+              </TouchableOpacity>
             </View>
             <Text style={styles.infoValue}>
-              Indrapuri Colony, Bhawar Kuan, Indore, Madhya Pradesh - 452001
+              {delivery?.destination?.address}
             </Text>
           </View>
         </View>
@@ -201,12 +306,12 @@ const OrderDetails = () => {
         {/* Action Buttons or Form */}
         {!showDeliveryForm ? (
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.googleMapsButton}>
+            <TouchableOpacity style={styles.googleMapsButton} onPress={handleOpenMaps}>
               <Image source={imageIndex.viewMap} style={{ height: 20, width: 20, marginRight: 10, tintColor: '#fff' }} />
               <Text style={styles.buttonText}>Open in Google Maps</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.callButton}>
+            <TouchableOpacity style={styles.callButton} onPress={handleCall}>
               <Icon name="call-outline" size={20} color="#fff" style={{ marginRight: 10 }} />
               <Text style={styles.buttonText}>Call Customer</Text>
             </TouchableOpacity>
@@ -306,7 +411,6 @@ const OrderDetails = () => {
           </View>
         </Modal>
 
-        {/* Success Modal */}
         <Modal
           visible={showSuccessModal}
           transparent={true}
@@ -327,29 +431,25 @@ const OrderDetails = () => {
               </View>
 
               <View style={styles.stopCard}>
-                <Text style={styles.stopNumber}>Stop #1</Text>
-                <Text style={styles.stopName}>Craig Carder</Text>
-                <Text style={styles.stopAddress}>123 Oak Street, Apt 4B</Text>
+                <Text style={styles.stopNumber}>Order Tracking: {delivery?.tracking_number}</Text>
+                <Text style={styles.stopName}>{delivery?.contact_person}</Text>
+                <Text style={styles.stopAddress}>{delivery?.destination?.address}</Text>
               </View>
 
               <View style={styles.stopCard}>
                 <Text style={styles.nextStopLabel}>Next Stop</Text>
-                <Text style={styles.stopName}>Michael Chen</Text>
-                <Text style={styles.stopAddress}>456 Maple Avenue, Suite 200</Text>
+                <Text style={styles.stopName}>Route List</Text>
+                <Text style={styles.stopAddress}>Return to your dashboard for next tasks.</Text>
               </View>
 
-              <TouchableOpacity style={styles.modalPrimaryButton}>
-                <Text style={styles.buttonText}>Go to Next Stop</Text>
-              </TouchableOpacity>
-
               <TouchableOpacity
-                style={styles.modalSecondaryButton}
+                style={styles.modalPrimaryButton}
                 onPress={() => {
                   setShowSuccessModal(false);
                   navigation.goBack();
                 }}
               >
-                <Text style={styles.buttonText}>Back to Route List</Text>
+                <Text style={styles.buttonText}>Go to Next task</Text>
               </TouchableOpacity>
             </View>
           </View>

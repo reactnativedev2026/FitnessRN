@@ -21,12 +21,96 @@ import useDashboard from './useDashboard';
 
 import Toast from 'react-native-toast-message';
 
+const darkMapStyle = [
+  { "elementType": "geometry", "stylers": [{ "color": "#242f3e" }] },
+  { "elementType": "labels.text.stroke", "stylers": [{ "color": "#242f3e" }] },
+  { "elementType": "labels.text.fill", "stylers": [{ "color": "#d1d5db" }] },
+  {
+    "featureType": "administrative.locality",
+    "elementType": "labels.text.fill",
+    "stylers": [{ "color": "#ffffff" }]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [{ "color": "#ffffff" }]
+  },
+  {
+    "featureType": "poi.place_of_worship",
+    "elementType": "labels.text.fill",
+    "stylers": [{ "color": "#ffffff" }]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry",
+    "stylers": [{ "color": "#263c3f" }]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text.fill",
+    "stylers": [{ "color": "#6b9a76" }]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [{ "color": "#718096" }]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry.stroke",
+    "stylers": [{ "color": "#212a37" }]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.text.fill",
+    "stylers": [{ "color": "#ffffff" }]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry",
+    "stylers": [{ "color": "#9ca3af" }]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry.stroke",
+    "stylers": [{ "color": "#1f2835" }]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels.text.fill",
+    "stylers": [{ "color": "#ffffff" }]
+  },
+  {
+    "featureType": "transit",
+    "elementType": "geometry",
+    "stylers": [{ "color": "#2f3948" }]
+  },
+  {
+    "featureType": "transit.station",
+    "elementType": "labels.text.fill",
+    "stylers": [{ "color": "#ffffff" }]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry",
+    "stylers": [{ "color": "#17263c" }]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.fill",
+    "stylers": [{ "color": "#ffffff" }]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.stroke",
+    "stylers": [{ "color": "#2b5a56ff" }]
+  }
+];
+
 const DeliveryMap = () => {
   const navigation = useNavigation();
   const [showReportModal, setShowReportModal] = useState(false);
   const { selectedAddress } = useDashboard();
-
-
   const handleCall = () => {
     const phoneNumber = '+162234567890';
     Linking.openURL(`tel:${phoneNumber}`);
@@ -49,11 +133,13 @@ const DeliveryMap = () => {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-      {/* Google Map Background */}
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         loadingEnabled={true}
+        showsCompass={false}
+        customMapStyle={darkMapStyle}
+        loadingBackgroundColor={color.primary}
         initialRegion={{
           latitude: selectedAddress?.latitude || 22.7196,
           longitude: selectedAddress?.longitude || 75.8577,
@@ -61,8 +147,6 @@ const DeliveryMap = () => {
           longitudeDelta: 0.0421,
         }}
       >
-
-
         <Marker
           coordinate={{
             latitude: selectedAddress?.latitude || 22.7196,
