@@ -46,7 +46,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
     <View style={styles.container}>
       <TouchableOpacity
         style={[
-          styles.dropdown, 
+          styles.dropdown,
           leftIcon && { paddingLeft: 40 },
           isDark && { backgroundColor: '#1C2533', borderColor: '#393B48' }
         ]}
@@ -65,7 +65,6 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
             : placeholder}
         </Text>
         <Image source={imageIndex.arrowqdown}
-
           style={{
             height: 22,
             width: 22,

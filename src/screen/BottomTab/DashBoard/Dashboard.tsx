@@ -31,6 +31,7 @@ const DashboardScreen = () => {
     selectedDuty,
     selectDuty,
     DUTY_OPTIONS,
+    dashboardData,
   } = useDashboard();
 
   return (
@@ -101,27 +102,36 @@ const DashboardScreen = () => {
 
         {/* Stats Section */}
         <View style={styles.statsRow}>
-          <View style={styles.statCard}>
+          <TouchableOpacity 
+            style={styles.statCard}
+            onPress={() => navigation.navigate(ScreenNameEnum.RECENT_DELIVERIES as never, { status: 'assigned' } as never)}
+          >
             <Image source={imageIndex.assigned} style={styles.statImage} />
             <View>
               <Text style={styles.statLabel}>Assigned</Text>
-              <Text style={styles.statValue}>10</Text>
+              <Text style={styles.statValue}>{dashboardData?.summary?.assigned ?? '0'}</Text>
             </View>
-          </View>
-          <View style={styles.statCard}>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.statCard}
+            onPress={() => navigation.navigate(ScreenNameEnum.RECENT_DELIVERIES as never, { status: 'in_progress' } as never)}
+          >
             <Image source={imageIndex.inProgress} style={styles.statImage} />
             <View>
               <Text style={styles.statLabel}>In Progress</Text>
-              <Text style={styles.statValue}>02</Text>
+              <Text style={styles.statValue}>{dashboardData?.summary?.in_progress ?? '0'}</Text>
             </View>
-          </View>
-          <View style={styles.statCard}>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.statCard}
+            onPress={() => navigation.navigate(ScreenNameEnum.RECENT_DELIVERIES as never, { status: 'delivered' } as never)}
+          >
             <Image source={imageIndex.completed} style={styles.statImage} />
             <View>
               <Text style={styles.statLabel}>Completed</Text>
-              <Text style={styles.statValue}>16</Text>
+              <Text style={styles.statValue}>{dashboardData?.summary?.completed ?? '0'}</Text>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
 
         {/* Quick Actions */}
@@ -155,17 +165,26 @@ const DashboardScreen = () => {
         </View>
 
         {/* Delivery Cards */}
-        {[
-          { id: '#5R9G87R', date: '14 May 2025', status: 'In Progress' },
-          { id: '#5R9G87R', date: '14 May 2025', status: 'Completed' },
-        ].map((item, index) => (
-          <DeliveryCard
-            key={index}
-            id={item.id}
-            date={item.date}
-            status={item.status}
-          />
-        ))}
+        {dashboardData?.recent_deliveries?.length > 0 ? (
+          dashboardData.recent_deliveries.map((item: any, index: number) => (
+            <TouchableOpacity 
+              key={index} 
+              onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}
+            >
+              <DeliveryCard
+                id={item.tracking_number}
+                date={item.expected_delivery}
+                status={item.shipment_status_label}
+                fromAddress={item.origin?.address}
+                toAddress={item.destination?.address}
+              />
+            </TouchableOpacity>
+          ))
+        ) : (
+          <View style={{ padding: 20, alignItems: 'center' }}>
+            <Text style={{ color: '#6F767E' }}>No recent deliveries</Text>
+          </View>
+        )}
 
         <View style={{ height: 100 }} />
       </ScrollView>

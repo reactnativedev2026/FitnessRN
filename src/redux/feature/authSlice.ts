@@ -42,6 +42,7 @@ const AuthSlice = createSlice({
           token: action.payload.token,
         })
       );
+      AsyncStorage.setItem('token', action.payload.token);
     },
 
     restoreLogin(
@@ -55,6 +56,7 @@ const AuthSlice = createSlice({
 
     logout() {
       AsyncStorage.removeItem('authData');
+      AsyncStorage.removeItem('token');
       return initialState;
     },
 

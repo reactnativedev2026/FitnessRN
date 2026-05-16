@@ -20,5 +20,9 @@ export const ENDPOINT = {
   CHANGE_RATING_STATUS: "user/change_rating_status",
   READ_ANNOUNCEMENT: "user/read_announcement",
   GET_SETTINGS: "settings",
-  UPDATE_SETTINGS: "settings/update"
+  UPDATE_SETTINGS: "settings/update",
+  DASHBOARD: "driver/dashboard",
+  DELIVERIES: "driver/deliveries",
+  DELIVERY_DETAIL: "driver/deliveries/",
+  NOTIFICATIONS: "driver/notifications"
 };

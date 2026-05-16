@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import { loginSuccess } from "../../../redux/feature/authSlice";
+import { loginSuccess, logout } from "../../../redux/feature/authSlice";
 import { ENDPOINT } from "../../../api/endpoints";
 import { GET_API, POST_API } from "../../../api/APIRequest";
 import { getLocation } from "../../../compoent/location";
@@ -48,6 +47,7 @@ const useDashboard = () => {
   const [selectedDutyState, setSelectedDutyState] = useState(DUTY_OPTIONS[0]);
   const [currentAnnouncement, setCurrentAnnouncement] = useState<any>(null);
   const [isAnnouncementVisible, setIsAnnouncementVisible] = useState(false);
+  const [dashboardData, setDashboardData] = useState<any>(null);
 
   const ChangeStatus = async (status: string, id: string, isSilent = false) => {
     const token = await AsyncStorage.getItem("token");
@@ -174,16 +174,25 @@ const useDashboard = () => {
     return null;
   };
 
-  const fetchAnnouncements = async () => {
+  const fetchAnnouncements = async (isSilent = false) => {
     try {
       const token = await AsyncStorage.getItem("token");
-      if (!token) return;
+      if (!token) {
+        console.log("❌ Token not found");
+        dispatch(logout());
+        return;
+      }
 
       const body = {
         user_id: userData?.id,
       };
 
-      const response = await POST_API(token, body, ENDPOINT.GET_ANNOUNCEMENTS, () => { });
+      const loaderFunc = isSilent ? () => { } : setLoading;
+      const response = await POST_API(token, body, ENDPOINT.GET_ANNOUNCEMENTS, loaderFunc);
+      if (response && !response.success && response.message === "Unauthenticated.") {
+        dispatch(logout());
+        return;
+      }
 
       if (response && response.success && response.data && response.data.length > 0) {
         // Show popup for any announcement where announcements_status is 0
@@ -229,7 +238,8 @@ const useDashboard = () => {
 
     // Start polling every 5 seconds
     const interval = setInterval(() => {
-      fetchAnnouncements();
+      fetchAnnouncements(true); // pass true for silent
+      fetchDashboardData(true); // pass true for silent
     }, 5000);
 
     getLocation().then(async (res) => {
@@ -257,6 +267,36 @@ const useDashboard = () => {
 
     return () => clearInterval(interval);
   }, [persistedLoaded]);
+
+  const fetchDashboardData = async (isSilent = false) => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        console.log("❌ Token not found");
+        dispatch(logout());
+        return;
+      }
+
+      const loaderFunc = isSilent ? () => { } : setLoading;
+      const response = await GET_API(ENDPOINT.DASHBOARD, token, "GET", loaderFunc);
+      console.log("📊 DASHBOARD API RESPONSE:", response);
+      if (response && response.success) {
+        setDashboardData(response.data);
+      } else {
+        console.log("❌ DASHBOARD API FAILED:", response?.message);
+        if (response?.message === "Unauthenticated.") {
+          dispatch(logout());
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!persistedLoaded) return;
+    fetchDashboardData();
+  }, [persistedLoaded]);
   const [ratingData, setRatingData] = useState([]);
   const getRatingApi = async () => {
     try {
@@ -264,9 +304,14 @@ const useDashboard = () => {
 
       if (!token) {
         console.log("❌ Token not found");
+        dispatch(logout());
         return;
       }
-      const rating = await GET_API(ENDPOINT.GET_RATING, "", "GET", setLoading);
+      const rating = await GET_API(ENDPOINT.GET_RATING, token, "GET", setLoading);
+      if (rating && !rating.success && rating.message === "Unauthenticated.") {
+        dispatch(logout());
+        return;
+      }
       if (rating.success) {
         console.log(rating?.data, "this is ratting");
         setRatingData(rating?.data);
@@ -294,7 +339,11 @@ const useDashboard = () => {
   };
   const getDriver = async (res: { latitude?: number; longitude?: number }) => {
     const token = await AsyncStorage.getItem("token");
-    if (!token) return;
+    if (!token) {
+      console.log("❌ Token not found");
+      dispatch(logout());
+      return;
+    }
     const param = {
       latitude: res?.latitude,
       longitude: res?.longitude,
@@ -315,14 +364,19 @@ const useDashboard = () => {
 
       if (!token) {
         console.log("❌ Token not found");
+        dispatch(logout());
         return;
       }
       const rating = await GET_API(
         ENDPOINT.GET_CURRENT_TRIP,
         token,
-        "POST",
+        "GET",
         setLoading,
       );
+      if (rating && !rating.success && rating.message === "Unauthenticated.") {
+        dispatch(logout());
+        return;
+      }
       if (rating.success) {
         if (rating?.data) {
           setTrip(rating?.data);
@@ -406,7 +460,11 @@ const useDashboard = () => {
     }
 
     const token = await AsyncStorage.getItem("token");
-    if (!token) return;
+    if (!token) {
+      console.log("❌ Token not found");
+      dispatch(logout());
+      return;
+    }
 
     const loaderFunc = isSilent ? () => { } : setLoading;
     if (!isSilent) setLoading(true);
@@ -576,6 +634,7 @@ const useDashboard = () => {
     isAnnouncementVisible,
     setIsAnnouncementVisible,
     markAnnouncementAsRead,
+    dashboardData,
   };
 };
 

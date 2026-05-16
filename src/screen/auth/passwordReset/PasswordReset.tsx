@@ -14,26 +14,43 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Video from 'react-native-video';
 import StatusBarComponent from '../../../compoent/StatusBarCompoent';
 import CustomButton from '../../../compoent/CustomButton';
 import TextInputField from '../../../compoent/TextInputField';
 import LoadingModal from '../../../utils/Loader';
 import useForgot from './useForgot';
 import imageIndex from '../../../assets/imageIndex';
-import { color } from '../../../constant';
 import styles from '../login/style';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function PasswordReset() {
   const { credentials, errors, isLoading, handleChange, handleForgot, navigation } = useForgot();
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const isLandscape = windowWidth > windowHeight;
   const screenHeight = Dimensions.get('screen').height;
-  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.35;
+  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.30;
+  const isFocused = useIsFocused();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
       <StatusBarComponent />
       <LoadingModal visible={isLoading} />
+
+      {isFocused && (
+        <Video
+          source={imageIndex.kimboVideo}
+          style={styles.backgroundVideo}
+          muted={true}
+          repeat={true}
+          resizeMode="cover"
+          rate={1.0}
+          ignoreSilentSwitch="obey"
+          paused={!isFocused}
+        />
+      )}
+
+      <View style={[styles.backgroundVideo, { backgroundColor: 'rgba(0,0,0,0.5)' }]} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
@@ -44,9 +61,8 @@ export default function PasswordReset() {
             contentContainerStyle={{ flexGrow: 1 }}
             keyboardShouldPersistTaps="handled"
           >
-            {/* Logo Section with Background Image */}
-            <ImageBackground
-              source={imageIndex.loginTop}
+            {/* Logo Section */}
+            <View
               style={{
                 height: logoSectionHeight,
                 width: '100%',
@@ -59,7 +75,7 @@ export default function PasswordReset() {
                 onPress={() => navigation.goBack()}
                 style={{ position: 'absolute', top: 20, left: 20, zIndex: 1 }}
               >
-                <Image source={imageIndex.back} style={{ width: 24, height: 24, }} />
+                <Image source={imageIndex.back} style={{ width: 40, height: 40, }} />
               </TouchableOpacity>
 
               <Image
@@ -68,10 +84,10 @@ export default function PasswordReset() {
                 resizeMode="contain"
               />
               <Text style={styles.title}>Forgot Password</Text>
-            </ImageBackground>
+            </View>
 
             {/* Form Section */}
-            <View style={{ paddingHorizontal: 20, flex: 1, marginTop: 20 }}>
+            <View style={styles.formBox}>
               <Text style={styles.subTitle}>
                 Please enter your email to reset your password
               </Text>
@@ -87,7 +103,7 @@ export default function PasswordReset() {
                 />
                 {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
               </View>
-              <View style={{ marginTop: 30, marginBottom: 30 }}>
+              <View style={{ marginTop: 0, marginBottom: 30 }}>
                 <CustomButton title="Send" onPress={handleForgot} style={styles.loginBtn} />
               </View>
             </View>

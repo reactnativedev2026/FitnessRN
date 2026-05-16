@@ -116,5 +116,14 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: 'rgba(0,0,0,0.4)', // Added overlay
   },
+  formBox: {
+    backgroundColor: 'rgba(1, 10, 22, 0.6)',
+    marginHorizontal: 20,
+    borderRadius: 30,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    // marginBottom: 80,
+  },
 });
 export default styles;

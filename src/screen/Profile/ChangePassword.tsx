@@ -65,11 +65,9 @@ const ChangePasswordScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             {isLoading ? <LoadingModal /> : null}
-
             <StatusBarComponent />
             <CustomHeader
                 label="Change Password"
-
             />
             <View style={{ marginHorizontal: 12, flex: 1 }}>
                 <View style={{ marginTop: 35 }}>
@@ -91,7 +89,6 @@ const ChangePasswordScreen = () => {
                             placeholder="New Password"
                             secureTextEntry={!passwordVisible}
                             placeholderTextColor={"#ADA4A5"}
-
                             value={password}
                             onChangeText={setPassword}
                             style={styles.input}
@@ -99,21 +96,15 @@ const ChangePasswordScreen = () => {
                         />
                         {/* <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
                             <Image source={!passwordVisible ? imageIndex.eye : imageIndex.visible} style={styles.image} />
-
                         </TouchableOpacity> */}
                     </View>
 
-                    {/* New Password */}
-
-
-                    {/* Confirm Password */}
                     <View style={styles.inputContainer}>
                         <Image source={imageIndex.lock} style={styles.image} />
                         <TextInput
                             placeholder="Confirm Password"
                             secureTextEntry={!confirmPasswordVisible}
                             placeholderTextColor={"#ADA4A5"}
-
                             style={styles.input}
                             value={confirmPassword}
                             onChangeText={setConfirmPassword}

@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#393B48', // Dark border color
+    borderColor: '#91939bff', // Dark border color
     alignItems: 'center',
     paddingHorizontal: 15,
     backgroundColor: 'transparent',

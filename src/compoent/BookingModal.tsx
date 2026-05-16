@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   Modal,
   StyleSheet,
-  TouchableOpacity,
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StatusBarComponent from './StatusBarCompoent';
 import CustomButton from './CustomButton';
-  
-const BookingSuccessModal = ({ visible, onClose, userName, userImage, onOpenChat }:any) => {
+
+const BookingSuccessModal = ({ visible, onClose, userName, userImage, onOpenChat }: any) => {
   return (
     <Modal
       animationType="fade"
@@ -23,11 +22,11 @@ const BookingSuccessModal = ({ visible, onClose, userName, userImage, onOpenChat
         <StatusBarComponent />
         <View style={styles.modalView}>
           {/* User Image */}
-          <Image 
-        //   source={{ uri: userImage }} 
-          
+          <Image
+            //   source={{ uri: userImage }} 
+
             source={{ uri: "https://i.pravatar.cc/300" }}
-          style={styles.userImage} />
+            style={styles.userImage} />
 
           {/* User Name */}
           <Text style={styles.userName}>{userName}</Text>
@@ -39,10 +38,10 @@ const BookingSuccessModal = ({ visible, onClose, userName, userImage, onOpenChat
           </Text>
 
           {/* Open Chat Button */}
-           <CustomButton title="Open Chat With Institution 💬"  
-          onPress={onOpenChat}
-         />
-         
+          <CustomButton title="Open Chat With Institution 💬"
+            onPress={onOpenChat}
+          />
+
         </View>
       </SafeAreaView>
     </Modal>

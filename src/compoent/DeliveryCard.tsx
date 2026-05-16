@@ -3,6 +3,7 @@ import { View, Text, Image } from 'react-native';
 import { color } from '../constant';
 import imageIndex from '../assets/imageIndex';
 import { styles as dashboardStyles } from '../screen/BottomTab/DashBoard/DashboardStyle';
+import moment from 'moment';
 
 interface DeliveryCardProps {
   id: string;
@@ -31,10 +32,12 @@ const DeliveryCard: React.FC<DeliveryCardProps> = ({
           <View>
             <Text style={dashboardStyles.orderId}>
               {id}
-              <Text style={{ color: '#6F767E', fontSize: 12 }}>  •  </Text>
-              <Text style={dashboardStyles.orderDate}>{date}</Text>
+              {/* <Text style={{ color: '#6F767E', fontSize: 12 }}>  •  </Text> */}
+
             </Text>
+            <Text style={dashboardStyles.orderDate}>{moment(date).format('DD MMM YYYY')}</Text>
           </View>
+
         </View>
         <Text style={[dashboardStyles.statusBadge, { color: status === 'Completed' ? '#2CC59D' : color.primary }]}>
           {status}

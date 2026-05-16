@@ -14,6 +14,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Video from 'react-native-video';
 import { CodeField, Cursor } from 'react-native-confirmation-code-field';
 
 import CustomButton from '../../../compoent/CustomButton';
@@ -24,6 +25,7 @@ import { styles as otpStyles } from './style';
 import loginStyles from '../login/style';
 import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function OtpScreen() {
   const {
@@ -43,12 +45,28 @@ export default function OtpScreen() {
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const isLandscape = windowWidth > windowHeight;
   const screenHeight = Dimensions.get('screen').height;
-  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.35;
+  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.30;
+  const isFocused = useIsFocused();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
       <StatusBarComponent />
       <LoadingModal visible={isLoading} />
+
+      {isFocused && (
+        <Video
+          source={imageIndex.kimboVideo}
+          style={loginStyles.backgroundVideo}
+          muted={true}
+          repeat={true}
+          resizeMode="cover"
+          rate={1.0}
+          ignoreSilentSwitch="obey"
+          paused={!isFocused}
+        />
+      )}
+
+      <View style={[loginStyles.backgroundVideo, { backgroundColor: 'rgba(0,0,0,0.5)' }]} />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -60,9 +78,8 @@ export default function OtpScreen() {
             contentContainerStyle={{ flexGrow: 1 }}
             keyboardShouldPersistTaps="handled"
           >
-            {/* Logo Section with Background Image */}
-            <ImageBackground
-              source={imageIndex.loginTop}
+            {/* Logo Section */}
+            <View
               style={{
                 height: logoSectionHeight,
                 width: '100%',
@@ -75,7 +92,7 @@ export default function OtpScreen() {
                 onPress={() => navigation.goBack()}
                 style={{ position: 'absolute', top: 20, left: 20, zIndex: 1 }}
               >
-                <Image source={imageIndex.back} style={{ width: 24, height: 24, }} />
+                <Image source={imageIndex.back} style={{ width: 40, height: 40, }} />
               </TouchableOpacity>
 
               <Image
@@ -84,10 +101,10 @@ export default function OtpScreen() {
                 resizeMode="contain"
               />
               <Text style={loginStyles.title}>Verify OTP</Text>
-            </ImageBackground>
+            </View>
 
             {/* Form Section */}
-            <View style={{ paddingHorizontal: 20, flex: 1, marginTop: 20 }}>
+            <View style={loginStyles.formBox}>
               <Text style={loginStyles.subTitle}>
                 A verification code was sent to the address. Enter the code received below.
               </Text>

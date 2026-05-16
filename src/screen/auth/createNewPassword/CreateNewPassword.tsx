@@ -14,6 +14,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Video from 'react-native-video';
 import StatusBarComponent from '../../../compoent/StatusBarCompoent';
 import CustomButton from '../../../compoent/CustomButton';
 import TextInputField from '../../../compoent/TextInputField';
@@ -22,6 +23,7 @@ import useCreateNewPassword from './useCreateNewPassword';
 import imageIndex from '../../../assets/imageIndex';
 import { color } from '../../../constant';
 import styles from '../login/style';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function CreateNewPassword() {
   const {
@@ -36,12 +38,28 @@ export default function CreateNewPassword() {
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const isLandscape = windowWidth > windowHeight;
   const screenHeight = Dimensions.get('screen').height;
-  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.35;
+  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.30;
+  const isFocused = useIsFocused();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
       <StatusBarComponent />
       <LoadingModal visible={isLoading} />
+
+      {isFocused && (
+        <Video
+          source={imageIndex.kimboVideo}
+          style={styles.backgroundVideo}
+          muted={true}
+          repeat={true}
+          resizeMode="cover"
+          rate={1.0}
+          ignoreSilentSwitch="obey"
+          paused={!isFocused}
+        />
+      )}
+
+      <View style={[styles.backgroundVideo, { backgroundColor: 'rgba(0,0,0,0.5)' }]} />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -53,9 +71,8 @@ export default function CreateNewPassword() {
             contentContainerStyle={{ flexGrow: 1 }}
             keyboardShouldPersistTaps="handled"
           >
-            {/* Logo Section with Background Image */}
-            <ImageBackground
-              source={imageIndex.loginTop}
+            {/* Logo Section */}
+            <View
               style={{
                 height: logoSectionHeight,
                 width: '100%',
@@ -73,19 +90,19 @@ export default function CreateNewPassword() {
 
               <Image
                 source={imageIndex.appLogo}
-                style={{ height: 100, width: '90%', alignSelf: 'center', marginBottom: 20 }}
+                style={{ height: 100, width: '90%', alignSelf: 'center', marginBottom: 10 }}
                 resizeMode="contain"
               />
               <Text style={styles.title}>Create New Password</Text>
-            </ImageBackground>
+            </View>
 
             {/* Form Section */}
-            <View style={{ paddingHorizontal: 20, flex: 1, marginTop: 20 }}>
+            <View style={styles.formBox}>
               <Text style={styles.subTitle}>
                 Your new password must be different from previous used passwords.
               </Text>
 
-              <View style={{ marginTop: 15 }}>
+              <View style={{ marginTop: 5 }}>
                 <TextInputField
                   placeholder="Enter OTP"
                   text={credentials.otp}
@@ -96,7 +113,7 @@ export default function CreateNewPassword() {
                 />
                 {errors.otp && <Text style={styles.errorText}>{errors.otp}</Text>}
 
-                <View style={{ marginTop: 15 }}>
+                <View style={{ marginTop: 5 }}>
                   <TextInputField
                     placeholder="New Password"
                     text={credentials.password}
@@ -109,7 +126,7 @@ export default function CreateNewPassword() {
                   {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
                 </View>
 
-                <View style={{ marginTop: 15 }}>
+                <View style={{ marginTop: 5 }}>
                   <TextInputField
                     placeholder="Confirm Password"
                     text={credentials.confirmPassword}
@@ -123,7 +140,7 @@ export default function CreateNewPassword() {
                 </View>
               </View>
 
-              <View style={{ marginTop: 30, marginBottom: 30 }}>
+              <View style={{ marginTop: 0, marginBottom: 30 }}>
                 <CustomButton title="Save" onPress={handleResetPass} style={styles.loginBtn} />
               </View>
             </View>

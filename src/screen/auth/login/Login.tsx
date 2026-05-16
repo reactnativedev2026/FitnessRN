@@ -25,6 +25,7 @@ import imageIndex from '../../../assets/imageIndex';
 import { color } from '../../../constant';
 import CountryPicker, { Country, CountryCode } from 'react-native-country-picker-modal';
 import ScreenNameEnum from '../../../routes/screenName.enum';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Login() {
   const {
@@ -41,13 +42,14 @@ export default function Login() {
   const [countryCode, setCountryCode] = useState<CountryCode>('US');
   const [callingCode, setCallingCode] = useState<string>('1');
   const [visible, setVisible] = useState<boolean>(false);
+  const isFocused = useIsFocused();
 
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const isLandscape = windowWidth > windowHeight;
 
   // Use screen height for portrait to prevent jumping when keyboard opens
   const screenHeight = Dimensions.get('screen').height;
-  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.35;
+  const logoSectionHeight = isLandscape ? windowHeight * 0.4 : screenHeight * 0.30;
 
   const onSelect = (country: Country) => {
     setCountryCode(country.cca2);
@@ -60,15 +62,19 @@ export default function Login() {
       <StatusBarComponent />
       <LoadingModal visible={isLoading} />
 
-      <Video
-        source={imageIndex.kimboVideo}
-        style={styles.backgroundVideo}
-        muted={true}
-        repeat={true}
-        resizeMode="cover"
-        rate={1.0}
-        ignoreSilentSwitch="obey"
-      />
+      {isFocused && (
+        <Video
+          source={imageIndex.kimboVideo}
+          style={styles.backgroundVideo}
+          muted={true}
+          repeat={true}
+          resizeMode="cover"
+          rate={1.0}
+          ignoreSilentSwitch="obey"
+          paused={!isFocused}
+        />
+      )}
+
       <View style={[styles.backgroundVideo, { backgroundColor: 'rgba(0,0,0,0.5)' }]} />
 
       <CountryPicker
@@ -121,7 +127,7 @@ export default function Login() {
             </View>
 
             {/* Form Section */}
-            <View style={{ paddingHorizontal: 20, flex: 1 }}>
+            <View style={styles.formBox}>
               {/* Tab Switcher */}
               <View style={styles.tabContainer}>
                 <TouchableOpacity

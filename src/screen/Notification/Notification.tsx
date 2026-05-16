@@ -1,74 +1,90 @@
-import React from 'react';
-import { View, Text, StyleSheet, SectionList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../compoent/CustomHeader';
 import imageIndex from '../../assets/imageIndex';
 import { color } from '../../constant';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { GET_API } from '../../api/APIRequest';
+import { ENDPOINT } from '../../api/endpoints';
+import { logout } from '../../redux/feature/authSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const notifications = [
-  {
-    title: 'Today',
-    data: [
-      {
-        id: '1',
-        title: 'Your weekly review has been answered',
-        date: 'Jun 2, 2024 at 09:41 AM',
-        unread: false,
-      },
-      {
-        id: '2',
-        title: 'New order assigned to you',
-        date: 'Today at 10:15 AM',
-        unread: true,
-      },
-    ],
-  },
-  {
-    title: 'This week',
-    data: [
-      {
-        id: '3',
-        title: 'System update scheduled',
-        date: 'Yesterday at 04:20 PM',
-        unread: true,
-      },
-      {
-        id: '4',
-        title: 'Delivery completed successfully',
-        date: 'Jun 1, 2024',
-        unread: false,
-      },
-      {
-        id: '5',
-        title: 'Profile updated',
-        date: 'May 30, 2024',
-        unread: false,
-      },
-    ],
-  },
-];
+const NotificationItem = ({ item, isUnread, onPress }: { item: any; isUnread: boolean; onPress: () => void }) => {
+  const formattedDate = item.created_at || item.date || '';
 
-const NotificationItem = ({ item }: { item: any }) => {
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={onPress}
       style={[
         styles.itemContainer,
-        item.unread && styles.unreadContainer
+        isUnread && styles.unreadContainer
       ]}
     >
-      <View style={[styles.dot, { backgroundColor: item.unread ? color.primary : 'rgba(255,255,255,0.1)' }]} />
+      <View style={[styles.dot, { backgroundColor: isUnread ? color.primary : 'rgba(255,255,255,0.1)' }]} />
       <View style={styles.textContainer}>
-        <Text style={[styles.title, item.unread && { fontWeight: '700' }]}>{item.title}</Text>
-        <Text style={styles.date}>{item.date}</Text>
+        <Text style={[styles.title, isUnread && { fontWeight: '700' }]}>{item.title || item.message}</Text>
+        <Text style={styles.date}>{formattedDate}</Text>
       </View>
-      {item.unread && <View style={styles.unreadBadge} />}
-    </View>
+      {isUnread && <View style={styles.unreadBadge} />}
+    </TouchableOpacity>
   );
 };
 
 const NotificationsScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const token = useSelector((state: any) => state.auth.token);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [readIds, setReadIds] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    loadReadStatus();
+    fetchNotifications();
+  }, []);
+
+  const loadReadStatus = async () => {
+    try {
+      const saved = await AsyncStorage.getItem('read_notifications');
+      if (saved) {
+        setReadIds(JSON.parse(saved));
+      }
+    } catch (e) {
+      console.error("Error loading read status", e);
+    }
+  };
+
+  const markAsRead = async (id: string) => {
+    if (readIds.includes(id)) return;
+    
+    const newReadIds = [...readIds, id];
+    setReadIds(newReadIds);
+    try {
+      await AsyncStorage.setItem('read_notifications', JSON.stringify(newReadIds));
+    } catch (e) {
+      console.error("Error saving read status", e);
+    }
+  };
+
+  const fetchNotifications = async () => {
+    try {
+      console.log("🔔 Fetching notifications with token:", token ? `${token.substring(0, 10)}...` : "NULL");
+      const response = await GET_API(ENDPOINT.NOTIFICATIONS, token, "GET", setLoading);
+      console.log("🔔 NOTIFICATIONS API RESPONSE:", response);
+      
+      if (response && response.success) {
+        setNotifications(response.data || []);
+      } else if (response?.message === "Unauthenticated.") {
+        dispatch(logout());
+      }
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <CustomHeader
@@ -76,16 +92,33 @@ const NotificationsScreen = () => {
         menuIcon={imageIndex.back}
         leftPress={() => navigation.goBack()}
       />
-      <SectionList
-        sections={notifications}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <NotificationItem item={item} />}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.sectionHeader}>{title}</Text>
-        )}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
-        showsVerticalScrollIndicator={false}
-      />
+      {loading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color={color.primary} />
+        </View>
+      ) : (
+        <FlatList
+          data={notifications}
+          keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+          renderItem={({ item }) => {
+            const isUnread = !readIds.includes(item.id?.toString());
+            return (
+              <NotificationItem 
+                item={item} 
+                isUnread={isUnread} 
+                onPress={() => markAsRead(item.id?.toString())}
+              />
+            );
+          }}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, paddingTop: 20 }}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No notifications found</Text>
+            </View>
+          }
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -143,6 +176,21 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: color.primary,
     marginLeft: 10,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#6F767E',
   },
 });
 

@@ -9,6 +9,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import CustomLoader from "../../compoent/CustomLoader";
+import { BASE_URL } from "../../api";
+
 
 const NotificationsSetting = () => {
   const navigation = useNavigation();
@@ -49,7 +51,7 @@ const NotificationsSetting = () => {
         redirect: "follow" as RequestRedirect
       };
 
-      const response = await fetch("https://kimbo.aitechnotech.in/api/settings", requestOptions);
+      const response = await fetch(`${BASE_URL}settings`, requestOptions);
       const result = await response.json();
       console.log("Get Settings API Response:", result);
 
@@ -77,7 +79,6 @@ const NotificationsSetting = () => {
       myHeaders.append("Accept", "application/json");
 
       const raw = JSON.stringify(updatedSettings);
-
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
@@ -85,7 +86,7 @@ const NotificationsSetting = () => {
         redirect: "follow" as RequestRedirect
       };
 
-      const response = await fetch("https://kimbo.aitechnotech.in/api/settings/update", requestOptions);
+      const response = await fetch(`${BASE_URL}settings/update`, requestOptions);
       const result = await response.json();
       console.log("Update Settings API Response:", result);
 

@@ -114,7 +114,8 @@ enum ScreenNameEnum {
   DetailScreen = "DetailScreen",
   AnnouncementsScreen = "AnnouncementsScreen",
   OffersScreen = "OffersScreen",
-  RECENT_DELIVERIES = "RecentDeliveries"
+  RECENT_DELIVERIES = "RecentDeliveries",
+  DELIVERY_DETAIL = "DeliveryDetail"
 }
 
 export default ScreenNameEnum;

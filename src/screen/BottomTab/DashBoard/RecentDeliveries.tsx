@@ -2,45 +2,123 @@ import React from "react";
 import {
   StatusBar,
   FlatList,
+  TouchableOpacity,
+  TextInput,
+  View,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { styles } from "./DashboardStyle";
 import { useNavigation } from "@react-navigation/native";
 import imageIndex from "../../../assets/imageIndex";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomHeader from "../../../compoent/CustomHeader";
 import DeliveryCard from "../../../compoent/DeliveryCard";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GET_API } from "../../../api/APIRequest";
+import { ENDPOINT } from "../../../api/endpoints";
+import LoadingModal from "../../../utils/Loader";
+import ScreenNameEnum from "../../../routes/screenName.enum";
 
-const RecentDeliveries = () => {
+const RecentDeliveries = ({ route }: any) => {
   const navigation = useNavigation();
+  const { status } = route?.params || {};
+  const [deliveries, setDeliveries] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const deliveryData = [
-    { id: '#5R9G87R', date: '14 May 2025', status: 'In Progress' },
-    { id: '#5R9G87R', date: '14 May 2025', status: 'Completed' },
-    { id: '#8K2L45P', date: '12 May 2025', status: 'Completed' },
-    { id: '#3M1N90Q', date: '10 May 2025', status: 'Completed' },
-    { id: '#7V6B43X', date: '08 May 2025', status: 'Completed' },
-    { id: '#2W9Z54Y', date: '06 May 2025', status: 'Completed' },
-    { id: '#9P3O21K', date: '04 May 2025', status: 'Completed' },
-  ];
+  const getHeaderLabel = () => {
+    switch (status) {
+      case 'assigned': return 'Assigned Deliveries';
+      case 'in_progress': return 'In Progress Deliveries';
+      case 'delivered': return 'Completed Deliveries';
+      default: return 'Recent Deliveries';
+    }
+  };
+
+  const filteredDeliveries = deliveries.filter((item: any) => {
+    const searchStr = searchQuery.toLowerCase();
+    return (
+      item.tracking_number?.toLowerCase().includes(searchStr) ||
+      item.client_name?.toLowerCase().includes(searchStr) ||
+      item.shipment_status_label?.toLowerCase().includes(searchStr)
+    );
+  });
+
+  const fetchDeliveries = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) return;
+
+      const endpoint = status ? `${ENDPOINT.DELIVERIES}?status=${status}` : ENDPOINT.DELIVERIES;
+      const response = await GET_API(endpoint, token, "GET", setLoading);
+      if (response && response.success) {
+        setDeliveries(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching deliveries:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDeliveries();
+  }, [status]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: '#010A16' }]}>
       <StatusBar barStyle="light-content" />
+      <LoadingModal visible={loading} />
       <CustomHeader
-        label='Recent Deliveries'
+        label={getHeaderLabel()}
         menuIcon={imageIndex.back}
         leftPress={() => navigation.goBack()}
       />
 
+      <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: '#111827',
+          borderRadius: 12,
+          paddingHorizontal: 15,
+          height: 50,
+          borderWidth: 1,
+          borderColor: 'rgba(255,255,255,0.05)'
+        }}>
+          <Icon name="search-outline" size={20} color="#6F767E" />
+          <TextInput
+            style={{
+              flex: 1,
+              color: '#fff',
+              marginLeft: 10,
+              fontSize: 14
+            }}
+            placeholder="Search by tracking number, name..."
+            placeholderTextColor="#6F767E"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery !== "" && (
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
+              <Icon name="close-circle" size={20} color="#6F767E" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+
       <FlatList
-        data={deliveryData}
+        data={filteredDeliveries}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <DeliveryCard
-            id={item.id}
-            date={item.date}
-            status={item.status}
-          />
+          <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}>
+            <DeliveryCard
+              id={item.tracking_number}
+              date={item.expected_delivery}
+              status={item.shipment_status_label}
+              fromAddress={item.origin?.address}
+              toAddress={item.destination?.address}
+            />
+          </TouchableOpacity>
         )}
         contentContainerStyle={{ paddingBottom: 40, paddingTop: 10 }}
         showsVerticalScrollIndicator={false}
