@@ -42,8 +42,6 @@ const DeliveryDetail = () => {
     }
   };
 
-
-
   useEffect(() => {
     if (deliveryId) {
       fetchDeliveryDetail();
@@ -133,7 +131,22 @@ const DeliveryDetail = () => {
             </View>
           </View>
         </View>
+        {/* 
+--- get delivery detail by id
+--- Update status API
+--- Start delevery Status update
+--- Arrived destination Status update
+--- Delivered status update
+--- add signature api
+--- add image upload api
+--- open in google map for drop location
+--- copy drop address 
+--- delivery drop address get
+--- Submit delivery form
+--- get detail after success
+--- real time update after change status
 
+*/}
         {/* Client Details */}
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>Client Information</Text>
@@ -161,7 +174,7 @@ const DeliveryDetail = () => {
         {/* Action Buttons */}
         {delivery?.shipment_status !== 'delivered' && (
           <View style={styles.actionContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.primaryButton}
               onPress={() => navigation.navigate(ScreenNameEnum.RaceDetail as any, { deliveryId: delivery?.id } as any)}
             >

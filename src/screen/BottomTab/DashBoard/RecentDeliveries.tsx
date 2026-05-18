@@ -127,7 +127,7 @@ const RecentDeliveries = ({ route }: any) => {
           />
         }
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}>
+          <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}>
             <DeliveryCard
               id={item.tracking_number}
               date={item.expected_delivery}
@@ -138,8 +138,8 @@ const RecentDeliveries = ({ route }: any) => {
           </TouchableOpacity>
         )}
         ListEmptyComponent={
-          <EmptyListMessage 
-            message={`No ${getHeaderLabel().toLowerCase()} found.`} 
+          <EmptyListMessage
+            message={`No ${getHeaderLabel().toLowerCase()} found.`}
             icon={status === 'delivered' ? 'checkmark-done-circle-outline' : 'cube-outline'}
           />
         }

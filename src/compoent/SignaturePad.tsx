@@ -2,8 +2,6 @@ import React, { useState, useRef } from 'react';
 import { View, StyleSheet, PanResponder, Dimensions, TouchableOpacity, Text } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-const { width } = Dimensions.get('window');
-
 interface SignaturePadProps {
   onSave: (path: string) => void;
   onClear: () => void;
@@ -32,7 +30,6 @@ const SignaturePad: React.FC<SignaturePadProps> = ({ onSave, onClear }) => {
         });
       },
       onPanResponderRelease: () => {
-        // Path is already in state
       },
     })
   ).current;

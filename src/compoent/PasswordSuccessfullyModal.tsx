@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   Modal,
   StyleSheet,
-   Image,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StatusBarComponent from './StatusBarCompoent';
 import CustomButton from './CustomButton';
 import imageIndex from '../assets/imageIndex';
-  
-const  PasswordSuccessfullyModal = ({ visible, onClose, userName, userImage, onOpenChat }:any) => {
+
+const PasswordSuccessfullyModal = ({ visible, onClose, userName, userImage, onOpenChat }: any) => {
   return (
     <Modal
       animationType="fade"
@@ -23,23 +23,23 @@ const  PasswordSuccessfullyModal = ({ visible, onClose, userName, userImage, onO
         <StatusBarComponent />
         <View style={styles.modalView}>
           {/* User Image */}
-          <Image 
-        //   source={{ uri: userImage }} 
-          
-            source={imageIndex.succesfuly}
-          style={styles.userImage} />
+          <Image
+            //   source={{ uri: userImage }} 
 
-          
+            source={imageIndex.succesfuly}
+            style={styles.userImage} />
+
+
           {/* Booking Text */}
           <Text style={styles.title}> Password Successfully Changed!</Text>
           <Text style={styles.subTitle}>
             Password updated successfully. You can now log in.
-           </Text>
+          </Text>
 
-            <CustomButton title="Back to Login"  
-          onPress={onOpenChat}
-         />
-         
+          <CustomButton title="Back to Login"
+            onPress={onOpenChat}
+          />
+
         </View>
       </SafeAreaView>
     </Modal>
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default  PasswordSuccessfullyModal;
+export default PasswordSuccessfullyModal;

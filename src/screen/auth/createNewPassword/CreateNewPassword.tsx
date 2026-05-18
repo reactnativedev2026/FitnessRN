@@ -21,7 +21,6 @@ import TextInputField from '../../../compoent/TextInputField';
 import LoadingModal from '../../../utils/Loader';
 import useCreateNewPassword from './useCreateNewPassword';
 import imageIndex from '../../../assets/imageIndex';
-import { color } from '../../../constant';
 import styles from '../login/style';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -101,7 +100,6 @@ export default function CreateNewPassword() {
               <Text style={styles.subTitle}>
                 Your new password must be different from previous used passwords.
               </Text>
-
               <View style={{ marginTop: 5 }}>
                 <TextInputField
                   placeholder="Enter OTP"

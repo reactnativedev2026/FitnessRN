@@ -132,7 +132,6 @@ const DeliveryMap = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}

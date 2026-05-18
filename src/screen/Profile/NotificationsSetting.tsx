@@ -11,7 +11,6 @@ import { RootState } from "../../redux/store";
 import CustomLoader from "../../compoent/CustomLoader";
 import { BASE_URL } from "../../api";
 
-
 const NotificationsSetting = () => {
   const navigation = useNavigation();
   const { token } = useSelector((state: RootState) => state.auth);

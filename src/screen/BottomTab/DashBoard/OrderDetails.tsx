@@ -14,6 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ScreenNameEnum from '../../../routes/screenName.enum';
 import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
 import CustomHeader from '../../../compoent/CustomHeader';
@@ -31,20 +32,21 @@ import Clipboard from '@react-native-clipboard/clipboard';
 
 const { width } = Dimensions.get('window');
 
-type OrderStatus = 'Assigned' | 'Accepted' | 'Arrived' | 'Delivered';
+type OrderStatus = 'Assigned' | 'Started' | 'Arrived' | 'Delivered';
 
 const OrderDetails = () => {
   const navigation = useNavigation();
   const route: any = useRoute();
   const { deliveryId } = route.params || {};
-
   const [loading, setLoading] = useState(false);
   const [delivery, setDelivery] = useState<any>(null);
   const [status, setStatus] = useState<OrderStatus>('Assigned');
   const [showDeliveryForm, setShowDeliveryForm] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
-  const [signature, setSignature] = useState<string | null>(null);
+  const [capturedPhotoBase64, setCapturedPhotoBase64] = useState<string | null>(null);
   const [receiverName, setReceiverName] = useState('');
+  const [deliveryNotes, setDeliveryNotes] = useState('Delivered at reception');
+  const [signature, setSignature] = useState<string | null>(null);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -59,14 +61,15 @@ const OrderDetails = () => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) return;
-
+      console.log("Fetch Delivery Detail Request ID:", deliveryId);
       const response = await GET_API(`${ENDPOINT.DELIVERY_DETAIL}${deliveryId}`, token, "GET", setLoading);
+      console.log("Fetch Delivery Detail Response:", response);
+
       if (response && response.success) {
-        console.log("Delivery Detail: ", response.data);
         setDelivery(response.data);
-        const apiStatus = response.data?.shipment_status;
-        if (apiStatus === 'assigned') setStatus('Assigned');
-        else if (apiStatus === 'accepted') setStatus('Accepted');
+        const apiStatus = response.data?.shipment_status?.toLowerCase();
+        if (apiStatus === 'assigned' || apiStatus === 'accepted') setStatus('Assigned');
+        else if (apiStatus === 'started' || apiStatus === 'out_for_delivery') setStatus('Started');
         else if (apiStatus === 'arrived') setStatus('Arrived');
         else if (apiStatus === 'delivered') setStatus('Delivered');
       }
@@ -81,16 +84,20 @@ const OrderDetails = () => {
       if (!token) return;
 
       if (status === 'Assigned') {
-        const res = await POST_API(token, {}, `${ENDPOINT.ACCEPT_DELIVERY}${deliveryId}/accept`, setLoading, false);
-        if (res && res.success) {
-          setStatus('Accepted');
-          Toast.show({ type: 'success', text1: 'Success', text2: 'Delivery Accepted!' });
-        }
-      } else if (status === 'Accepted') {
+        console.log("Start Delivery Request URL:", `${ENDPOINT.START_DELIVERY}${deliveryId}/start`);
         const res = await POST_API(token, {}, `${ENDPOINT.START_DELIVERY}${deliveryId}/start`, setLoading, false);
+        console.log("Start Delivery Response:", res);
+        if (res && res.success) {
+          setStatus('Started');
+          Toast.show({ type: 'success', text1: 'Success', text2: 'Delivery Started!' });
+        }
+      } else if (status === 'Started') {
+        console.log("Arrive Delivery Request URL:", `${ENDPOINT.DELIVERY_DETAIL}${deliveryId}/arrive`);
+        const res = await POST_API(token, {}, `${ENDPOINT.DELIVERY_DETAIL}${deliveryId}/arrive`, setLoading, false);
+        console.log("Arrive Delivery Response:", res);
         if (res && res.success) {
           setStatus('Arrived');
-          Toast.show({ type: 'success', text1: 'Success', text2: 'Delivery Started!' });
+          Toast.show({ type: 'success', text1: 'Success', text2: 'Arrived at Location!' });
         }
       } else if (status === 'Arrived') {
         setShowDeliveryForm(true);
@@ -100,11 +107,65 @@ const OrderDetails = () => {
     }
   };
 
+  const btoa = (input: string) => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    let str = input;
+    let output = '';
+    for (let block = 0, charCode, i = 0, map = chars;
+      str.charAt(i | 0) || (map = '=', i % 1);
+      output += map.charAt(63 & block >> 8 - i % 1 * 8)) {
+      charCode = str.charCodeAt(i += 3 / 4);
+      block = block << 8 | charCode;
+    }
+    return output;
+  };
+
+  const handleSubmitComplete = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) return;
+
+      let dynamicSignature = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+      if (signature) {
+        try {
+          const svgMarkup = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="150" viewBox="0 0 300 150"><path d="${signature}" stroke="black" stroke-width="3" fill="none"/></svg>`;
+          dynamicSignature = `data:image/svg+xml;base64,${btoa(svgMarkup)}`;
+        } catch (e) {
+          console.error("Error encoding signature:", e);
+        }
+      }
+
+      const payload = {
+        receiver_name: receiverName,
+        receiver_signature: dynamicSignature,
+        proof_photo: capturedPhotoBase64 || "",
+        notes: deliveryNotes
+      };
+
+      console.log("Submit Complete Payload:", payload);
+      const res = await POST_API(token, payload, `${ENDPOINT.DELIVERY_DETAIL}${deliveryId}/complete`, setLoading, false);
+      console.log("Submit Complete Response:", res);
+
+      if (res && res.success) {
+        setStatus('Delivered');
+        setShowDeliveryForm(false);
+        setShowSuccessModal(true);
+        Toast.show({ type: 'success', text1: 'Success', text2: 'Delivery Completed Successfully!' });
+      } else {
+        Toast.show({ type: 'error', text1: 'Error', text2: res?.message || 'Failed to complete delivery.' });
+      }
+    } catch (error) {
+      console.error("Error completing delivery:", error);
+      Toast.show({ type: 'error', text1: 'Error', text2: 'An unexpected error occurred.' });
+    }
+  };
+
   const handleReportSubmit = async (data: any) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) return;
-      // console.log(token, 'token');
+
+      console.log("Report Issue Payload:", data);
       const response = await POST_API(
         token,
         data,
@@ -112,6 +173,7 @@ const OrderDetails = () => {
         setLoading,
         false
       );
+      console.log("Report Issue Response:", response);
 
       if (response && response.success) {
         setShowReportModal(false);
@@ -167,12 +229,18 @@ const OrderDetails = () => {
   const renderTimeline = (isModal = false) => {
     const steps = [
       { id: 'Assigned', label: 'Assigned', activeIcon: imageIndex.step1, inactiveIcon: imageIndex.step1 },
-      { id: 'Accepted', label: 'Accepted', activeIcon: imageIndex.step2f, inactiveIcon: imageIndex.step2 },
+      { id: 'Started', label: 'Started', activeIcon: imageIndex.step2f, inactiveIcon: imageIndex.step2 },
       { id: 'Arrived', label: 'Arrived', activeIcon: imageIndex.step3f, inactiveIcon: imageIndex.step3 },
       { id: 'Delivered', label: 'Delivered', activeIcon: imageIndex.step4f, inactiveIcon: imageIndex.step4 },
     ];
 
-    const getStatusIndex = (s: OrderStatus) => steps.findIndex(step => step.id === s);
+    const getStatusIndex = (s: OrderStatus) => {
+      if (s === 'Assigned') return 0;
+      if (s === 'Started') return 1;
+      if (s === 'Arrived') return 2;
+      if (s === 'Delivered') return 3;
+      return 0;
+    };
     const currentIndex = isModal ? 3 : getStatusIndex(status);
 
     return (
@@ -214,10 +282,14 @@ const OrderDetails = () => {
         height: 1000,
         cropping: true,
         compressImageQuality: 0.5,
+        includeBase64: true,
       });
 
       if (image && image.path) {
         setCapturedPhoto(image.path);
+        if (image.data) {
+          setCapturedPhotoBase64(`data:${image.mime};base64,${image.data}`);
+        }
       }
     } catch (error: any) {
       if (error.code === 'E_PICKER_CANCELLED') {
@@ -250,7 +322,6 @@ const OrderDetails = () => {
           <View style={styles.cardContent}>
             <Text style={styles.infoLabel}>Tracking ID: {delivery?.tracking_number}</Text>
             <Text style={styles.infoValue}>{delivery?.origin?.address}</Text>
-
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.infoLabel}>Client Name</Text>
@@ -321,7 +392,11 @@ const OrderDetails = () => {
               onPress={handleNextStatus}
             >
               <Text style={styles.actionButtonText}>
-                {status === 'Assigned' ? 'Mark as Accepted' : status === 'Accepted' ? 'Mark Arrived' : 'Mark as Delivered'}
+                {status === 'Assigned'
+                  ? 'Start Delivery'
+                  : status === 'Started'
+                    ? 'Mark Arrived'
+                    : 'Mark as Delivered'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -337,6 +412,17 @@ const OrderDetails = () => {
                 placeholderTextColor="#6F767E"
                 value={receiverName}
                 onChangeText={setReceiverName}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Delivery Notes</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter delivery notes"
+                placeholderTextColor="#6F767E"
+                value={deliveryNotes}
+                onChangeText={setDeliveryNotes}
               />
             </View>
 
@@ -376,11 +462,7 @@ const OrderDetails = () => {
             <TouchableOpacity
               style={[styles.submitButton, isFormValid && { backgroundColor: '#2CC59D' }]}
               disabled={!isFormValid}
-              onPress={() => {
-                setStatus('Delivered');
-                setShowDeliveryForm(false);
-                setShowSuccessModal(true);
-              }}
+              onPress={handleSubmitComplete}
             >
               <Text style={styles.submitButtonText}>Submit</Text>
             </TouchableOpacity>
@@ -418,10 +500,9 @@ const OrderDetails = () => {
         >
           <View style={styles.modalOverlay}>
             <View style={styles.successModalContent}>
-              <Text style={styles.timerText}>3 seconds!</Text>
+              {/* <Text style={styles.timerText}>3 seconds!</Text> */}
 
               <Image source={imageIndex.success} style={styles.successIcon} />
-
               <Text style={styles.successTitle}>Delivery Complete!</Text>
 
               <View style={styles.modalStatusSection}>
@@ -446,7 +527,7 @@ const OrderDetails = () => {
                 style={styles.modalPrimaryButton}
                 onPress={() => {
                   setShowSuccessModal(false);
-                  navigation.goBack();
+                  navigation.replace(ScreenNameEnum.DashBoardScreen as any);
                 }}
               >
                 <Text style={styles.buttonText}>Go to Next task</Text>
