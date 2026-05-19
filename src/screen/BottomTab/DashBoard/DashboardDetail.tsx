@@ -48,7 +48,6 @@ const DashboardDetail = ({ route }: any) => {
   ];
 
   const filteredData = deliveryData.filter(item => item.status === activeTab);
-
   return (
     <SafeAreaView style={[styles.container,]}>
       <StatusBar barStyle="light-content" />
