@@ -32,7 +32,6 @@ const DeliveryDetail = () => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) return;
-
       const response = await GET_API(`${ENDPOINT.DELIVERY_DETAIL}${deliveryId}`, token, "GET", setLoading);
       if (response && response.success) {
         setDelivery(response.data);
@@ -131,22 +130,7 @@ const DeliveryDetail = () => {
             </View>
           </View>
         </View>
-        {/* 
---- get delivery detail by id
---- Update status API
---- Start delevery Status update
---- Arrived destination Status update
---- Delivered status update
---- add signature api
---- add image upload api
---- open in google map for drop location
---- copy drop address 
---- delivery drop address get
---- Submit delivery form
---- get detail after success
---- real time update after change status
 
-*/}
         {/* Client Details */}
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>Client Information</Text>
@@ -176,9 +160,16 @@ const DeliveryDetail = () => {
           <View style={styles.actionContainer}>
             <TouchableOpacity
               style={styles.primaryButton}
+              onPress={() => navigation.navigate(ScreenNameEnum.MapScreen as any, { delivery: delivery } as any)}
+            >
+              <Text style={styles.buttonText}>Track on Map</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.secondaryButton}
               onPress={() => navigation.navigate(ScreenNameEnum.RaceDetail as any, { deliveryId: delivery?.id } as any)}
             >
-              <Text style={styles.buttonText}>Update Status</Text>
+              <Text style={styles.secondaryButtonText}>Update Status</Text>
             </TouchableOpacity>
           </View>
         )}

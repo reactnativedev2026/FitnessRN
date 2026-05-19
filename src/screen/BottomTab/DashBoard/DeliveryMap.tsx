@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,15 +8,14 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import ReportIssueModal from '../../../compoent/ReportIssueModal';
-import { useState } from 'react';
 import useDashboard from './useDashboard';
 
 import Toast from 'react-native-toast-message';
@@ -109,13 +108,33 @@ const darkMapStyle = [
 
 const DeliveryMap = () => {
   const navigation = useNavigation();
+  const route: any = useRoute();
+  const { delivery } = route.params || {};
+  
   const [showReportModal, setShowReportModal] = useState(false);
-  const { selectedAddress } = useDashboard();
+  const { selectedAddress, selectedAddress2 } = useDashboard();
+  const mapRef = useRef<MapView>(null);
+  const [routeCoords, setRouteCoords] = useState<Array<{ latitude: number; longitude: number }>>([]);
+  const [distance, setDistance] = useState("4.2 km");
+  const [duration, setDuration] = useState("15 min");
+
+  // Calculate coordinates dynamically with route parameters or useDashboard fallbacks
+  const pickupLocation = {
+    latitude: delivery?.origin?.latitude ? parseFloat(delivery.origin.latitude) : selectedAddress?.latitude || 22.7196,
+    longitude: delivery?.origin?.longitude ? parseFloat(delivery.origin.longitude) : selectedAddress?.longitude || 75.8577,
+    address: delivery?.origin?.address || selectedAddress?.address || "Sapphire House, Indore"
+  };
+
+  const dropLocation = {
+    latitude: delivery?.destination?.latitude ? parseFloat(delivery.destination.latitude) : selectedAddress2?.latitude || 22.7012,
+    longitude: delivery?.destination?.longitude ? parseFloat(delivery.destination.longitude) : selectedAddress2?.longitude || 75.8711,
+    address: delivery?.destination?.address || selectedAddress2?.address || "Shivampuri Colony, Indore"
+  };
+
   const handleCall = () => {
     const phoneNumber = '+162234567890';
     Linking.openURL(`tel:${phoneNumber}`);
   };
-
 
   const handleReportSubmit = (data: any) => {
     console.log('Issue Reported:', data);
@@ -129,32 +148,163 @@ const DeliveryMap = () => {
     }, 500);
   };
 
+  const MAP_API_KEY = "AIzaSyDgFGS91BvviXh_f-nmvtEggUHJcaGyUwA";
+
+  const calculateHaversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Radius of the earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const d = R * c; // Distance in km
+    return d;
+  };
+
+  const decodePolyline = (encoded: string) => {
+    const points = [];
+    let index = 0, len = encoded.length;
+    let lat = 0, lng = 0;
+
+    while (index < len) {
+      let b, shift = 0, result = 0;
+      do {
+        b = encoded.charCodeAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      const dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.charCodeAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      const dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+      lng += dlng;
+
+      points.push({ latitude: lat / 1E5, longitude: lng / 1E5 });
+    }
+    return points;
+  };
+
+  useEffect(() => {
+    const fetchDirections = async () => {
+      const startLat = pickupLocation.latitude;
+      const startLng = pickupLocation.longitude;
+      const endLat = dropLocation.latitude;
+      const endLng = dropLocation.longitude;
+
+      try {
+        const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${startLat},${startLng}&destination=${endLat},${endLng}&key=${MAP_API_KEY}`;
+        const response = await fetch(url);
+        const json = await response.json();
+        
+        if (json.routes && json.routes.length > 0) {
+          const points = decodePolyline(json.routes[0].overview_polyline.points);
+          setRouteCoords(points);
+          
+          const leg = json.routes[0].legs?.[0];
+          if (leg) {
+            setDistance(leg.distance?.text || "4.2 km");
+            setDuration(leg.duration?.text || "15 min");
+          }
+        } else {
+          setRouteCoords([
+            { latitude: startLat, longitude: startLng },
+            { latitude: endLat, longitude: endLng }
+          ]);
+          const rawDist = calculateHaversineDistance(startLat, startLng, endLat, endLng);
+          const roadDist = rawDist * 1.35;
+          setDistance(`${roadDist.toFixed(1)} km`);
+          setDuration(`${Math.round((roadDist / 30) * 60)} min`);
+        }
+      } catch (error) {
+        console.error("Error fetching directions:", error);
+        setRouteCoords([
+          { latitude: startLat, longitude: startLng },
+          { latitude: endLat, longitude: endLng }
+        ]);
+        const rawDist = calculateHaversineDistance(startLat, startLng, endLat, endLng);
+        const roadDist = rawDist * 1.35;
+        setDistance(`${roadDist.toFixed(1)} km`);
+        setDuration(`${Math.round((roadDist / 30) * 60)} min`);
+      }
+    };
+
+    fetchDirections();
+  }, [selectedAddress, selectedAddress2, delivery]);
+
+  const handleMapReady = () => {
+    if (mapRef.current) {
+      mapRef.current.fitToCoordinates(
+        [
+          { latitude: pickupLocation.latitude, longitude: pickupLocation.longitude },
+          { latitude: dropLocation.latitude, longitude: dropLocation.longitude }
+        ],
+        {
+          edgePadding: { top: 100, right: 50, bottom: 350, left: 50 },
+          animated: true,
+        }
+      );
+    }
+  };
+
+  useEffect(() => {
+    handleMapReady();
+  }, [selectedAddress, selectedAddress2, routeCoords, delivery]);
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
       <MapView
+        ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         loadingEnabled={true}
         showsCompass={false}
         customMapStyle={darkMapStyle}
         loadingBackgroundColor={color.primary}
+        onMapReady={handleMapReady}
         initialRegion={{
-          latitude: selectedAddress?.latitude || 22.7196,
-          longitude: selectedAddress?.longitude || 75.8577,
+          latitude: pickupLocation.latitude,
+          longitude: pickupLocation.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
       >
         <Marker
           coordinate={{
-            latitude: selectedAddress?.latitude || 22.7196,
-            longitude: selectedAddress?.longitude || 75.8577,
+            latitude: pickupLocation.latitude,
+            longitude: pickupLocation.longitude,
           }}
-          title={selectedAddress?.address ? "Current Location" : "Pickup Location"}
-          description={selectedAddress?.address || "Sapphire House, Indore"}
+          title="Pickup Location"
+          description={pickupLocation.address}
         />
 
+        <Marker
+          coordinate={{
+            latitude: dropLocation.latitude,
+            longitude: dropLocation.longitude,
+          }}
+          title="Drop Location"
+          description={dropLocation.address}
+          pinColor="#FFD700"
+        />
+
+        {routeCoords.length > 0 && (
+          <Polyline
+            coordinates={routeCoords}
+            strokeWidth={4}
+            strokeColor={color.primary}
+            geodesic={true}
+          />
+        )}
       </MapView>
 
       <SafeAreaView style={styles.safeArea} pointerEvents="box-none">
@@ -178,15 +328,44 @@ const DeliveryMap = () => {
 
         {/* Bottom Card */}
         <View style={styles.bottomCard}>
+          {/* Tracking Status Badge */}
+          <View style={{ 
+            flexDirection: 'row', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            marginBottom: 15,
+            paddingBottom: 15,
+            borderBottomWidth: 1,
+            borderBottomColor: 'rgba(255,255,255,0.05)'
+          }}>
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>
+              {delivery?.tracking_number ? `Tracking: ${delivery.tracking_number}` : "Active Duty Route"}
+            </Text>
+            <View style={{ 
+              backgroundColor: delivery?.tracking_number ? 'rgba(59, 130, 246, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+              paddingHorizontal: 10,
+              paddingVertical: 4,
+              borderRadius: 6
+            }}>
+              <Text style={{ 
+                color: delivery?.tracking_number ? '#3B82F6' : '#10B981',
+                fontSize: 12,
+                fontWeight: '600'
+              }}>
+                {delivery?.tracking_number ? "Order Selected" : "Active Trip"}
+              </Text>
+            </View>
+          </View>
+
           {/* Stats Row */}
           <View style={styles.statsRow}>
             <View>
               <Text style={styles.statLabel}>Estimated Time</Text>
-              <Text style={styles.statValue}>15 min</Text>
+              <Text style={styles.statValue}>{duration}</Text>
             </View>
             <View style={{ alignItems: 'flex-end' }}>
               <Text style={styles.statLabel}>Distance</Text>
-              <Text style={styles.statValue}>4.2 km</Text>
+              <Text style={styles.statValue}>{distance}</Text>
             </View>
           </View>
 
@@ -201,7 +380,7 @@ const DeliveryMap = () => {
               <View style={styles.addressTextWrapper}>
                 <Text style={styles.addressLabel}>Pickup Location</Text>
                 <Text style={styles.addressValue} numberOfLines={1}>
-                  Sapphire House, 402 A, B, C, Sapna Sangeeta...
+                  {pickupLocation.address}
                 </Text>
               </View>
             </View>
@@ -214,7 +393,7 @@ const DeliveryMap = () => {
               <View style={styles.addressTextWrapper}>
                 <Text style={styles.addressLabel}>Drop Location</Text>
                 <Text style={styles.addressValue} numberOfLines={1}>
-                  Shivampuri Colony, Indore, Madhya Pradesh 452014...
+                  {dropLocation.address}
                 </Text>
               </View>
             </View>
