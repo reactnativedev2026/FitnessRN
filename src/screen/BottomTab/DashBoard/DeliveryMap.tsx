@@ -110,7 +110,6 @@ const DeliveryMap = () => {
   const navigation = useNavigation();
   const route: any = useRoute();
   const { delivery } = route.params || {};
-  
   const [showReportModal, setShowReportModal] = useState(false);
   const { selectedAddress, selectedAddress2 } = useDashboard();
   const mapRef = useRef<MapView>(null);
@@ -154,11 +153,11 @@ const DeliveryMap = () => {
     const R = 6371; // Radius of the earth in km
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
     return d;
   };
@@ -204,11 +203,11 @@ const DeliveryMap = () => {
         const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${startLat},${startLng}&destination=${endLat},${endLng}&key=${MAP_API_KEY}`;
         const response = await fetch(url);
         const json = await response.json();
-        
+
         if (json.routes && json.routes.length > 0) {
           const points = decodePolyline(json.routes[0].overview_polyline.points);
           setRouteCoords(points);
-          
+
           const leg = json.routes[0].legs?.[0];
           if (leg) {
             setDistance(leg.distance?.text || "4.2 km");
@@ -329,10 +328,10 @@ const DeliveryMap = () => {
         {/* Bottom Card */}
         <View style={styles.bottomCard}>
           {/* Tracking Status Badge */}
-          <View style={{ 
-            flexDirection: 'row', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             marginBottom: 15,
             paddingBottom: 15,
             borderBottomWidth: 1,
@@ -341,13 +340,13 @@ const DeliveryMap = () => {
             <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>
               {delivery?.tracking_number ? `Tracking: ${delivery.tracking_number}` : "Active Duty Route"}
             </Text>
-            <View style={{ 
+            <View style={{
               backgroundColor: delivery?.tracking_number ? 'rgba(59, 130, 246, 0.15)' : 'rgba(16, 185, 129, 0.15)',
               paddingHorizontal: 10,
               paddingVertical: 4,
               borderRadius: 6
             }}>
-              <Text style={{ 
+              <Text style={{
                 color: delivery?.tracking_number ? '#3B82F6' : '#10B981',
                 fontSize: 12,
                 fontWeight: '600'
@@ -401,7 +400,7 @@ const DeliveryMap = () => {
 
           <TouchableOpacity
             style={styles.primaryButton}
-            onPress={() => navigation.navigate(ScreenNameEnum.RaceDetail as never)}
+            onPress={() => navigation.navigate(ScreenNameEnum.RaceDetail as never, { deliveryId: delivery?.id } as never)}
           >
             <Image source={imageIndex.send} style={{ height: 20, width: 20, marginRight: 10 }} />
             <Text style={styles.buttonText}>Start Navigation</Text>

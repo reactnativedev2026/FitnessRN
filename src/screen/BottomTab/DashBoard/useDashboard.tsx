@@ -75,6 +75,27 @@ const useDashboard = () => {
     console.log("✅ CHANGE_STATUS API RESPONSE:", stChange);
   };
 
+  useEffect(() => {
+    fetchRamcharitmanas();
+  }, []);
+  // किसी भी React Native कंपोनेंट में
+  const fetchRamcharitmanas = async () => {
+    try {
+      const response = await fetch('https://ramcharitmanas-api.vercel.app/api/v1/verses');
+      console.log(response);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+
+
   const UpdateRatingType = async () => {
     const token = await AsyncStorage.getItem("token");
     if (!token) return;
@@ -196,9 +217,7 @@ const useDashboard = () => {
       }
 
       if (response && response.success && response.data && response.data.length > 0) {
-        // Show popup for any announcement where announcements_status is 0
         const unreadAnnouncement = response.data.find((item: any) => item.announcements_status === 0 || item.announcements_status === "0");
-
         if (unreadAnnouncement) {
           setCurrentAnnouncement(unreadAnnouncement);
           setIsAnnouncementVisible(true);

@@ -12,6 +12,7 @@ interface DetailDeliveryCardProps {
   dropAddress: string;
   onPressStart?: () => void;
   onPressMenu?: () => void;
+  onPress?: () => void;
 }
 
 const DetailDeliveryCard: React.FC<DetailDeliveryCardProps> = ({
@@ -22,11 +23,12 @@ const DetailDeliveryCard: React.FC<DetailDeliveryCardProps> = ({
   dropAddress,
   onPressStart,
   onPressMenu,
+  onPress,
 }) => {
   const isCompleted = status === 'Completed';
 
   return (
-    <View style={styles.cardContainer}>
+    <TouchableOpacity style={styles.cardContainer} onPress={onPress} activeOpacity={0.8}>
       {/* Top Status Section */}
       <View style={styles.headerRow}>
         <View style={styles.statusBadge}>
@@ -48,21 +50,19 @@ const DetailDeliveryCard: React.FC<DetailDeliveryCardProps> = ({
         </View>
       </View>
 
-      {/* Name and ID Section */}
       <View style={styles.nameRow}>
         <View style={{ flex: 1 }}>
           <Text style={styles.nameText}>
             {name} <Text style={styles.idText}>• {id}</Text>
           </Text>
         </View>
-        <TouchableOpacity onPress={onPressMenu}>
+        {/* <TouchableOpacity onPress={onPressMenu}>
           <Icon name="ellipsis-vertical" size={20} color="#fff" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Address Section */}
       <View style={styles.addressContainer}>
-        {/* Pickup */}
         <View style={styles.addressRow}>
           <View style={styles.timelineContainer}>
             <View style={styles.dot} />
@@ -92,7 +92,7 @@ const DetailDeliveryCard: React.FC<DetailDeliveryCardProps> = ({
           <Text style={styles.startButtonText}>Start Delivery</Text>
         </TouchableOpacity>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 

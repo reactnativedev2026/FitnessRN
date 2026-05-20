@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity, RefreshControl, Modal, Image, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../compoent/CustomHeader';
 import imageIndex from '../../assets/imageIndex';
@@ -11,9 +11,16 @@ import { ENDPOINT } from '../../api/endpoints';
 import { logout } from '../../redux/feature/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EmptyListMessage from '../../compoent/EmptyListMessage';
+import CustomButton from '../../compoent/CustomButton';
+import Icon from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
+import ScreenNameEnum from '../../routes/screenName.enum';
+
+const { width, height } = Dimensions.get('window');
 
 const NotificationItem = ({ item, isUnread, onPress }: { item: any; isUnread: boolean; onPress: () => void }) => {
-  const formattedDate = item.created_at || item.date || '';
+  const rawDate = item.created_at || item.date || '';
+  const formattedDate = rawDate ? moment(rawDate).fromNow() : '';
 
   return (
     <TouchableOpacity
@@ -24,13 +31,98 @@ const NotificationItem = ({ item, isUnread, onPress }: { item: any; isUnread: bo
         isUnread && styles.unreadContainer
       ]}
     >
-      <View style={[styles.dot, { backgroundColor: isUnread ? color.primary : 'rgba(255,255,255,0.1)' }]} />
+      <View style={styles.iconContainer}>
+        <Icon 
+          name={isUnread ? "notifications" : "notifications-outline"} 
+          size={24} 
+          color={isUnread ? color.primary : '#9CA3AF'} 
+        />
+        {isUnread && <View style={styles.unreadDot} />}
+      </View>
       <View style={styles.textContainer}>
-        <Text style={[styles.title, isUnread && { fontWeight: '700' }]}>{item.title || item.message}</Text>
+        <Text 
+          numberOfLines={1} 
+          style={[styles.title, isUnread && { fontWeight: '700' }]}
+        >
+          {item.title || item.message}
+        </Text>
+        <Text numberOfLines={2} style={styles.description}>
+          {item.message || 'No description available'}
+        </Text>
         <Text style={styles.date}>{formattedDate}</Text>
       </View>
-      {isUnread && <View style={styles.unreadBadge} />}
     </TouchableOpacity>
+  );
+};
+
+const NotificationDetailModal = ({ 
+  visible, 
+  item, 
+  onClose,
+  onGoToDetail
+}: { 
+  visible: boolean; 
+  item: any; 
+  onClose: () => void;
+  onGoToDetail: (item: any) => void;
+}) => {
+  if (!item) return null;
+  const rawDate = item.created_at || item.date || '';
+  const formattedDate = rawDate ? moment(rawDate).format('DD MMM YYYY, hh:mm A') : '';
+  const relativeTime = rawDate ? moment(rawDate).fromNow() : '';
+  const isDeliveryUpdate = item.type === 'delivery_update' && item.shipment_id;
+
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <TouchableOpacity 
+        activeOpacity={1} 
+        onPress={onClose} 
+        style={styles.modalOverlay}
+      >
+        <TouchableOpacity 
+          activeOpacity={1} 
+          style={styles.modalContent}
+        >
+          <View style={styles.modalHeader}>
+            <View style={styles.modalIconContainer}>
+              <Icon name="notifications" size={32} color={color.primary} />
+            </View>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <Icon name="close" size={20} color={color.white} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.modalBody}>
+            <Text style={styles.modalTitle}>{item.title || 'Notification'}</Text>
+            <Text style={styles.modalDate}>{formattedDate} ({relativeTime})</Text>
+            <View style={styles.divider} />
+            <Text style={styles.modalDescription}>{item.message || 'No details available'}</Text>
+          </View>
+
+          <View style={styles.modalFooter}>
+            {isDeliveryUpdate && (
+              <CustomButton 
+                onPress={() => onGoToDetail(item)} 
+                title="Go to Detail" 
+                style={[styles.footerButton, { marginBottom: 12 }]}
+              />
+            )}
+            <CustomButton 
+              onPress={onClose} 
+              title="Close" 
+              bgColor="rgba(255,255,255,0.05)"
+              txtcolor={color.white}
+              style={styles.footerButton}
+            />
+          </View>
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </Modal>
   );
 };
 
@@ -42,6 +134,8 @@ const NotificationsScreen = () => {
   const [readIds, setReadIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState<any>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -65,6 +159,21 @@ const NotificationsScreen = () => {
     }
   };
 
+  const handleNotificationPress = (item: any) => {
+    markAsRead(item.id?.toString());
+    setSelectedNotification(item);
+    setModalVisible(true);
+  };
+
+  const handleGoToDetail = (item: any) => {
+    setModalVisible(false);
+    if (item.shipment_id) {
+      navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, {
+        deliveryId: item.shipment_id
+      } as never);
+    }
+  };
+
   const markAsRead = async (id: string) => {
     if (readIds.includes(id)) return;
     
@@ -79,12 +188,11 @@ const NotificationsScreen = () => {
 
   const fetchNotifications = async () => {
     try {
-      console.log("🔔 Fetching notifications with token:", token ? `${token.substring(0, 10)}...` : "NULL");
       const response = await GET_API(ENDPOINT.NOTIFICATIONS, token, "GET", setLoading);
-      console.log("🔔 NOTIFICATIONS API RESPONSE:", response);
       
       if (response && response.success) {
         setNotifications(response.data || []);
+        console.log("Notifications:", response.data || []);
       } else if (response?.message === "Unauthenticated.") {
         dispatch(logout());
       }
@@ -105,36 +213,44 @@ const NotificationsScreen = () => {
           <ActivityIndicator size="large" color={color.primary} />
         </View>
       ) : (
-        <FlatList
-          data={notifications}
-          keyExtractor={(item, index) => item.id?.toString() || index.toString()}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              tintColor={color.primary}
-              colors={[color.primary]}
-            />
-          }
-          renderItem={({ item }) => {
-            const isUnread = !readIds.includes(item.id?.toString());
-            return (
-              <NotificationItem 
-                item={item} 
-                isUnread={isUnread} 
-                onPress={() => markAsRead(item.id?.toString())}
+        <>
+          <FlatList
+            data={notifications}
+            keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor={color.primary}
+                colors={[color.primary]}
               />
-            );
-          }}
-          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, paddingTop: 20 }}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
-            <EmptyListMessage 
-              message="No notifications found yet." 
-              icon="notifications-off-outline" 
-            />
-          }
-        />
+            }
+            renderItem={({ item }) => {
+              const isUnread = !readIds.includes(item.id?.toString());
+              return (
+                <NotificationItem 
+                  item={item} 
+                  isUnread={isUnread} 
+                  onPress={() => handleNotificationPress(item)}
+                />
+              );
+            }}
+            contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, paddingTop: 20 }}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={
+              <EmptyListMessage 
+                message="No notifications found yet." 
+                icon="notifications-off-outline" 
+              />
+            }
+          />
+          <NotificationDetailModal 
+            visible={modalVisible} 
+            item={selectedNotification} 
+            onClose={() => setModalVisible(false)} 
+            onGoToDetail={handleGoToDetail}
+          />
+        </>
       )}
     </SafeAreaView>
   );
@@ -145,20 +261,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.background,
   },
-  sectionHeader: {
-    fontSize: 16,
-    fontWeight: '700',
-    marginTop: 25,
-    marginBottom: 15,
-    color: '#6F767E',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
   itemContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     padding: 16,
-    borderRadius: 20,
+    borderRadius: 16,
     marginBottom: 12,
     backgroundColor: '#111827',
     borderWidth: 1,
@@ -168,46 +274,128 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(35, 108, 237, 0.3)',
     backgroundColor: '#161F2E',
   },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 16,
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  unreadDot: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: color.primary,
+    borderWidth: 2,
+    borderColor: '#161F2E',
   },
   textContainer: {
     flex: 1,
   },
   title: {
-    fontSize: 15,
+    fontSize: 16,
     color: color.white,
+    marginBottom: 4,
+  },
+  description: {
+    fontSize: 14,
+    color: '#9CA3AF',
+    marginBottom: 8,
     lineHeight: 20,
   },
   date: {
     fontSize: 12,
-    color: '#6F767E',
-    marginTop: 6,
-  },
-  unreadBadge: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: color.primary,
-    marginLeft: 10,
+    color: '#6B7280',
   },
   loaderContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  emptyContainer: {
+  // Modal Styles
+  modalOverlay: {
     flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 100,
+    padding: 20,
   },
-  emptyText: {
+  modalContent: {
+    width: '100%',
+    backgroundColor: '#111827',
+    borderRadius: 24,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 20,
+  },
+  modalIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: 'rgba(35, 108, 237, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalIcon: {
+    width: 28,
+    height: 28,
+  },
+  closeButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: color.white,
     fontSize: 16,
-    color: '#6F767E',
+  },
+  modalBody: {
+    marginBottom: 24,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: color.white,
+    marginBottom: 8,
+  },
+  modalDate: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 16,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    marginBottom: 16,
+  },
+  modalDescription: {
+    fontSize: 16,
+    color: '#9CA3AF',
+    lineHeight: 24,
+  },
+  modalFooter: {
+    width: '100%',
+  },
+  footerButton: {
+    width: '100%',
   },
 });
 
