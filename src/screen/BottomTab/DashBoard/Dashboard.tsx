@@ -2,7 +2,6 @@ import React from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   StatusBar,
   Image,
@@ -38,7 +37,7 @@ const DashboardScreen = () => {
   } = useDashboard();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <LoadingModal visible={loading} />
       <StatusBar barStyle="light-content" />
 
@@ -115,7 +114,7 @@ const DashboardScreen = () => {
 
         {/* Stats Section */}
         <View style={styles.statsRow}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.statCard}
             onPress={() => navigation.navigate(ScreenNameEnum.RECENT_DELIVERIES as never, { status: 'assigned' } as never)}
           >
@@ -125,7 +124,7 @@ const DashboardScreen = () => {
               <Text style={styles.statValue}>{dashboardData?.summary?.assigned ?? '0'}</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.statCard}
             onPress={() => navigation.navigate(ScreenNameEnum.RECENT_DELIVERIES as never, { status: 'in_progress' } as never)}
           >
@@ -135,7 +134,7 @@ const DashboardScreen = () => {
               <Text style={styles.statValue}>{dashboardData?.summary?.in_progress ?? '0'}</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.statCard}
             onPress={() => navigation.navigate(ScreenNameEnum.RECENT_DELIVERIES as never, { status: 'delivered' } as never)}
           >
@@ -180,8 +179,8 @@ const DashboardScreen = () => {
         {/* Delivery Cards */}
         {dashboardData?.recent_deliveries?.length > 0 ? (
           dashboardData.recent_deliveries.map((item: any, index: number) => (
-            <TouchableOpacity 
-              key={index} 
+            <TouchableOpacity
+              key={index}
               onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}
             >
               <DeliveryCard
@@ -201,7 +200,7 @@ const DashboardScreen = () => {
 
         <View style={{ height: 100 }} />
       </ScrollView>
-    </SafeAreaView >
+    </View >
   );
 };
 

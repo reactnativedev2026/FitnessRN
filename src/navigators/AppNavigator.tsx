@@ -52,10 +52,6 @@ const AppNavigator: React.FC = () => {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer>
-          {/* <NetworkStatusModal
-            modalVisible={!isConnected}
-            offlineText="No Internet! Please check your connection."
-          /> */}
           <RegistrationRoutes />
           <ProfileWatcher />
           <Toast config={toastConfig} />
@@ -67,3 +63,6 @@ const AppNavigator: React.FC = () => {
 };
 
 export default AppNavigator;
+
+
+
