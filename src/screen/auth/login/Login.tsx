@@ -15,11 +15,11 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
-import StatusBarComponent from '../../../compoent/StatusBarCompoent';
-import CustomButton from '../../../compoent/CustomButton';
+import StatusBarComponent from '../../../component/StatusBarCompoent';
+import CustomButton from '../../../component/CustomButton';
 import LoadingModal from '../../../utils/Loader';
 import useLogin from './useLogin';
-import TextInputField from '../../../compoent/TextInputField';
+import TextInputField from '../../../component/TextInputField';
 import styles from './style';
 import imageIndex from '../../../assets/imageIndex';
 import { color } from '../../../constant';

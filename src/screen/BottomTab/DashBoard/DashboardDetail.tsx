@@ -9,9 +9,9 @@ import {
 import { color } from "../../../constant";
 import { styles } from "./DashboardStyle";
 import { useNavigation } from "@react-navigation/native";
-import DetailDeliveryCard from "../../../compoent/DetailDeliveryCard";
+import DetailDeliveryCard from "../../../component/DetailDeliveryCard";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomHeader from "../../../compoent/CustomHeader";
+import CustomHeader from "../../../component/CustomHeader";
 import imageIndex from "../../../assets/imageIndex";
 import ScreenNameEnum from "../../../routes/screenName.enum";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -67,6 +67,24 @@ const DashboardDetail = ({ route }: any) => {
           style={[styles.tabButton, activeTab === 'Assigned' && { backgroundColor: color.primary }]}
           onPress={() => setActiveTab('Assigned')}
         >
+          {/* 
+--- Get assigned orders for start delivery
+--- Get pending orders for start delivery
+--- Get completed orders for start delivery
+--- Start delivery
+--- Accept delivery
+--- Arrived delivery
+--- Deliver order
+--- Get completed delivery details
+--- Get assigned deliveries for status update
+--- Get pending deliveries for status update
+--- Get completed deliveries for status update
+--- Get delivery details by ID
+--- Get expected delivery date
+--- Get client information
+video - https://we.tl/t-3WahDEfZXyjPbMk7
+apk - https://we.tl/t-TTWZ786aR5MagrMN
+*/}
           <Text style={[styles.tabText, activeTab === 'Assigned' && { color: '#fff' }]}>
             Assigned
           </Text>

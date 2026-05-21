@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loginSuccess, logout } from "../../../redux/feature/authSlice";
 import { ENDPOINT } from "../../../api/endpoints";
 import { GET_API, POST_API } from "../../../api/APIRequest";
-import { getLocation } from "../../../compoent/location";
+import { getLocation } from "../../../component/location";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 const MAP_API_KEY = "AIzaSyDgFGS91BvviXh_f-nmvtEggUHJcaGyUwA";
 import { errorToast } from "../../../utils/customToast";

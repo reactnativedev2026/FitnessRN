@@ -15,7 +15,7 @@ import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-import ReportIssueModal from '../../../compoent/ReportIssueModal';
+import ReportIssueModal from '../../../component/ReportIssueModal';
 import useDashboard from './useDashboard';
 
 import Toast from 'react-native-toast-message';

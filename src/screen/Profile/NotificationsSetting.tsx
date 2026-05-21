@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Switch, FlatList, StyleSheet, Alert } from "react-native";
-import CustomHeader from "../../compoent/CustomHeader";
+import CustomHeader from "../../component/CustomHeader";
 import imageIndex from "../../assets/imageIndex";
 import { SafeAreaView } from "react-native-safe-area-context";
-import StatusBarComponent from "../../compoent/StatusBarCompoent";
+import StatusBarComponent from "../../component/StatusBarCompoent";
 import { color } from "../../constant";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import CustomLoader from "../../compoent/CustomLoader";
+import CustomLoader from "../../component/CustomLoader";
 import { BASE_URL } from "../../api";
 
 const NotificationsSetting = () => {

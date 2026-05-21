@@ -14,11 +14,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import imageIndex from '../../assets/imageIndex';
 import font from '../../theme/font';
 import ScreenNameEnum from '../../routes/screenName.enum';
-import LogoutModal from '../../compoent/LogoutModal';
+import LogoutModal from '../../component/LogoutModal';
 import { logout } from '../../redux/feature/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from '../../compoent/CustomHeader';
+import CustomHeader from '../../component/CustomHeader';
 
 
 const ProfileSettingsScreen = () => {

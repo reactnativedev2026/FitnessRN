@@ -1,7 +1,7 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
-import CustomDrawerContent from '../compoent/CustomDrawerContent';
+import CustomDrawerContent from '../component/CustomDrawerContent';
 import PrivacyPolicy from '../screen/Profile/PrivacyPolicy';
 import ScreenNameEnum from '../routes/screenName.enum';
 import HelpScreen from '../screen/Profile/Help/Helps';

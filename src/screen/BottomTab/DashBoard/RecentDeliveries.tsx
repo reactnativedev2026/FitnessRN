@@ -12,15 +12,15 @@ import { styles } from "./DashboardStyle";
 import { useNavigation } from "@react-navigation/native";
 import imageIndex from "../../../assets/imageIndex";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomHeader from "../../../compoent/CustomHeader";
-import DeliveryCard from "../../../compoent/DeliveryCard";
+import CustomHeader from "../../../component/CustomHeader";
+import DeliveryCard from "../../../component/DeliveryCard";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GET_API } from "../../../api/APIRequest";
 import { ENDPOINT } from "../../../api/endpoints";
 import LoadingModal from "../../../utils/Loader";
 import ScreenNameEnum from "../../../routes/screenName.enum";
-import EmptyListMessage from "../../../compoent/EmptyListMessage";
+import EmptyListMessage from "../../../component/EmptyListMessage";
 
 const RecentDeliveries = ({ route }: any) => {
   const navigation = useNavigation();

@@ -17,8 +17,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
 import { CodeField, Cursor } from 'react-native-confirmation-code-field';
 
-import CustomButton from '../../../compoent/CustomButton';
-import StatusBarComponent from '../../../compoent/StatusBarCompoent';
+import CustomButton from '../../../component/CustomButton';
+import StatusBarComponent from '../../../component/StatusBarCompoent';
 import LoadingModal from '../../../utils/Loader';
 import { useOtpVerification } from './useOTPVerification';
 import { styles as otpStyles } from './style';

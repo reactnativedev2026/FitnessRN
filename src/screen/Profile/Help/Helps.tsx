@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, TextInput, Image } from "react-native";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import StatusBarComponent from "../../../compoent/StatusBarCompoent";
+import StatusBarComponent from "../../../component/StatusBarCompoent";
 import LoadingModal from "../../../utils/Loader";
-import CustomHeader from "../../../compoent/CustomHeader";
+import CustomHeader from "../../../component/CustomHeader";
 import imageIndex from "../../../assets/imageIndex";
-import CustomButton from "../../../compoent/CustomButton";
+import CustomButton from "../../../component/CustomButton";
 import { POST_API } from "../../../api/APIRequest";
 import { ENDPOINT } from "../../../api/endpoints";
 

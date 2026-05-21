@@ -10,11 +10,11 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import TextInputField from '../../../compoent/TextInputField';
-import CustomButton from '../../../compoent/CustomButton';
+import TextInputField from '../../../component/TextInputField';
+import CustomButton from '../../../component/CustomButton';
 import imageIndex from '../../../assets/imageIndex';
-import StatusBarComponent from '../../../compoent/StatusBarCompoent';
-import CustomHeader from '../../../compoent/CustomHeader';
+import StatusBarComponent from '../../../component/StatusBarCompoent';
+import CustomHeader from '../../../component/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
 import LoadingModal from '../../../utils/Loader';
 import Icon from 'react-native-vector-icons/MaterialIcons';

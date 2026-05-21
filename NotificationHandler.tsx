@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import { Platform } from 'react-native';
@@ -29,7 +29,7 @@ const NotificationHandler = () => {
 
           const apnsToken = await messaging().getAPNSToken();
           if (apnsToken) {
-            console.log('🍏 APNs Token:', apnsToken);
+            console.log('APNs Token:', apnsToken);
           }
         }
 

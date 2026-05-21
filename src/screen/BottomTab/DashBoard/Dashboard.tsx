@@ -19,7 +19,7 @@ import useDashboard from "./useDashboard";
 import LoadingModal from "../../../utils/Loader";
 import ScreenNameEnum from "../../../routes/screenName.enum";
 import { styles } from "./DashboardStyle";
-import DeliveryCard from "../../../compoent/DeliveryCard";
+import DeliveryCard from "../../../component/DeliveryCard";
 import SwipeButton from 'rn-swipe-button';
 
 const DashboardScreen = () => {

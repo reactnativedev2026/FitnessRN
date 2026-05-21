@@ -12,7 +12,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
-import CustomHeader from '../../../compoent/CustomHeader';
+import CustomHeader from '../../../component/CustomHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GET_API } from '../../../api/APIRequest';
 import { ENDPOINT } from '../../../api/endpoints';

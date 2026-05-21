@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import { UpdteProfileApi } from '../../../api/authApi/AuthApi';
 import { errorToast } from '../../../utils/customToast';
 import { useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../../redux/feature/authSlice';
 

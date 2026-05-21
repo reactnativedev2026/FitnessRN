@@ -11,8 +11,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import HTML from 'react-native-render-html';
 
 import imageIndex from '../../assets/imageIndex';
-import StatusBarComponent from '../../compoent/StatusBarCompoent';
-import CustomHeader from '../../compoent/CustomHeader';
+import StatusBarComponent from '../../component/StatusBarCompoent';
+import CustomHeader from '../../component/CustomHeader';
 import { hp } from '../../utils/Constant';
 import font from '../../theme/font';
 import { Privacypolicy } from '../../api/authApi/AuthApi';
