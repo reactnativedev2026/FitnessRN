@@ -9,8 +9,8 @@ import {
   Image,
   Modal,
 } from "react-native";
-import font from "../theme/font";
-import imageIndex from "../assets/imageIndex";
+import font from "../../theme/font";
+import imageIndex from "../../assets/imageIndex";
 
 interface DropdownItem {
   label: string;

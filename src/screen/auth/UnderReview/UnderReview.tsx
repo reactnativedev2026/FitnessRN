@@ -7,10 +7,10 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import StatusBarCompoent from '../../../component/StatusBarCompoent';
+import StatusBarCompoent from '../../../component/common/StatusBarCompoent';
 import imageIndex from '../../../assets/imageIndex';
-import CustomButton from '../../../component/CustomButton';
-import CustomHeader from '../../../component/CustomHeader';
+import CustomButton from '../../../component/common/CustomButton';
+import CustomHeader from '../../../component/common/CustomHeader';
   import ScreenNameEnum from '../../../routes/screenName.enum';
 import { SafeAreaView } from 'react-native-safe-area-context';
  import { useNavigation } from '@react-navigation/native';

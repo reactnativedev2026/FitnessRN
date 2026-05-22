@@ -17,7 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
-import CustomHeader from '../../../component/CustomHeader';
+import CustomHeader from '../../../component/common/CustomHeader';
 import ImagePicker from 'react-native-image-crop-picker';
 import { requestCameraPermissions } from '../../../api';
 import SignaturePad from '../../../component/SignaturePad';
@@ -318,7 +318,6 @@ const OrderDetails = () => {
           <View style={styles.blueBoxOverlay}>
             <Image source={imageIndex.bluebox} style={styles.blueBoxIcon} />
           </View>
-
           <View style={styles.cardContent}>
             <Text style={styles.infoLabel}>Tracking ID: {delivery?.tracking_number}</Text>
             <Text style={styles.infoValue}>{delivery?.origin?.address}</Text>
@@ -340,7 +339,7 @@ const OrderDetails = () => {
               </View>
               <View style={styles.col}>
                 <Text style={styles.infoLabel}>Receiver Phone</Text>
-                <Text style={styles.infoValue}>{delivery?.contact_phone || 'N/A'}</Text>
+                <Text style={styles.infoValue}>{delivery?.client_phone || 'N/A'}</Text>
               </View>
             </View>
 

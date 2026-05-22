@@ -1,70 +1,71 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Image } from "react-native"; 
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TextInput, Image } from "react-native";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import StatusBarComponent from "../../../component/StatusBarCompoent";
+import StatusBarComponent from "../../../component/common/StatusBarCompoent";
 import LoadingModal from "../../../utils/Loader";
-import CustomHeader from "../../../component/CustomHeader";
+import CustomHeader from "../../../component/common/CustomHeader";
 import imageIndex from "../../../assets/imageIndex";
-import CustomButton from "../../../component/CustomButton";
-import { POST_API } from "../../../api/APIRequest";
+import CustomButton from "../../../component/common/CustomButton";
+import { Linking } from "react-native";
+import { POST_API, GET_API } from "../../../api/APIRequest";
 import { ENDPOINT } from "../../../api/endpoints";
+import { color } from "../../../constant";
 
 const HelpSupportScreen = () => {
   const navigation = useNavigation();
-  const [SupportHelp, setSupportHelp] = useState("");
-  const [isLoading, setLoading] = useState(false);
-  const isLogin = useSelector((state: any) => state?.auth);
+  const [contactInfo, setContactInfo] = useState(null);
 
-  const handleSubmit = async () => {
-    if (!SupportHelp) {
-      // navigation.goBack();
-    } else {
-      try {
-        console.log(isLogin?.user_data
-?.userData)
-        const body ={
-message:SupportHelp,
-user_id:isLogin?.userData?.user_data?.id
-        }
-        const response = await POST_API(
-          '',
-          body,
-          ENDPOINT.SUPPORT,
-          setLoading
-        );
-        if(response.success){
-          setSupportHelp('')
-          navigation.goBack()
-        }
-      } catch (error) {}
-    }
-  };
+  useEffect(() => {
+    const fetchContact = async () => {
+      const response = await GET_API(ENDPOINT.CONTACT_US, null, "GET", setLoading);
+      if (response?.success) {
+        console.log("Contact Us Response:", response);
+        setContactInfo(response.data?.data || response.data);
+      }
+    };
+    fetchContact();
+  }, []);
+
+  const isLogin = useSelector((state: any) => state?.auth);
+  const [isLoading, setLoading] = useState(false);
+  const [SupportHelp, setSupportHelp] = useState("");
+
+ 
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
+      {/* Render Contact Us content */}
+      <CustomHeader
+
+
+        // imageSource={imageIndex.menu}
+        label="Help & Support"
+      />
+
+      {contactInfo && (
+        <View style={styles.contactContainer}>
+          <Image
+            source={imageIndex.helpPrva}
+            style={styles.illustration}
+            resizeMode="contain"
+          />
+          <Text style={styles.title}>{contactInfo.title}</Text>
+          <Text style={styles.content}>{contactInfo.content}</Text>
+          <Text style={styles.link} onPress={() => Linking.openURL(`mailto:${contactInfo.support_email}`)}>{contactInfo.support_email} </Text>
+          <Text style={styles.link} onPress={() => Linking.openURL(`tel:${contactInfo.support_phone}`)}>{contactInfo.support_phone} </Text>
+        </View>
+      )}
+
       <StatusBarComponent />
       {isLoading ? <LoadingModal /> : null}
       <View>
-        <CustomHeader
-           
-          
-          // imageSource={imageIndex.menu}
-          label="Help & Support"
-        />
 
         <View style={{ marginHorizontal: 15 }}>
-          <View style={styles.illustrationContainer}>
-            {/* Replace this with your own illustration asset */}
-            <Image
-              source={imageIndex.helpPrva}
-              style={styles.illustration}
-              resizeMode="contain"
-            />
-          </View>
+
 
           {/* Text input for user’s query */}
-          <View
+          {/* <View
             style={{
               borderWidth: 1, // thickness of the border
               borderColor: "rgba(251, 91, 43, 1)", // color of the border
@@ -99,9 +100,9 @@ user_id:isLogin?.userData?.user_data?.id
               placeholderTextColor="rgba(84, 84, 84, 1)"
               multiline
             />
-          </View>
+          </View> */}
 
-          <View
+          {/* <View
             style={{
               flex: 1,
               position: "relative",
@@ -109,7 +110,7 @@ user_id:isLogin?.userData?.user_data?.id
             }}
           >
             <CustomButton title="Submit" onPress={() => handleSubmit()} />
-          </View>
+          </View> */}
         </View>
       </View>
     </SafeAreaView>
@@ -121,7 +122,7 @@ export default HelpSupportScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: color.background,
   },
   header: {
     flexDirection: "row",
@@ -150,17 +151,28 @@ const styles = StyleSheet.create({
     textAlignVertical: "top", // Ensures multiline text starts at top
     fontSize: 16,
   },
-  submitButton: {
-    marginTop: 20,
-    marginHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 8,
-    backgroundColor: "#FF6B00",
-    alignItems: "center",
+  contactContainer: {
+    marginHorizontal: 15,
+    marginBottom: 20,
+    alignItems: 'center',
   },
-  submitButtonText: {
-    color: "#FFF",
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000',
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  content: {
+    fontSize: 14,
+    marginTop: 10,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  link: {
     fontSize: 16,
-    fontWeight: "600",
+    marginTop: 5,
+    color: '#1e90ff',
+    paddingRight:3
   },
 });

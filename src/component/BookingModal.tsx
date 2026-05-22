@@ -7,8 +7,8 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import StatusBarComponent from './StatusBarCompoent';
-import CustomButton from './CustomButton';
+import StatusBarComponent from './common/StatusBarCompoent';
+import CustomButton from './common/CustomButton';
 
 const BookingSuccessModal = ({ visible, onClose, userName, userImage, onOpenChat }: any) => {
   return (
@@ -23,8 +23,6 @@ const BookingSuccessModal = ({ visible, onClose, userName, userImage, onOpenChat
         <View style={styles.modalView}>
           {/* User Image */}
           <Image
-            //   source={{ uri: userImage }} 
-
             source={{ uri: "https://i.pravatar.cc/300" }}
             style={styles.userImage} />
 

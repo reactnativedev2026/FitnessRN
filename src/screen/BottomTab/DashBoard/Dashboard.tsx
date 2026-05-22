@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import ScreenNameEnum from "../../../routes/screenName.enum";
 import { styles } from "./DashboardStyle";
 import DeliveryCard from "../../../component/DeliveryCard";
 import SwipeButton from 'rn-swipe-button';
+import { IMAGE_URL } from "../../../api";
 
 const DashboardScreen = () => {
   const {
@@ -34,6 +35,7 @@ const DashboardScreen = () => {
     dashboardData,
     refreshing,
     onRefresh,
+    toggleAvailability,
   } = useDashboard();
 
   return (
@@ -70,9 +72,15 @@ const DashboardScreen = () => {
                 <Icon name="notifications-outline" size={24} color="#fff" />
               </TouchableOpacity>
               <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate(ScreenNameEnum.ProfileSetup as never)}>
-                {userData?.profile_image ? (
+                {userData?.profile_image_url || userData?.profile_image ? (
                   <Image
-                    source={{ uri: userData.profile_image }}
+                    source={{
+                      uri: (() => {
+                        const img = userData.profile_image_url || userData.profile_image;
+                        if (img.startsWith('http://') || img.startsWith('https://')) return img;
+                        return `${IMAGE_URL}${img.startsWith('/') ? img : '/' + img}`;
+                      })()
+                    }}
                     style={{ width: 40, height: 40, borderRadius: 20 }}
                   />
                 ) : (
@@ -93,10 +101,15 @@ const DashboardScreen = () => {
             shouldResetAfterSuccess={true}
             resetAfterSuccessAnimDelay={100}
             titleFadeOut={false}
-            onSwipeSuccess={() => {
+            onSwipeSuccess={async () => {
               const nextStatus = selectedDuty.status === 'on_duty' ? 'off_duty' : 'on_duty';
               const duty = DUTY_OPTIONS.find(d => d.status === nextStatus);
-              if (duty) selectDuty(duty);
+              if (duty) {
+                // Call API to toggle driver online/offline
+                const isOnline = nextStatus === 'on_duty';
+                await toggleAvailability(isOnline, false);
+                selectDuty(duty);
+              }
             }}
             railFillBackgroundColor={'transparent'}
             railFillBorderColor={selectedDuty.status != 'on_duty' ? '#FF3B30' : color.primary}
@@ -162,7 +175,13 @@ const DashboardScreen = () => {
             <Image source={imageIndex.status} style={styles.actionImage} />
             <Text style={styles.actionText}>Update Status</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionCard} onPress={() => navigation.navigate(ScreenNameEnum.MapScreen)}>
+          <TouchableOpacity
+            style={styles.actionCard}
+            onPress={() => {
+              const firstDelivery = dashboardData?.recent_deliveries?.[0];
+              navigation.navigate(ScreenNameEnum.MapScreen as never, { delivery: firstDelivery } as never);
+            }}
+          >
             <Image source={imageIndex.viewMap} style={styles.actionImage} />
             <Text style={styles.actionText}>View Map</Text>
           </TouchableOpacity>
@@ -178,7 +197,7 @@ const DashboardScreen = () => {
 
         {/* Delivery Cards */}
         {dashboardData?.recent_deliveries?.length > 0 ? (
-          dashboardData.recent_deliveries.map((item: any, index: number) => (
+          dashboardData.recent_deliveries?.slice(0, 3).map((item: any, index: number) => (
             <TouchableOpacity
               key={index}
               onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}

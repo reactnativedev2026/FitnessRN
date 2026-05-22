@@ -15,12 +15,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
- import TextInputField from '../../../component/TextInputField';
-import CustomButton from '../../../component/CustomButton';
+ import TextInputField from '../../../component/common/TextInputField';
+import CustomButton from '../../../component/common/CustomButton';
 import imageIndex from '../../../assets/imageIndex';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import StatusBarComponent from '../../../component/StatusBarCompoent';
-import CustomHeader from '../../../component/CustomHeader';
+import StatusBarComponent from '../../../component/common/StatusBarCompoent';
+import CustomHeader from '../../../component/common/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import LoadingModal from '../../../utils/Loader';

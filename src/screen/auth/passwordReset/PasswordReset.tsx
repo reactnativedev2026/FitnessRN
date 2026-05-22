@@ -15,9 +15,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
-import StatusBarComponent from '../../../component/StatusBarCompoent';
-import CustomButton from '../../../component/CustomButton';
-import TextInputField from '../../../component/TextInputField';
+import StatusBarComponent from '../../../component/common/StatusBarCompoent';
+import CustomButton from '../../../component/common/CustomButton';
+import TextInputField from '../../../component/common/TextInputField';
 import LoadingModal from '../../../utils/Loader';
 import useForgot from './useForgot';
 import imageIndex from '../../../assets/imageIndex';

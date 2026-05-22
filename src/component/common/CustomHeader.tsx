@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
-import imageIndex from '../assets/imageIndex';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { color } from '../constant';
+import imageIndex from '../../assets/imageIndex';
+import { useNavigation } from '@react-navigation/native';
+import { color } from '../../constant';
 
 interface RightIcon {
   icon: any;
@@ -27,7 +27,7 @@ const CustomHeader: React.FC<Props> = ({ isSearch, rightIcons = [], menuIcon, la
     <View style={styles.header}>
       {/* Left Menu */}
       <TouchableOpacity
-        onPress={leftPress || (() => navigation.dispatch(DrawerActions.openDrawer()))}
+        onPress={leftPress || (() => navigation.goBack())}
       >
         <Image
           source={menuIcon || imageIndex.back} style={styles.leftIcon} resizeMode="contain" />
@@ -45,7 +45,6 @@ const CustomHeader: React.FC<Props> = ({ isSearch, rightIcons = [], menuIcon, la
           </TouchableOpacity>
           )
         } */}
-
 
         <TouchableOpacity onPress={() => { }}
         >

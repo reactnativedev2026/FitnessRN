@@ -1,7 +1,7 @@
 import { View, TextInput, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
-import imageIndex from '../assets/imageIndex';
-import { color } from '../constant';
+import imageIndex from '../../assets/imageIndex';
+import { color } from '../../constant';
 import CountryFlag from "react-native-country-flag";
 
 export default function TextInputField({ ...props }) {

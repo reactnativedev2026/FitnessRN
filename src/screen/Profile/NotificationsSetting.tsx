@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Switch, FlatList, StyleSheet, Alert } from "react-native";
-import CustomHeader from "../../component/CustomHeader";
+import CustomHeader from "../../component/common/CustomHeader";
 import imageIndex from "../../assets/imageIndex";
 import { SafeAreaView } from "react-native-safe-area-context";
-import StatusBarComponent from "../../component/StatusBarCompoent";
+import StatusBarComponent from "../../component/common/StatusBarCompoent";
 import { color } from "../../constant";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";

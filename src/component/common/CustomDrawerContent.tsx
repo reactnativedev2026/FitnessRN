@@ -8,14 +8,14 @@ import {
   FlatList,
 } from "react-native";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import imageIndex from "../assets/imageIndex";
-import ScreenNameEnum from "../routes/screenName.enum";
+import imageIndex from "../../assets/imageIndex";
+import ScreenNameEnum from "../../routes/screenName.enum";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StatusBarComponent from "./StatusBarCompoent";
-import LogoutModal from "./LogoutModal";
-import { logout } from "../redux/feature/authSlice";
+import LogoutModal from "../LogoutModal";
+import { logout } from "../../redux/feature/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { color } from "../constant";
+import { color } from "../../constant";
 
 // -------- Menu Data --------
 const menuItems = [
@@ -27,14 +27,14 @@ const menuItems = [
   { id: "2", title: "Calculator", icon: imageIndex.service, screen: ScreenNameEnum.ClickUploadScreen },
   { id: "3", title: "Duty Logs", icon: imageIndex.clock, screen: ScreenNameEnum.DutyLog },
   { id: "4", title: "Notification", icon: imageIndex.no1, screen: ScreenNameEnum.NotificationsSetting },
-  { id: "5", title: "Change Password", icon: imageIndex.lock1, screen: ScreenNameEnum.changePassword },
+  { id: "5", title: "Change Password", icon: imageIndex.lock, screen: ScreenNameEnum.changePassword },
   { id: "6", title: "Contact Us", icon: imageIndex.support, screen: ScreenNameEnum.Help },
   // { id: "7", title: "Feeding Log", icon: imageIndex.support, screen: ScreenNameEnum.HelpSupport },
   { id: "8", title: "About us", icon: imageIndex.info, screen: ScreenNameEnum.ABOUT_US },
   { id: "9", title: "Service Rules", icon: imageIndex.terms, screen: ScreenNameEnum.LegalPoliciesScreen },
   { id: "6", title: "Privacy Policy", icon: imageIndex.service, screen: ScreenNameEnum.PrivacyPolicy },
 
-  { id: "12", title: "Logout", icon: imageIndex.logout1, screen: "Reminder" },
+  { id: "12", title: "Logout", icon: imageIndex.logout, screen: "Reminder" },
 
 ];
 

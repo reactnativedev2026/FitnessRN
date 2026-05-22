@@ -7,8 +7,8 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import StatusBarComponent from './StatusBarCompoent';
-import CustomButton from './CustomButton';
+import StatusBarComponent from './common/StatusBarCompoent';
+import CustomButton from './common/CustomButton';
 
 const PostSuccessfull = ({ visible, butt, onClose, title, userImage, subTitle, onOpenChat }: any) => {
   return (

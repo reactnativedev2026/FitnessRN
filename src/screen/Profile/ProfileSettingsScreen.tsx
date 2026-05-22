@@ -18,7 +18,8 @@ import LogoutModal from '../../component/LogoutModal';
 import { logout } from '../../redux/feature/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from '../../component/CustomHeader';
+import CustomHeader from '../../component/common/CustomHeader';
+import { IMAGE_URL } from '../../api';
 
 
 const ProfileSettingsScreen = () => {
@@ -27,7 +28,7 @@ const ProfileSettingsScreen = () => {
   const { userData } = useSelector((state: any) => state.auth);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
-  const menuItems = [
+    const menuItems = [
     {
       id: 1,
       title: 'Profile',
@@ -44,7 +45,7 @@ const ProfileSettingsScreen = () => {
     //   id: 3,
     //   title: 'Appearance',
     //   icon: imageIndex.appearanceCircle,
-    //   onPress: () => { }, // Placeholder for now
+    //   onPress: () => { }, // Placeholder
     // },
     {
       id: 4,
@@ -64,7 +65,15 @@ const ProfileSettingsScreen = () => {
       icon: imageIndex.aboutusCircle,
       onPress: () => navigation.navigate(ScreenNameEnum.LegalPoliciesScreen as never),
     },
+    {
+      id: 7,
+      title: 'Contact Us',
+      icon: imageIndex.aboutusCircle,
+      onPress: () => navigation.navigate(ScreenNameEnum.Help as never),
+    },
   ];
+    
+  
 
   const handleLogout = async () => {
     setLogoutModalVisible(false);
@@ -90,7 +99,17 @@ const ProfileSettingsScreen = () => {
         <View style={styles.profileSection}>
           <View style={styles.avatarContainer}>
             <Image
-              source={userData?.profile_image ? { uri: userData.profile_image } : imageIndex.profile}
+              source={
+                userData?.profile_image_url || userData?.profile_image
+                  ? {
+                      uri: (() => {
+                        const img = userData.profile_image_url || userData.profile_image;
+                        if (img.startsWith('http://') || img.startsWith('https://')) return img;
+                        return `${IMAGE_URL}${img.startsWith('/') ? img : '/' + img}`;
+                      })()
+                    }
+                  : imageIndex.profile
+              }
               style={styles.avatar}
             />
           </View>

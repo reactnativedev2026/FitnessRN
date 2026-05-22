@@ -4,10 +4,10 @@ import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import LoadingModal from '../../utils/Loader';
-import StatusBarComponent from '../../component/StatusBarCompoent';
-import CustomHeader from '../../component/CustomHeader';
+import StatusBarComponent from '../../component/common/StatusBarCompoent';
+import CustomHeader from '../../component/common/CustomHeader';
 import imageIndex from '../../assets/imageIndex';
-import CustomButton from '../../component/CustomButton';
+import CustomButton from '../../component/common/CustomButton';
 import PasswordSuccessfullyModal from '../../component/PasswordSuccessfullyModal';
 import font from '../../theme/font';
 import { POST_API } from '../../api/APIRequest';
@@ -25,7 +25,6 @@ const ChangePasswordScreen = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
     const validatePasswords = () => {
         if (!oldpass) {
             setErrorMessage("Please enter your old password.");
@@ -91,7 +90,6 @@ const ChangePasswordScreen = () => {
                             value={password}
                             onChangeText={setPassword}
                             style={styles.input}
-
                         />
                         {/* <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
                             <Image source={!passwordVisible ? imageIndex.eye : imageIndex.visible} style={styles.image} />

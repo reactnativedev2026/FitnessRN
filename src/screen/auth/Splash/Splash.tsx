@@ -5,7 +5,7 @@ import FastImage from '@d11/react-native-fast-image';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
-import StatusBarComponent from '../../../component/StatusBarCompoent';
+import StatusBarComponent from '../../../component/common/StatusBarCompoent';
 import { styles } from './style';
 import { useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';

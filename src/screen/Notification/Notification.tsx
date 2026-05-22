@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity, RefreshControl, Modal, Image, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from '../../component/CustomHeader';
+import CustomHeader from '../../component/common/CustomHeader';
 import imageIndex from '../../assets/imageIndex';
 import { color } from '../../constant';
 import { useNavigation } from '@react-navigation/native';
@@ -11,7 +11,7 @@ import { ENDPOINT } from '../../api/endpoints';
 import { logout } from '../../redux/feature/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EmptyListMessage from '../../component/EmptyListMessage';
-import CustomButton from '../../component/CustomButton';
+import CustomButton from '../../component/common/CustomButton';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import ScreenNameEnum from '../../routes/screenName.enum';

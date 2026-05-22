@@ -10,16 +10,17 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import TextInputField from '../../../component/TextInputField';
-import CustomButton from '../../../component/CustomButton';
+import TextInputField from '../../../component/common/TextInputField';
+import CustomButton from '../../../component/common/CustomButton';
 import imageIndex from '../../../assets/imageIndex';
-import StatusBarComponent from '../../../component/StatusBarCompoent';
-import CustomHeader from '../../../component/CustomHeader';
+import StatusBarComponent from '../../../component/common/StatusBarCompoent';
+import CustomHeader from '../../../component/common/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
 import LoadingModal from '../../../utils/Loader';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useProfileScreen from './useProfileScreen';
 import { pickProfileImage } from './imagePicker';
+import { IMAGE_URL } from '../../../api';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
@@ -34,7 +35,7 @@ export default function ProfileScreen() {
   const handleImagePick = async () => {
     const result = await pickProfileImage();
     if (result) {
-      handleChange('profileImage', result.path);
+      handleChange('profileImage', result);
     }
   };
 
@@ -61,7 +62,17 @@ export default function ProfileScreen() {
           <View style={styles.photoSection}>
             <View style={styles.avatarWrapper}>
               <Image
-                source={credentials.profileImage ? { uri: credentials.profileImage } : imageIndex.profile}
+                source={
+                  credentials.profileImage
+                    ? {
+                        uri: typeof credentials.profileImage === 'string'
+                          ? (credentials.profileImage.startsWith('http://') || credentials.profileImage.startsWith('https://')
+                              ? credentials.profileImage
+                              : `${IMAGE_URL}${credentials.profileImage.startsWith('/') ? credentials.profileImage : '/' + credentials.profileImage}`)
+                          : credentials.profileImage.path
+                      }
+                    : imageIndex.profile
+                }
                 style={styles.avatar}
               />
               <TouchableOpacity style={styles.editButton} onPress={handleImagePick}>

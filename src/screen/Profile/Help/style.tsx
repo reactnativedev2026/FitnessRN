@@ -5,7 +5,7 @@ import font from "../../../theme/font";
 export const styles = StyleSheet.create({
     safeContainer: {
         flex: 1,
-        backgroundColor: 'white',
+   backgroundColor: color.background,
     },
     container: {
         flex: 1,

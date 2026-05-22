@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, PanResponder, Dimensions, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, PanResponder, TouchableOpacity, Text } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 interface SignaturePadProps {
@@ -41,8 +41,6 @@ const SignaturePad: React.FC<SignaturePadProps> = ({ onSave, onClear }) => {
 
   const handleSave = () => {
     if (paths.length > 0) {
-      // In a real app, you'd convert SVG to image, 
-      // but here we just pass the path data or a success flag
       onSave(paths.join(' '));
     }
   };

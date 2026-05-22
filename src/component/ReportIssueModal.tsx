@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { color } from '../constant';
 import font from '../theme/font';
-import CustomButton from './CustomButton';
+import CustomButton from './common/CustomButton';
 import Toast from 'react-native-toast-message';
 import toastConfig from '../utils/customToast';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -26,7 +26,7 @@ const { width } = Dimensions.get('window');
 interface ReportIssueModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (data: { issue_note: string; issue_photo: string | null }) => void;
+  onSubmit: (data: { issue: string; issue_photo: string | null }) => void;
 }
 
 const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ visible, onClose, onSubmit }) => {
@@ -61,9 +61,14 @@ const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ visible, onClose, o
 
   const handleSubmit = () => {
     if (note.trim()) {
-      onSubmit({ issue_note: note, issue_photo: photo });
+      onSubmit({ issue: note, issue_photo: photo });
       setNote('');
       setPhoto(null);
+      Toast.show({
+        type: 'success',
+        text1: 'Issue Reported',
+        text2: 'Your issue has been submitted successfully.',
+      });
     } else {
       Toast.show({
         type: 'error',

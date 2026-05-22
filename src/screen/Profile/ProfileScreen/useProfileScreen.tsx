@@ -14,7 +14,7 @@ interface Credentials {
   mobile: string;
   phoneCode: string;
   address: string;
-  profileImage: string | null;
+  profileImage: any;
 }
 
 interface ValidationErrors {
@@ -48,7 +48,7 @@ const useProfileScreen = () => {
         mobile: userData.mobile_number ?? '',
         phoneCode: userData.phone_code ?? '+91',
         address: userData.address ?? '',
-        profileImage: userData.profile_image ?? null,
+        profileImage: userData.profile_image_url || userData.profile_image || null,
       });
     }
   }, [userData]);
@@ -80,7 +80,7 @@ const useProfileScreen = () => {
     setErrors({});
 
     try {
-      const body = {
+      const body: any = {
         first_name: credentials.firstName.trim(),
         last_name: credentials.lastName.trim(),
         email: credentials.email.trim(),
@@ -88,6 +88,10 @@ const useProfileScreen = () => {
         mobile_number: credentials.mobile,
         address: credentials.address.trim(),
       };
+
+      if (credentials.profileImage && typeof credentials.profileImage === 'object') {
+        body.profile_image = credentials.profileImage;
+      }
 
       const response = await UpdteProfileApi(body, token, setIsLoading);
       console.log('Profile Update API Response:', response);

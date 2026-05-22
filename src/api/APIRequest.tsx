@@ -1,8 +1,6 @@
 import { BASE_URL } from ".";
 
-/**
- * Common API Request handler
- */
+
 export const API_CALL = async (
   endpoint: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
@@ -37,7 +35,7 @@ export const API_CALL = async (
         requestBody = JSON.stringify(body);
       }
     }
-
+    
     const response = await fetch(url, {
       method,
       headers,
@@ -81,7 +79,7 @@ export const POST_API = async (
   body: any,
   endpoint: string,
   setLoading: (v: boolean) => void,
-  isFormData: boolean = true
+  isFormData: boolean = false
 ) => {
   return API_CALL(endpoint, 'POST', body, token, setLoading, isFormData);
 };

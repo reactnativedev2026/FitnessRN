@@ -35,7 +35,7 @@ const DeliveryCard: React.FC<DeliveryCardProps> = ({
               {/* <Text style={{ color: '#6F767E', fontSize: 12 }}>  •  </Text> */}
 
             </Text>
-            <Text style={dashboardStyles.orderDate}>{moment(date).format('DD MMM YYYY')}</Text>
+            <Text style={dashboardStyles.orderDate}>{date && moment(date).format('DD MMM YYYY')}</Text>
           </View>
 
         </View>

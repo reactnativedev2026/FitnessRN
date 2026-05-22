@@ -84,9 +84,6 @@ export const authResetPassword = async (
   }
 };
 
-/**
- * Signup API function
- */
 export const signupApi = async (
   body: any,
   setLoading: (loading: boolean) => void
@@ -116,7 +113,7 @@ export const UpdteProfileApi = async (
   setLoading: (loading: boolean) => void
 ): Promise<ApiResponse> => {
   try {
-    const response = await commonPostApi({ url: ENDPOINT.UPDATE_PROFILE, body, token }, setLoading);
+    const response = await API_CALL(ENDPOINT.UPDATE_PROFILE, 'POST', body, token, setLoading, true);
 
     if (response.success) {
       successToast(response.message);
@@ -152,9 +149,8 @@ export const ApiCall = async (
  */
 export const Privacypolicy = async (setLoading: any) => {
   try {
-    const response = await API_CALL('common/get_privacy_policy', 'GET', null, null, setLoading);
+    const response = await API_CALL(ENDPOINT.PRIVACY_POLICY, 'GET', null, null, setLoading);
     if (response?.success) {
-      successToast(response?.message);
       return response;
     }
   } catch (error: any) {
@@ -163,14 +159,10 @@ export const Privacypolicy = async (setLoading: any) => {
   }
 };
 
-/**
- * Terms and Conditions
- */
-export const Termsconditions = async (setLoading: any) => {
+export const ContactUsApi = async (setLoading: any) => {
   try {
-    const response = await API_CALL('common/get_terms_and_condition', 'GET', null, null, setLoading);
+    const response = await API_CALL(ENDPOINT.CONTACT_US, 'GET', null, null, setLoading);
     if (response?.success) {
-      successToast(response?.message);
       return response;
     }
   } catch (error: any) {

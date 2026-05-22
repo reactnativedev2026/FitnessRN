@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   StatusBar
 } from 'react-native';
@@ -12,7 +11,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { color } from '../../../constant';
 import imageIndex from '../../../assets/imageIndex';
-import CustomHeader from '../../../component/CustomHeader';
+import CustomHeader from '../../../component/common/CustomHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GET_API } from '../../../api/APIRequest';
 import { ENDPOINT } from '../../../api/endpoints';
@@ -156,23 +155,7 @@ const DeliveryDetail = () => {
         )}
 
         {/* Action Buttons */}
-        {delivery?.shipment_status !== 'delivered' && (
-          <View style={styles.actionContainer}>
-            <TouchableOpacity
-              style={styles.primaryButton}
-              onPress={() => navigation.navigate(ScreenNameEnum.MapScreen as any, { delivery: delivery } as any)}
-            >
-              <Text style={styles.buttonText}>Track on Map</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.secondaryButton}
-              onPress={() => navigation.navigate(ScreenNameEnum.RaceDetail as any, { deliveryId: delivery?.id } as any)}
-            >
-              <Text style={styles.secondaryButtonText}>Update Status</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        
       </ScrollView>
     </SafeAreaView>
   );

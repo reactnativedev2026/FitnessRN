@@ -1,6 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
 import { color } from '../../../constant';
-import { hp } from '../../../utils/Constant';
 
 export const styles = StyleSheet.create({
   container: {

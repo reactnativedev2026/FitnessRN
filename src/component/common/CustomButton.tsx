@@ -8,12 +8,8 @@ import {
   ViewStyle,
   TextStyle,
   GestureResponderEvent,
-  Image,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { color } from '../constant';
-import font from '../theme/font';
-import imageIndex from '../assets/imageIndex';
+import { color } from '../../constant';
 
 type AlignType = 'left' | 'center' | 'right';
 

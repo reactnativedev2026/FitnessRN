@@ -1,6 +1,6 @@
 import React from "react";
 import { View, TextInput, Image, StyleSheet } from "react-native";
-import imageIndex from "../assets/imageIndex";
+import imageIndex from "../../assets/imageIndex";
 
 interface SearchBarProps {
   placeholder?: string;
