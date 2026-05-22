@@ -6,7 +6,7 @@ import {
   StatusBar,
   ScrollView,
 } from "react-native";
-import { color } from "../../../constant";
+import { color } from "../../../theme/colors";
 import { styles } from "./DashboardStyle";
 import { useNavigation } from "@react-navigation/native";
 import DetailDeliveryCard from "../../../component/DetailDeliveryCard";
@@ -17,7 +17,7 @@ import ScreenNameEnum from "../../../routes/screenName.enum";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GET_API } from '../../../api/APIRequest';
 import { ENDPOINT } from '../../../api/endpoints';
-import LoadingModal from '../../../utils/Loader';
+import LoadingModal from '../../../component/LoadingModal';
 
 const DashboardDetail = ({ route }: any) => {
   const navigation = useNavigation();

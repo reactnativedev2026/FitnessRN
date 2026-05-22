@@ -3,7 +3,7 @@ import { Animated, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FastImage from '@d11/react-native-fast-image';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-import { color } from '../../../constant';
+import { color } from '../../../theme/colors';
 import imageIndex from '../../../assets/imageIndex';
 import StatusBarComponent from '../../../component/common/StatusBarCompoent';
 import { styles } from './style';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
-import { color } from '../constant';
+import { color } from '../theme/colors';
 import imageIndex from '../assets/imageIndex';
 import { styles as dashboardStyles } from '../screen/BottomTab/DashBoard/DashboardStyle';
 import moment from 'moment';
@@ -58,7 +58,6 @@ const DeliveryCard: React.FC<DeliveryCardProps> = ({
           </View>
         </View>
 
-        {/* Dotted Line Spacer Row */}
         <View style={{ flexDirection: 'row' }}>
           <View style={{ width: 20, alignItems: 'center', height: 30, justifyContent: 'space-evenly', marginVertical: 2 }}>
             <View style={dashboardStyles.smallDot} />

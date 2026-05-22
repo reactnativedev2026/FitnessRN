@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -13,10 +13,10 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import imageIndex from "../../../assets/imageIndex";
-import { color } from "../../../constant";
+import { color } from "../../../theme/colors";
 import font from "../../../theme/font";
 import useDashboard from "./useDashboard";
-import LoadingModal from "../../../utils/Loader";
+import LoadingModal from "../../../component/LoadingModal";
 import ScreenNameEnum from "../../../routes/screenName.enum";
 import { styles } from "./DashboardStyle";
 import DeliveryCard from "../../../component/DeliveryCard";
@@ -42,7 +42,6 @@ const DashboardScreen = () => {
     <View style={styles.container}>
       <LoadingModal visible={loading} />
       <StatusBar barStyle="light-content" />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -105,7 +104,6 @@ const DashboardScreen = () => {
               const nextStatus = selectedDuty.status === 'on_duty' ? 'off_duty' : 'on_duty';
               const duty = DUTY_OPTIONS.find(d => d.status === nextStatus);
               if (duty) {
-                // Call API to toggle driver online/offline
                 const isOnline = nextStatus === 'on_duty';
                 await toggleAvailability(isOnline, false);
                 selectDuty(duty);

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { color } from '../../../constant';
+import { color } from '../../../theme/colors';
 import { hp, wp } from '../../../utils/Constant';
 
 export const styles = StyleSheet.create({

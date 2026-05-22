@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import font from '../theme/font';
-import { color } from '../constant';
+import { color } from '../theme/colors';
 
 const LogoutModal = ({ visible, onLogout, onCancel }: any) => {
   return (

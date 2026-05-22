@@ -2,18 +2,18 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
 import CustomDrawerContent from '../component/common/CustomDrawerContent';
-import PrivacyPolicy from '../screen/Profile/PrivacyPolicy';
+import PrivacyPolicy from '../screen/Profile/privacy-policy/PrivacyPolicy';
 import ScreenNameEnum from '../routes/screenName.enum';
-import HelpScreen from '../screen/Profile/Help/Helps';
+import HelpScreen from '../screen/Profile/help/HelpScreen';
 import Dashboard from '../screen/BottomTab/DashBoard/Dashboard';
-import ProfileScreen from '../screen/Profile/ProfileScreen/ProfileScreen';
+import ProfileScreen from '../screen/Profile/profile-screen/ProfileScreen';
 import AnnouncementsScreen from '../screen/Announcements/Announcements';
 import OffersScreen from '../screen/Offers/Offers';
-import NotificationsSetting from '../screen/Profile/NotificationsSetting';
+import NotificationsSetting from '../screen/Profile/notification-setting/NotificationsSetting';
 import DutyLog from '../screen/BottomTab/DutyLog/DutyLog';
-import AboutUs from '../screen/Profile/About';
-import ChangePasswordScreen from '../screen/Profile/ChangePassword';
-import TearmsCodition from '../screen/Profile/TearmsCodition';
+import AboutUs from '../screen/Profile/about/AboutScreen';
+import ChangePasswordScreen from '../screen/Profile/change-password/ChangePasswordScreen';
+import TearmsCodition from '../screen/Profile/tearms-conditions/TearmsCondition';
 
 const Drawer = createDrawerNavigator();
 

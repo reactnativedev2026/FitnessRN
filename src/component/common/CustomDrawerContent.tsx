@@ -15,7 +15,7 @@ import StatusBarComponent from "./StatusBarCompoent";
 import LogoutModal from "../LogoutModal";
 import { logout } from "../../redux/feature/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { color } from "../../constant";
+import { color } from "../../theme/colors";
 
 // -------- Menu Data --------
 const menuItems = [

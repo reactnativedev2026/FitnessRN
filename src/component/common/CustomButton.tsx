@@ -9,7 +9,7 @@ import {
   TextStyle,
   GestureResponderEvent,
 } from 'react-native';
-import { color } from '../../constant';
+import { color } from '../../theme/colors';
 
 type AlignType = 'left' | 'center' | 'right';
 

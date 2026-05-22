@@ -12,7 +12,7 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import { color } from '../constant';
+import { color } from '../theme/colors';
 import font from '../theme/font';
 import CustomButton from './common/CustomButton';
 import Toast from 'react-native-toast-message';

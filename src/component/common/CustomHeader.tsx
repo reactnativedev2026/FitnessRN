@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
 import imageIndex from '../../assets/imageIndex';
 import { useNavigation } from '@react-navigation/native';
-import { color } from '../../constant';
+import { color } from '../../theme/colors';
 
 interface RightIcon {
   icon: any;

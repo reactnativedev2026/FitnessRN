@@ -9,13 +9,13 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { color } from '../../../constant';
+import { color } from '../../../theme/colors';
 import imageIndex from '../../../assets/imageIndex';
 import CustomHeader from '../../../component/common/CustomHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GET_API } from '../../../api/APIRequest';
 import { ENDPOINT } from '../../../api/endpoints';
-import LoadingModal from '../../../utils/Loader';
+import LoadingModal from '../../../component/LoadingModal';
 import moment from 'moment';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 

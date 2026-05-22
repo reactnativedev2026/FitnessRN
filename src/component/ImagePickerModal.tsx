@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
 } from 'react-native';
-import { color } from '../constant';
+import { color } from '../theme/colors';
 import font from '../theme/font';
 
 interface ImagePickerModalProps {

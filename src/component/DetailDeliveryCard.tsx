@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { color } from '../constant';
+import { color } from '../theme/colors';
 import imageIndex from '../assets/imageIndex';
 
 interface DetailDeliveryCardProps {

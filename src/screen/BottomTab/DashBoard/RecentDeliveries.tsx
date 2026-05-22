@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GET_API } from "../../../api/APIRequest";
 import { ENDPOINT } from "../../../api/endpoints";
-import LoadingModal from "../../../utils/Loader";
+import LoadingModal from "../../../component/LoadingModal";
 import ScreenNameEnum from "../../../routes/screenName.enum";
 import EmptyListMessage from "../../../component/EmptyListMessage";
 
