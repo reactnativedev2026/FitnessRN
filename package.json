@@ -15,8 +15,6 @@
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-clipboard/clipboard": "^1.16.0",
     "@react-native-community/geolocation": "^3.4.0",
-    "@react-native-firebase/app": "^24.0.0",
-    "@react-native-firebase/messaging": "^24.0.0",
     "@react-navigation/bottom-tabs": "^7.8.11",
     "@react-navigation/drawer": "^7.7.10",
     "@react-navigation/native": "^7.1.14",

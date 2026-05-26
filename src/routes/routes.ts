@@ -1,6 +1,5 @@
 import ScreenNameEnum from "./screenName.enum";
 import NotificationsScreen from "../screen/Notification/NotificationScreen";
-import HelpScreen from "../screen/Profile/help/HelpScreen";
 import Splash from "../screen/auth/Splash/Splash";
 import OtpScreen from "../screen/auth/otp/OtpScreen";
 import PrivacyPolicy from "../screen/Profile/privacy-policy/PrivacyPolicy";
@@ -58,10 +57,7 @@ const _routes: any = {
       Component: OtpScreen,
     },
 
-    {
-      name: ScreenNameEnum.Help,
-      Component: HelpScreen,
-    },
+
     {
       name: ScreenNameEnum.ABOUT_US,
       Component: AboutUs,
