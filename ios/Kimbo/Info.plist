@@ -35,11 +35,10 @@
 	<string>This app needs access to your camera to take photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs microphone access</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app needs permission to save photos to your gallery.</string>
-
-<key>NSMicrophoneUsageDescription</key>
-<string>This app needs microphone access</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to your photo library to select images.</string>
 	<key>RCTNewArchEnabled</key>
