@@ -376,28 +376,32 @@ const OrderDetails = () => {
         {/* Action Buttons or Form */}
         {!showDeliveryForm ? (
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.googleMapsButton} onPress={handleOpenMaps}>
-              <Image source={imageIndex.viewMap} style={{ height: 20, width: 20, marginRight: 10, tintColor: '#fff' }} />
-              <Text style={styles.buttonText}>Open in Google Maps</Text>
-            </TouchableOpacity>
+            {status !== 'Delivered' && (
+              <TouchableOpacity style={styles.googleMapsButton} onPress={handleOpenMaps}>
+                <Image source={imageIndex.viewMap} style={{ height: 20, width: 20, marginRight: 10, tintColor: '#fff' }} />
+                <Text style={styles.buttonText}>Open in Google Maps</Text>
+              </TouchableOpacity>
+            )}
 
             <TouchableOpacity style={styles.callButton} onPress={handleCall}>
               <Icon name="call-outline" size={20} color="#fff" style={{ marginRight: 10 }} />
               <Text style={styles.buttonText}>Call Customer</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.actionButton, { backgroundColor: '#34C759' }]}
-              onPress={handleNextStatus}
-            >
-              <Text style={styles.actionButtonText}>
-                {status === 'Assigned'
-                  ? 'Start Delivery'
-                  : status === 'Started'
-                    ? 'Mark Arrived'
-                    : 'Mark as Delivered'}
-              </Text>
-            </TouchableOpacity>
+            {status !== 'Delivered' && (
+              <TouchableOpacity
+                style={[styles.actionButton, { backgroundColor: '#34C759' }]}
+                onPress={handleNextStatus}
+              >
+                <Text style={styles.actionButtonText}>
+                  {status === 'Assigned'
+                    ? 'Start Delivery'
+                    : status === 'Started'
+                      ? 'Mark Arrived'
+                      : 'Mark as Delivered'}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         ) : (
           <View style={styles.formContainer}>

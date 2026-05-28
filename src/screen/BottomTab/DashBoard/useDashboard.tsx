@@ -6,8 +6,7 @@ import { logout } from "../../../redux/feature/authSlice";
 import { ENDPOINT } from "../../../api/endpoints";
 import { GET_API, POST_API } from "../../../api/APIRequest";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-const MAP_API_KEY = "AIzaSyDgFGS91BvviXh_f-nmvtEggUHJcaGyUwA";
-
+import ScreenNameEnum from "../../../routes/screenName.enum";
 
 const STORAGE_KEYS = {
   DRIVER_TYPE: "driver_type",
@@ -72,6 +71,7 @@ const useDashboard = () => {
       if (!token) {
         console.log("❌ Token not found");
         dispatch(logout());
+        navigation.navigate(ScreenNameEnum.LoginScreen as never);
         return;
       }
       const loaderFunc = isSilent ? () => {} : setLoading;

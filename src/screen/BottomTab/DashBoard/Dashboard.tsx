@@ -174,10 +174,16 @@ const DashboardScreen = () => {
             <Text style={styles.actionText}>Update Status</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.actionCard}
+            style={[styles.actionCard, { opacity: dashboardData?.recent_deliveries?.length > 0 ? 1 : 0.5 }]}
+            disabled={!(dashboardData?.recent_deliveries?.length > 0)}
             onPress={() => {
-              const firstDelivery = dashboardData?.recent_deliveries?.[0];
-              navigation.navigate(ScreenNameEnum.MapScreen as never, { delivery: firstDelivery } as never);
+              const firstDelivery = dashboardData?.recent_deliveries?.[0].shipment_status === 'completed' ? dashboardData?.recent_deliveries?.find((d: any) => d.shipment_status !== 'completed') : dashboardData?.recent_deliveries?.[0];
+              if (firstDelivery) {
+
+                navigation.navigate(ScreenNameEnum.MapScreen as never, { delivery: firstDelivery } as never);
+              } else {
+                navigation.navigate(ScreenNameEnum.RECENT_DELIVERIES as never, { status: 'in_progress' } as never);
+              }
             }}
           >
             <Image source={imageIndex.viewMap} style={styles.actionImage} />

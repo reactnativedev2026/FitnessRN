@@ -37,14 +37,10 @@ const LocationPicker: React.FC<Props> = ({ apiKey, visible, onSumit, onClose, on
         )}&key=${apiKey}&types=establishment&components=country:fr`;
 
         const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=${apiKey}&language=en`;
-        console.log("url", url)
 
         try {
             const response = await fetch(type ? urlHospital : url);
-            console.log("response", response)
-
             const result = await response.json();
-            console.log("result--", result)
             setPlaces(result?.predictions || []);
             Animated.timing(fadeAnim, {
                 toValue: result?.predictions?.length ? 1 : 0,
@@ -118,7 +114,6 @@ const LocationPicker: React.FC<Props> = ({ apiKey, visible, onSumit, onClose, on
                             </Animated.View>
                         )}
                     </View>
-
                 </View>
             </View>
 
@@ -192,7 +187,6 @@ const styles = StyleSheet.create({
         alignItems: "flex-end",
         marginBottom: 20,
     },
-
 });
 
 export default LocationPicker;

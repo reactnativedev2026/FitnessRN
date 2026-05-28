@@ -45,9 +45,9 @@ const DashboardDetail = ({ route }: any) => {
 
   const filteredData = deliveries.filter(item => {
     if (activeTab === 'Assigned') {
-      return item.shipment_status !== 'delivered';
+      return item.shipment_status !== 'completed';
     } else {
-      return item.shipment_status === 'delivered';
+      return item.shipment_status === 'completed';
     }
   });
   return (
@@ -86,7 +86,7 @@ const DashboardDetail = ({ route }: any) => {
             key={index}
             id={item.tracking_number || item.id}
             name={item.client_name || 'Unknown'}
-            status={item.shipment_status === 'delivered' ? 'Completed' : 'Assigned'}
+            status={item.shipment_status === 'completed' ? 'Completed' : 'Assigned'}
             pickupAddress={item.origin?.address || item.pickup_location || ''}
             dropAddress={item.destination?.address || item.drop_location || ''}
             onPressStart={() => navigation.navigate(ScreenNameEnum.MapScreen as never, { delivery: item } as never)}

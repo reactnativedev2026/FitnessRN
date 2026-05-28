@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  StatusBar
+  StatusBar,
+  TouchableOpacity
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -33,6 +34,7 @@ const DeliveryDetail = () => {
       if (!token) return;
       const response = await GET_API(`${ENDPOINT.DELIVERY_DETAIL}${deliveryId}`, token, "GET", setLoading);
       if (response && response.success) {
+        console.log("Delivery Detail:", response.data);
         setDelivery(response.data);
       }
     } catch (error) {
@@ -155,7 +157,16 @@ const DeliveryDetail = () => {
         )}
 
         {/* Action Buttons */}
-        
+        {delivery?.shipment_status !== 'completed' && (
+          <View style={styles.actionContainer}>
+            <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate(ScreenNameEnum.DashBoardDetail as never, { type: 'update', deliveryId: delivery?.id } as never)}>
+              <Text style={styles.buttonText}>Update Status</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.navigate(ScreenNameEnum.MapScreen as never, { delivery } as never)}>
+              <Text style={styles.buttonText}>View on Map</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

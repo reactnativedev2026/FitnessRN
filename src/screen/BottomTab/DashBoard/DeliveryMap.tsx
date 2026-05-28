@@ -19,6 +19,10 @@ import ReportIssueModal from '../../../component/ReportIssueModal';
 import useDashboard from './useDashboard';
 
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { POST_API } from '../../../api/APIRequest';
+import { ENDPOINT } from '../../../api/endpoints';
+import LoadingModal from '../../../component/LoadingModal';
 
 const darkMapStyle = [
   { "elementType": "geometry", "stylers": [{ "color": "#242f3e" }] },
@@ -111,13 +115,13 @@ const DeliveryMap = () => {
   const route: any = useRoute();
   const { delivery } = route.params || {};
   const [showReportModal, setShowReportModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { selectedAddress, selectedAddress2 } = useDashboard();
   const mapRef = useRef<MapView>(null);
   const [routeCoords, setRouteCoords] = useState<Array<{ latitude: number; longitude: number }>>([]);
   const [distance, setDistance] = useState("4.2 km");
   const [duration, setDuration] = useState("15 min");
 
-  // Calculate coordinates dynamically with route parameters or useDashboard fallbacks
   const pickupLocation = {
     latitude: delivery?.origin?.latitude ? parseFloat(delivery.origin.latitude) : selectedAddress?.latitude || 22.7196,
     longitude: delivery?.origin?.longitude ? parseFloat(delivery.origin.longitude) : selectedAddress?.longitude || 75.8577,
@@ -135,16 +139,42 @@ const DeliveryMap = () => {
     Linking.openURL(`tel:${phoneNumber}`);
   };
 
-  const handleReportSubmit = (data: any) => {
-    console.log('Issue Reported:', data);
-    setShowReportModal(false);
-    setTimeout(() => {
+  const handleReportSubmit = async (data: any) => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) return;
+
+      console.log("Report Issue Payload:", data);
+      const response = await POST_API(
+        token,
+        data,
+        `${ENDPOINT.REPORT_ISSUE}${delivery?.id}/issue`,
+        setLoading,
+        false
+      );
+
+      if (response && response.success) {
+        setShowReportModal(false);
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Issue reported successfully! 👋',
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: response?.message || 'Failed to report issue.',
+        });
+      }
+    } catch (error) {
+      console.error('Error reporting issue:', error);
       Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Issue reported successfully! 👋',
+        type: 'error',
+        text1: 'Error',
+        text2: 'An unexpected error occurred.',
       });
-    }, 500);
+    }
   };
 
   const MAP_API_KEY = "AIzaSyDgFGS91BvviXh_f-nmvtEggUHJcaGyUwA";
@@ -260,6 +290,7 @@ const DeliveryMap = () => {
 
   return (
     <View style={styles.container}>
+      <LoadingModal visible={loading} />
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
       <MapView
         ref={mapRef}
