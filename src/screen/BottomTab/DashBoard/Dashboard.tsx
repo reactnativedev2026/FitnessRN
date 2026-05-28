@@ -22,6 +22,7 @@ import { styles } from "./DashboardStyle";
 import DeliveryCard from "../../../component/DeliveryCard";
 import SwipeButton from 'rn-swipe-button';
 import { IMAGE_URL } from "../../../api";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const DashboardScreen = () => {
   const {
@@ -39,7 +40,7 @@ const DashboardScreen = () => {
   } = useDashboard();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <LoadingModal visible={loading} />
       <StatusBar barStyle="light-content" />
       <ScrollView
@@ -223,7 +224,7 @@ const DashboardScreen = () => {
 
         <View style={{ height: 100 }} />
       </ScrollView>
-    </View >
+    </SafeAreaView >
   );
 };
 

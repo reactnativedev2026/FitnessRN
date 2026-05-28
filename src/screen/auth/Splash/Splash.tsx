@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import FastImage from '@d11/react-native-fast-image';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import { color } from '../../../theme/colors';
 import imageIndex from '../../../assets/imageIndex';
@@ -12,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { restoreLogin } from '../../../redux/feature/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FastImage from '@d11/react-native-fast-image';
 
 const Splash: React.FC = () => {
   const navigation = useNavigation();
