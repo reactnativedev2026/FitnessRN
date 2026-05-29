@@ -10,8 +10,8 @@ import imageIndex from '../../../assets/imageIndex';
 import CustomButton from '../../../component/common/CustomButton';
 import PasswordSuccessfullyModal from '../../../component/PasswordSuccessfullyModal';
 import font from '../../../theme/font';
-import { POST_API } from '../../../api/APIRequest';
-import { ENDPOINT } from '../../../api/endpoints';
+import { POST_API } from '../../../Api/APIRequest';
+import { ENDPOINT } from '../../../Api/endpoints';
 import { errorToast, successToast } from '../../../utils/customToast';
 
 const ChangePasswordScreen = () => {

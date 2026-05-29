@@ -9,8 +9,8 @@ import CustomHeader from "../../../component/common/CustomHeader";
 import imageIndex from "../../../assets/imageIndex";
 import CustomButton from "../../../component/common/CustomButton";
 import { Linking } from "react-native";
-import { POST_API, GET_API } from "../../../api/APIRequest";
-import { ENDPOINT } from "../../../api/endpoints";
+import { POST_API, GET_API } from "../../../Api/APIRequest";
+import { ENDPOINT } from "../../../Api/endpoints";
 import { color } from "../../../theme/colors";
 
 const HelpSupportScreen = () => {
@@ -32,7 +32,7 @@ const HelpSupportScreen = () => {
   const [isLoading, setLoading] = useState(false);
   const [SupportHelp, setSupportHelp] = useState("");
 
- 
+
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
       {/* Render Contact Us content */}
@@ -173,6 +173,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 5,
     color: '#1e90ff',
-    paddingRight:3
+    paddingRight: 3
   },
 });

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-import { useDispatch } from 'react-redux';
-import { authLogin } from '../../../api/authApi/AuthApi';
+import { authLogin } from '../../../Api/authApi/AuthApi';
 import { errorToast, successToast } from '../../../utils/customToast';
 
 interface Credentials {
@@ -13,9 +12,11 @@ interface Credentials {
 
 const useLogin = () => {
   const [credentials, setCredentials] = useState<Credentials>({
-    email: 'gs@yopmail.com',
+    email: '',
+    // email: 'gs@yopmail.com',
     phone: '',
-    password: '12345678',
+    password: '',
+    // password: '12345678',
   });
 
   const [errors, setErrors] = useState<Partial<Credentials>>({});

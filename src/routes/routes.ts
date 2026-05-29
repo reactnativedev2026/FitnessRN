@@ -3,22 +3,22 @@ import NotificationsScreen from "../screen/Notification/NotificationScreen";
 import Splash from "../screen/auth/Splash/Splash";
 import OtpScreen from "../screen/auth/otp/OtpScreen";
 import PrivacyPolicy from "../screen/Profile/privacy-policy/PrivacyPolicy";
-import Login from "../screen/auth/login/LoginScreen";
+import Login from "../screen/auth/Login/LoginScreen";
 import ProfileScreen from "../screen/Profile/profile-screen/ProfileScreen";
-import SignUpUI from "../screen/auth/signup/SignupScreen";
+import SignUpUI from "../screen/auth/Signup/SignupScreen";
 import PasswordReset from "../screen/auth/forgot-password/forgotPasswordScreen";
 import CreateNewPassword from "../screen/auth/create-password/CreatePassword";
 import DrawerNavigation from "../navigators/DrawerNavigation";
 import AboutUs from "../screen/Profile/about/AboutScreen";
 import ProfileSettingsScreen from "../screen/Profile/ProfileIndex";
 import TearmsCodition from "../screen/Profile/tearms-conditions/TearmsCondition";
-import DashboardScreen from "../screen/BottomTab/DashBoard/Dashboard";
-import DashboardDetail from "../screen/BottomTab/DashBoard/DashboardDetail";
-import RecentDeliveries from "../screen/BottomTab/DashBoard/RecentDeliveries";
-import DeliveryMap from "../screen/BottomTab/DashBoard/DeliveryMap";
-import OrderDetails from "../screen/BottomTab/DashBoard/OrderDetails";
+import DashboardScreen from "../screen/BottomTab/Dashboard/Dashboard";
+import DashboardDetail from "../screen/BottomTab/Dashboard/DashboardDetail";
+import RecentDeliveries from "../screen/BottomTab/Dashboard/RecentDeliveries";
+import DeliveryMap from "../screen/BottomTab/Dashboard/DeliveryMap";
+import OrderDetails from "../screen/BottomTab/Dashboard/OrderDetails";
 import NotificationsSetting from "../screen/Profile/notification-setting/NotificationsSetting";
-import DeliveryDetail from "../screen/BottomTab/DashBoard/DeliveryDetail";
+import DeliveryDetail from "../screen/BottomTab/Dashboard/DeliveryDetail";
 
 const _routes: any = {
   REGISTRATION_ROUTE: [

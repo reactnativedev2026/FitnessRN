@@ -20,7 +20,7 @@ import CustomButton from '../../../component/common/CustomButton';
 import LoadingModal from '../../../component/LoadingModal';
 import useLogin from './useLogin';
 import TextInputField from '../../../component/common/TextInputField';
-import styles from './login.styles';
+import { styles } from './login.styles';
 import imageIndex from '../../../assets/imageIndex';
 import { color } from '../../../theme/colors';
 import CountryPicker, { Country, CountryCode } from 'react-native-country-picker-modal';

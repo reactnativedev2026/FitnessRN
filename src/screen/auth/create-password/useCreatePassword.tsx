@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-  import ScreenNameEnum from '../../../routes/screenName.enum';
+import ScreenNameEnum from '../../../routes/screenName.enum';
 import { Alert } from 'react-native';
-import { authResetPassword } from '../../../api/authApi/AuthApi';
+import { authResetPassword } from '../../../Api/authApi/AuthApi';
 import { errorToast, successToast } from '../../../utils/customToast';
 
 const useCreateNewPassword = () => {
@@ -29,12 +29,12 @@ const useCreateNewPassword = () => {
     if (!otp.trim()) validationErrors.otp = 'OTP is required.';
     if (!password.trim()) validationErrors.password = 'Password is required.';
     if (!confirmPassword.trim()) validationErrors.confirmPassword = 'Confirm Password is required.';
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    
+
     if (password !== confirmPassword) {
       Alert.alert('Error', 'Passwords do not match.');
       return;

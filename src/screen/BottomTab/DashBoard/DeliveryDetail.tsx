@@ -14,8 +14,8 @@ import { color } from '../../../theme/colors';
 import imageIndex from '../../../assets/imageIndex';
 import CustomHeader from '../../../component/common/CustomHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GET_API } from '../../../api/APIRequest';
-import { ENDPOINT } from '../../../api/endpoints';
+import { GET_API } from '../../../Api/APIRequest';
+import { ENDPOINT } from '../../../Api/endpoints';
 import LoadingModal from '../../../component/LoadingModal';
 import moment from 'moment';
 import ScreenNameEnum from '../../../routes/screenName.enum';
@@ -159,11 +159,12 @@ const DeliveryDetail = () => {
         {/* Action Buttons */}
         {delivery?.shipment_status !== 'completed' && (
           <View style={styles.actionContainer}>
-            <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate(ScreenNameEnum.DashBoardDetail as never, { type: 'update', deliveryId: delivery?.id } as never)}>
+            <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate(ScreenNameEnum.RaceDetail as never, { type: 'update', deliveryId: delivery?.id, status: delivery?.shipment_status } as never)}>
               <Text style={styles.buttonText}>Update Status</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.navigate(ScreenNameEnum.MapScreen as never, { delivery } as never)}>
               <Text style={styles.buttonText}>View on Map</Text>
+
             </TouchableOpacity>
           </View>
         )}

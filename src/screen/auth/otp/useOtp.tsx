@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-import { authVerifyOtp } from '../../../api/authApi/AuthApi';
+import { authVerifyOtp } from '../../../Api/authApi/AuthApi';
 import { errorToast, successToast } from '../../../utils/customToast';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../../redux/feature/authSlice';

@@ -35,13 +35,7 @@ const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ visible, onClose, o
 
   const handleTakePhoto = async () => {
     try {
-      const hasPermission = await requestCameraPermissions();
-      if (!hasPermission) {
-        alert('Camera permission is required to take photos.');
-        return;
-      }
-
-      const image = await ImagePicker.openCamera({
+      const image = await ImagePicker.openPicker({
         width: 1000,
         height: 1000,
         cropping: true,

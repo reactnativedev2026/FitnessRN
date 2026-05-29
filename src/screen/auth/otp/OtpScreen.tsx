@@ -22,10 +22,10 @@ import StatusBarComponent from '../../../component/common/StatusBarCompoent';
 import LoadingModal from '../../../component/LoadingModal';
 import { useOtpVerification } from './useOtp';
 import { styles as otpStyles } from './otp.styles';
-import loginStyles from '../login/login.styles';
 import { color } from '../../../theme/colors';
 import imageIndex from '../../../assets/imageIndex';
 import { useIsFocused } from '@react-navigation/native';
+import { styles } from '../Login/login.styles';
 
 export default function OtpScreen() {
   const {
@@ -56,7 +56,7 @@ export default function OtpScreen() {
       {isFocused && (
         <Video
           source={imageIndex.kimboVideo}
-          style={loginStyles.backgroundVideo}
+          style={styles.backgroundVideo}
           muted={true}
           repeat={true}
           resizeMode="cover"
@@ -66,7 +66,7 @@ export default function OtpScreen() {
         />
       )}
 
-      <View style={[loginStyles.backgroundVideo, { backgroundColor: 'rgba(0,0,0,0.5)' }]} />
+      <View style={[styles.backgroundVideo, { backgroundColor: 'rgba(0,0,0,0.5)' }]} />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -100,12 +100,12 @@ export default function OtpScreen() {
                 style={{ height: 100, width: '90%', alignSelf: 'center', marginBottom: 20 }}
                 resizeMode="contain"
               />
-              <Text style={loginStyles.title}>Verify OTP</Text>
+              <Text style={styles.title}>Verify OTP</Text>
             </View>
 
             {/* Form Section */}
-            <View style={loginStyles.formBox}>
-              <Text style={loginStyles.subTitle}>
+            <View style={styles.formBox}>
+              <Text style={styles.subTitle}>
                 A verification code was sent to the address. Enter the code received below.
               </Text>
 
@@ -133,13 +133,13 @@ export default function OtpScreen() {
                 {errorMessage ? <Text style={otpStyles.errorText}>{errorMessage}</Text> : null}
               </View>
 
-              <Text style={[loginStyles.subTitle, { marginTop: 20 }]}>
+              <Text style={[styles.subTitle, { marginTop: 20 }]}>
                 {timer > 0 ? (
                   `You can resend the code in ${timer} sec.`
                 ) : (
-                  <Text style={loginStyles.subTitle}>
+                  <Text style={styles.subTitle}>
                     Didn't receive the code?{' '}
-                    <Text style={[loginStyles.subTitle, { color: color.primary, fontWeight: '700' }]} onPress={handleResendOTP}>
+                    <Text style={[styles.subTitle, { color: color.primary, fontWeight: '700' }]} onPress={handleResendOTP}>
                       Resend OTP
                     </Text>
                   </Text>
@@ -147,7 +147,7 @@ export default function OtpScreen() {
               </Text>
 
               <View style={{ marginTop: 30, marginBottom: 30 }}>
-                <CustomButton title="Continue" onPress={handleVerifyOTP} style={loginStyles.loginBtn} />
+                <CustomButton title="Continue" onPress={handleVerifyOTP} style={styles.loginBtn} />
               </View>
             </View>
           </ScrollView>

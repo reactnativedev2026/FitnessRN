@@ -19,7 +19,7 @@ import { logout } from '../../redux/feature/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../component/common/CustomHeader';
-import { IMAGE_URL } from '../../api';
+import { IMAGE_URL } from '../../Api';
 
 
 const ProfileIndex = () => {
@@ -28,7 +28,7 @@ const ProfileIndex = () => {
   const { userData } = useSelector((state: any) => state.auth);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
-    const menuItems = [
+  const menuItems = [
     {
       id: 1,
       title: 'Profile',
@@ -72,8 +72,8 @@ const ProfileIndex = () => {
       onPress: () => navigation.navigate(ScreenNameEnum.Help as never),
     },
   ];
-    
-  
+
+
 
   const handleLogout = async () => {
     setLogoutModalVisible(false);
@@ -102,12 +102,12 @@ const ProfileIndex = () => {
               source={
                 userData?.profile_image_url || userData?.profile_image
                   ? {
-                      uri: (() => {
-                        const img = userData.profile_image_url || userData.profile_image;
-                        if (img.startsWith('http://') || img.startsWith('https://')) return img;
-                        return `${IMAGE_URL}${img.startsWith('/') ? img : '/' + img}`;
-                      })()
-                    }
+                    uri: (() => {
+                      const img = userData.profile_image_url || userData.profile_image;
+                      if (img.startsWith('http://') || img.startsWith('https://')) return img;
+                      return `${IMAGE_URL}${img.startsWith('/') ? img : '/' + img}`;
+                    })()
+                  }
                   : imageIndex.profile
               }
               style={styles.avatar}

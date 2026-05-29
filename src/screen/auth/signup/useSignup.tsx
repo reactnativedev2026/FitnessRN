@@ -1,7 +1,7 @@
 // useSignup.ts
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { signupApi } from '../../../api/authApi/AuthApi';
+import { signupApi } from '../../../Api/authApi/AuthApi';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import { errorToast } from '../../../utils/customToast';
 import { Alert } from 'react-native';
@@ -211,16 +211,16 @@ const useSignup = () => {
 
       if (data?.content && data.content.length > 0) {
         // Prioritize Active (A) first, then Allowed to Operate (Y)
-        const bestMatch = data.content.find((item: any) => item.carrier?.statusCode === "A") || 
-                          data.content.find((item: any) => item.carrier?.allowedToOperate === "Y") || 
-                          data.content[0];
+        const bestMatch = data.content.find((item: any) => item.carrier?.statusCode === "A") ||
+          data.content.find((item: any) => item.carrier?.allowedToOperate === "Y") ||
+          data.content[0];
 
 
         const carrier = bestMatch.carrier;
         console.log(carrier, 'carrrrrrr')
-        
+
         const companyName = carrier?.dbaName || carrier?.legalName || '';
-        
+
         setFmcsaData({
           dotNumber: carrier.dotNumber,
           isDotVerified: !!carrier.dotNumber,

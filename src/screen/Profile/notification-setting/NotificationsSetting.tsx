@@ -9,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import LoadingModal from "../../../component/LoadingModal";
-import { BASE_URL } from "../../../api";
+import { BASE_URL } from "../../../Api";
 
 const NotificationsSetting = () => {
   const navigation = useNavigation();

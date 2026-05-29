@@ -19,14 +19,13 @@ import { color } from '../../../theme/colors';
 import imageIndex from '../../../assets/imageIndex';
 import CustomHeader from '../../../component/common/CustomHeader';
 import ImagePicker from 'react-native-image-crop-picker';
-import { requestCameraPermissions } from '../../../api';
 import SignaturePad from '../../../component/SignaturePad';
 import Svg, { Path } from 'react-native-svg';
 import ReportIssueModal from '../../../component/ReportIssueModal';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GET_API, POST_API } from '../../../api/APIRequest';
-import { ENDPOINT } from '../../../api/endpoints';
+import { GET_API, POST_API } from '../../../Api/APIRequest';
+import { ENDPOINT } from '../../../Api/endpoints';
 import LoadingModal from '../../../component/LoadingModal';
 import Clipboard from '@react-native-clipboard/clipboard';
 
@@ -37,10 +36,20 @@ type OrderStatus = 'Assigned' | 'Started' | 'Arrived' | 'Delivered';
 const OrderDetails = () => {
   const navigation = useNavigation();
   const route: any = useRoute();
-  const { deliveryId } = route.params || {};
+  const { deliveryId, status: routeStatus } = route.params || {};
   const [loading, setLoading] = useState(false);
   const [delivery, setDelivery] = useState<any>(null);
-  const [status, setStatus] = useState<OrderStatus>('Assigned');
+
+  const getMappedStatus = (s: string): OrderStatus => {
+    const apiStatus = s?.toLowerCase();
+    if (apiStatus === 'assigned' || apiStatus === 'accepted') return 'Assigned';
+    if (apiStatus === 'started' || apiStatus === 'out_for_delivery') return 'Started';
+    if (apiStatus === 'arrived') return 'Arrived';
+    if (apiStatus === 'delivered') return 'Delivered';
+    return 'Assigned';
+  };
+
+  const [status, setStatus] = useState<OrderStatus>(routeStatus ? getMappedStatus(routeStatus) : 'Assigned');
   const [showDeliveryForm, setShowDeliveryForm] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const [capturedPhotoBase64, setCapturedPhotoBase64] = useState<string | null>(null);
@@ -127,12 +136,7 @@ const OrderDetails = () => {
 
       let dynamicSignature = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
       if (signature) {
-        try {
-          const svgMarkup = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="150" viewBox="0 0 300 150"><path d="${signature}" stroke="black" stroke-width="3" fill="none"/></svg>`;
-          dynamicSignature = `data:image/svg+xml;base64,${btoa(svgMarkup)}`;
-        } catch (e) {
-          console.error("Error encoding signature:", e);
-        }
+        dynamicSignature = signature;
       }
 
       const payload = {
@@ -271,13 +275,7 @@ const OrderDetails = () => {
 
   const handleTakePhoto = async () => {
     try {
-      const hasPermission = await requestCameraPermissions();
-      if (!hasPermission) {
-        alert('Camera permission is required to take photos.');
-        return;
-      }
-
-      const image = await ImagePicker.openCamera({
+      const image = await ImagePicker.openPicker({
         width: 1000,
         height: 1000,
         cropping: true,
@@ -434,9 +432,7 @@ const OrderDetails = () => {
               <TouchableOpacity style={styles.signaturePad} onPress={() => setShowSignatureModal(true)}>
                 {signature ? (
                   <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Svg width="100%" height="100%" viewBox={`0 0 ${width - 60} 300`}>
-                      <Path d={signature} stroke="black" strokeWidth={3} fill="none" />
-                    </Svg>
+                    <Image source={{ uri: signature }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
                   </View>
                 ) : (
                   <Text style={{ color: color.primary }}>Sign Here</Text>

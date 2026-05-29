@@ -15,8 +15,8 @@ import CustomHeader from "../../../component/common/CustomHeader";
 import imageIndex from "../../../assets/imageIndex";
 import ScreenNameEnum from "../../../routes/screenName.enum";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GET_API } from '../../../api/APIRequest';
-import { ENDPOINT } from '../../../api/endpoints';
+import { GET_API } from '../../../Api/APIRequest';
+import { ENDPOINT } from '../../../Api/endpoints';
 import LoadingModal from '../../../component/LoadingModal';
 
 const DashboardDetail = ({ route }: any) => {

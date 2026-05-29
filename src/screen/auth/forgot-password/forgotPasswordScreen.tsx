@@ -21,8 +21,9 @@ import TextInputField from '../../../component/common/TextInputField';
 import LoadingModal from '../../../component/LoadingModal';
 import useForgot from './useForgot';
 import imageIndex from '../../../assets/imageIndex';
-import styles from '../login/login.styles';
+
 import { useIsFocused } from '@react-navigation/native';
+import { styles } from '../Login/login.styles';
 
 export default function PasswordReset() {
   const { credentials, errors, isLoading, handleChange, handleForgot, navigation } = useForgot();

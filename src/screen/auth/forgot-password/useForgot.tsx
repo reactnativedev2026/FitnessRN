@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { authForgotPassword } from '../../../api/authApi/AuthApi';
+import { authForgotPassword } from '../../../Api/authApi/AuthApi';
 import { errorToast, successToast } from '../../../utils/customToast';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 

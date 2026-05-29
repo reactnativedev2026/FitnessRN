@@ -46,7 +46,7 @@ const CustomHeader: React.FC<Props> = ({ isSearch, rightIcons = [], menuIcon, la
           )
         } */}
 
-        <TouchableOpacity onPress={() => { }}
+        <TouchableOpacity onPress={() => { }} style={{ minWidth: 40 }}
         >
           {showRight &&
             <Image source={imageIndex.no1} style={styles.rightIcon} resizeMode="contain" />

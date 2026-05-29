@@ -23,7 +23,6 @@ const menuItems = [
   { id: "13", title: "Announcements", icon: imageIndex.no1, screen: ScreenNameEnum.AnnouncementsScreen },
   { id: "14", title: "Offers", icon: imageIndex.bag, screen: ScreenNameEnum.OffersScreen },
   { id: "1", title: "Profile", icon: imageIndex.profile, screen: ScreenNameEnum.EditProfile },
-
   { id: "2", title: "Calculator", icon: imageIndex.service, screen: ScreenNameEnum.ClickUploadScreen },
   { id: "3", title: "Duty Logs", icon: imageIndex.clock, screen: ScreenNameEnum.DutyLog },
   { id: "4", title: "Notification", icon: imageIndex.no1, screen: ScreenNameEnum.NotificationsSetting },
@@ -83,9 +82,9 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
           <View
             style={styles.menuItem}
           >
-            <View style={{backgroundColor:color.primary, height:45, width:45, borderRadius:23, alignItems:'center', justifyContent:'center',  marginRight: 15,}}>
-            <Image source={item.icon} style={styles.icon} />
-            </View> 
+            <View style={{ backgroundColor: color.primary, height: 45, width: 45, borderRadius: 23, alignItems: 'center', justifyContent: 'center', marginRight: 15, }}>
+              <Image source={item.icon} style={styles.icon} />
+            </View>
             <Text allowFontScaling={false} style={styles.menuText}>{item.title}</Text>
           </View>
           {/* <Image source={imageIndex.next} style={[styles.icon,{
@@ -114,7 +113,7 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
               tintColor: "black",
               height: 34,
               width: 22,
-              marginRight:20
+              marginRight: 20
 
             }]} />
           )}
@@ -141,7 +140,7 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
     )
   }
   const dispatch = useDispatch()
-    const handleLogout = () => {
+  const handleLogout = () => {
     dispatch(logout());
 
     navigation.reset({
@@ -170,7 +169,7 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
           }}
           source={isLogin?.userData?.user_data?.image ? { uri: isLogin?.userData?.user_data?.image } : imageIndex.dummy} /> */}
         <View>
-           <Text style={{
+          <Text style={{
             marginLeft: 15,
 
             color: color.primary,
@@ -182,14 +181,14 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
 
             color: "black",
             fontWeight: "600",
-             fontSize:24
+            fontSize: 24
           }}>{isLogin?.userData?.user_data?.user_name || "Marcus Aminoff"}</Text>
           <Text style={{
             marginLeft: 15,
             marginTop: 5,
             color: "black",
             fontWeight: "600",
-            fontSize:18
+            fontSize: 18
           }}>{isLogin?.userData?.user_data?.email || '@Marcus'}</Text>
         </View>
       </TouchableOpacity>
@@ -209,9 +208,9 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
           setLogoutModal(false)
         }}
         onLogout={handleLogout}
- 
 
-         
+
+
       />
     </SafeAreaView>
   );
@@ -247,7 +246,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     resizeMode: "contain",
-   
+
   },
   menuText: {
     fontSize: 16,

@@ -21,7 +21,7 @@ import ScreenNameEnum from "../../../routes/screenName.enum";
 import { styles } from "./DashboardStyle";
 import DeliveryCard from "../../../component/DeliveryCard";
 import SwipeButton from 'rn-swipe-button';
-import { IMAGE_URL } from "../../../api";
+import { IMAGE_URL } from "../../../Api";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const DashboardScreen = () => {

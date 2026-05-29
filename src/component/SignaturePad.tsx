@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, StyleSheet, PanResponder, TouchableOpacity, Text } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import ViewShot from 'react-native-view-shot';
 
 interface SignaturePadProps {
   onSave: (path: string) => void;
@@ -9,6 +10,7 @@ interface SignaturePadProps {
 
 const SignaturePad: React.FC<SignaturePadProps> = ({ onSave, onClear }) => {
   const [paths, setPaths] = useState<string[]>([]);
+  const viewShotRef = useRef<any>(null);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -39,20 +41,34 @@ const SignaturePad: React.FC<SignaturePadProps> = ({ onSave, onClear }) => {
     onClear();
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (paths.length > 0) {
-      onSave(paths.join(' '));
+      try {
+        if (viewShotRef.current) {
+          const uri = await viewShotRef.current.capture();
+          // uri is base64 string since we specify format and result
+          onSave(`data:image/png;base64,${uri}`);
+        }
+      } catch (err) {
+        console.error("Error capturing signature:", err);
+      }
     }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.canvas} {...panResponder.panHandlers}>
-        <Svg style={StyleSheet.absoluteFill}>
-          {paths.map((p, i) => (
-            <Path key={i} d={p} stroke="black" strokeWidth={3} fill="none" />
-          ))}
-        </Svg>
+        <ViewShot 
+          ref={viewShotRef} 
+          style={{ flex: 1, backgroundColor: '#fff' }}
+          options={{ format: "png", quality: 1, result: "base64" }}
+        >
+          <Svg style={StyleSheet.absoluteFill}>
+            {paths.map((p, i) => (
+              <Path key={i} d={p} stroke="black" strokeWidth={3} fill="none" />
+            ))}
+          </Svg>
+        </ViewShot>
       </View>
       <View style={styles.footer}>
         <TouchableOpacity style={styles.button} onPress={handleClear}>
@@ -77,6 +93,7 @@ const styles = StyleSheet.create({
   },
   canvas: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   footer: {
     flexDirection: 'row',

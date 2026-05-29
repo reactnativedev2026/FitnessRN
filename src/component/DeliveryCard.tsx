@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { color } from '../theme/colors';
 import imageIndex from '../assets/imageIndex';
-import { styles as dashboardStyles } from '../screen/BottomTab/DashBoard/DashboardStyle';
+import { styles as dashboardStyles } from '../screen/BottomTab/Dashboard/DashboardStyle';
 import moment from 'moment';
 
 interface DeliveryCardProps {

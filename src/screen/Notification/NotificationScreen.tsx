@@ -6,8 +6,8 @@ import imageIndex from '../../assets/imageIndex';
 import { color } from '../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_API } from '../../api/APIRequest';
-import { ENDPOINT } from '../../api/endpoints';
+import { GET_API } from '../../Api/APIRequest';
+import { ENDPOINT } from '../../Api/endpoints';
 import { logout } from '../../redux/feature/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EmptyListMessage from '../../component/EmptyListMessage';
@@ -30,16 +30,16 @@ const NotificationItem = ({ item, isUnread, onPress }: { item: any; isUnread: bo
       ]}
     >
       <View style={styles.iconContainer}>
-        <Icon 
-          name={isUnread ? "notifications" : "notifications-outline"} 
-          size={24} 
-          color={isUnread ? color.primary : '#9CA3AF'} 
+        <Icon
+          name={isUnread ? "notifications" : "notifications-outline"}
+          size={24}
+          color={isUnread ? color.primary : '#9CA3AF'}
         />
         {isUnread && <View style={styles.unreadDot} />}
       </View>
       <View style={styles.textContainer}>
-        <Text 
-          numberOfLines={1} 
+        <Text
+          numberOfLines={1}
           style={[styles.title, isUnread && { fontWeight: '700' }]}
         >
           {item.title || item.message}
@@ -53,14 +53,14 @@ const NotificationItem = ({ item, isUnread, onPress }: { item: any; isUnread: bo
   );
 };
 
-const NotificationDetailModal = ({ 
-  visible, 
-  item, 
+const NotificationDetailModal = ({
+  visible,
+  item,
   onClose,
   onGoToDetail
-}: { 
-  visible: boolean; 
-  item: any; 
+}: {
+  visible: boolean;
+  item: any;
   onClose: () => void;
   onGoToDetail: (item: any) => void;
 }) => {
@@ -77,13 +77,13 @@ const NotificationDetailModal = ({
       visible={visible}
       onRequestClose={onClose}
     >
-      <TouchableOpacity 
-        activeOpacity={1} 
-        onPress={onClose} 
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={onClose}
         style={styles.modalOverlay}
       >
-        <TouchableOpacity 
-          activeOpacity={1} 
+        <TouchableOpacity
+          activeOpacity={1}
           style={styles.modalContent}
         >
           <View style={styles.modalHeader}>
@@ -104,15 +104,15 @@ const NotificationDetailModal = ({
 
           <View style={styles.modalFooter}>
             {isDeliveryUpdate && (
-              <CustomButton 
-                onPress={() => onGoToDetail(item)} 
-                title="Go to Detail" 
+              <CustomButton
+                onPress={() => onGoToDetail(item)}
+                title="Go to Detail"
                 style={[styles.footerButton, { marginBottom: 12 }]}
               />
             )}
-            <CustomButton 
-              onPress={onClose} 
-              title="Close" 
+            <CustomButton
+              onPress={onClose}
+              title="Close"
               bgColor="rgba(255,255,255,0.05)"
               txtcolor={color.white}
               style={styles.footerButton}
@@ -174,7 +174,7 @@ const NotificationsScreen = () => {
 
   const markAsRead = async (id: string) => {
     if (readIds.includes(id)) return;
-    
+
     const newReadIds = [...readIds, id];
     setReadIds(newReadIds);
     try {
@@ -187,7 +187,7 @@ const NotificationsScreen = () => {
   const fetchNotifications = async () => {
     try {
       const response = await GET_API(ENDPOINT.NOTIFICATIONS, token, "GET", setLoading);
-      
+
       if (response && response.success) {
         setNotifications(response.data || []);
         console.log("Notifications:", response.data || []);
@@ -226,9 +226,9 @@ const NotificationsScreen = () => {
             renderItem={({ item }) => {
               const isUnread = !readIds.includes(item.id?.toString());
               return (
-                <NotificationItem 
-                  item={item} 
-                  isUnread={isUnread} 
+                <NotificationItem
+                  item={item}
+                  isUnread={isUnread}
                   onPress={() => handleNotificationPress(item)}
                 />
               );
@@ -236,16 +236,16 @@ const NotificationsScreen = () => {
             contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, paddingTop: 20 }}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={
-              <EmptyListMessage 
-                message="No notifications found yet." 
-                icon="notifications-off-outline" 
+              <EmptyListMessage
+                message="No notifications found yet."
+                icon="notifications-off-outline"
               />
             }
           />
-          <NotificationDetailModal 
-            visible={modalVisible} 
-            item={selectedNotification} 
-            onClose={() => setModalVisible(false)} 
+          <NotificationDetailModal
+            visible={modalVisible}
+            item={selectedNotification}
+            onClose={() => setModalVisible(false)}
             onGoToDetail={handleGoToDetail}
           />
         </>

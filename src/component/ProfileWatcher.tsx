@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GET_API } from '../api/APIRequest';
-import { ENDPOINT } from '../api/endpoints';
+import { GET_API } from '../Api/APIRequest';
+import { ENDPOINT } from '../Api/endpoints';
 import { logout } from '../redux/feature/authSlice';
 import ScreenNameEnum from '../routes/screenName.enum';
 import { useNavigation } from '@react-navigation/native';

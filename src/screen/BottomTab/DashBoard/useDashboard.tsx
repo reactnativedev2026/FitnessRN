@@ -3,8 +3,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logout } from "../../../redux/feature/authSlice";
-import { ENDPOINT } from "../../../api/endpoints";
-import { GET_API, POST_API } from "../../../api/APIRequest";
+import { ENDPOINT } from "../../../Api/endpoints";
+import { GET_API, POST_API } from "../../../Api/APIRequest";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ScreenNameEnum from "../../../routes/screenName.enum";
 
@@ -44,7 +44,7 @@ const useDashboard = () => {
   const toggleAvailability = async (isOnline: boolean, isSilent = false) => {
     const token = await AsyncStorage.getItem("token");
     if (!token) return;
-    const loaderFunc = isSilent ? () => {} : setLoading;
+    const loaderFunc = isSilent ? () => { } : setLoading;
     const param = { is_online: isOnline };
     console.log("🚀 CALLING DRIVER_AVAILABILITY API:", param);
     const res = await POST_API(token, param, ENDPOINT.DRIVER_AVAILABILITY, loaderFunc, false);
@@ -74,7 +74,7 @@ const useDashboard = () => {
         navigation.navigate(ScreenNameEnum.LoginScreen as never);
         return;
       }
-      const loaderFunc = isSilent ? () => {} : setLoading;
+      const loaderFunc = isSilent ? () => { } : setLoading;
       const response = await GET_API(ENDPOINT.DASHBOARD, token, "GET", loaderFunc);
       if (response && response.success) {
         setDashboardData(response.data);
@@ -105,7 +105,7 @@ const useDashboard = () => {
   useEffect(() => {
     fetchDashboardData();
   }, []);
- 
+
 
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();

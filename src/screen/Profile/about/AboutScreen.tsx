@@ -8,14 +8,13 @@ import {
   Text,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import HTML from 'react-native-render-html';
 import imageIndex from '../../../assets/imageIndex';
 import StatusBarComponent from '../../../component/common/StatusBarCompoent';
 import CustomHeader from '../../../component/common/CustomHeader';
 import { hp } from '../../../utils/Constant';
 import font from '../../../theme/font';
-import { GET_API } from '../../../api/APIRequest';
-import { ENDPOINT } from '../../../api/endpoints';
+import { GET_API } from '../../../Api/APIRequest';
+import { ENDPOINT } from '../../../Api/endpoints';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { color } from '../../../theme/colors';
@@ -67,7 +66,7 @@ const AboutUs = () => {
         </View>
 
         {content ? (
-        <Text style={styles.bodyText}>{content}</Text>
+          <Text style={styles.bodyText}>{content}</Text>
         ) : (
           <Text style={styles.bodyText}>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy. This Privacy Policy has been created with the help of the</Text>
         )}

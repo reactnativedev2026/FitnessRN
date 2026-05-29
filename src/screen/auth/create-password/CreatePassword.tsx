@@ -20,8 +20,8 @@ import TextInputField from '../../../component/common/TextInputField';
 import LoadingModal from '../../../component/LoadingModal';
 import useCreateNewPassword from './useCreatePassword';
 import imageIndex from '../../../assets/imageIndex';
-import styles from '../login/login.styles';
 import { useIsFocused } from '@react-navigation/native';
+import { styles } from '../Login/login.styles';
 
 export default function CreateNewPassword() {
   const {

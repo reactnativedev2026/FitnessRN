@@ -20,7 +20,6 @@ import LoadingModal from '../../../component/LoadingModal';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useProfileScreen from './useProfile';
 import { pickProfileImage } from './imagePicker';
-import { IMAGE_URL } from '../../../api';
 import { styles } from './profile.styles';
 
 export default function ProfileScreen() {
@@ -66,12 +65,12 @@ export default function ProfileScreen() {
                 source={
                   credentials.profileImage
                     ? {
-                        uri: typeof credentials.profileImage === 'string'
-                          ? (credentials.profileImage.startsWith('http://') || credentials.profileImage.startsWith('https://')
-                              ? credentials.profileImage
-                              : `${IMAGE_URL}${credentials.profileImage.startsWith('/') ? credentials.profileImage : '/' + credentials.profileImage}`)
-                          : credentials.profileImage.path
-                      }
+                      uri: typeof credentials.profileImage === 'string'
+                        ? (credentials.profileImage.startsWith('http://') || credentials.profileImage.startsWith('https://')
+                          ? credentials.profileImage
+                          : `${'https://kimbo.aitechnotech.in'}${credentials.profileImage.startsWith('/') ? credentials.profileImage : '/' + credentials.profileImage}`)
+                        : credentials.profileImage.path
+                    }
                     : imageIndex.profile
                 }
                 style={styles.avatar}
