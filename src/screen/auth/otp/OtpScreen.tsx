@@ -25,7 +25,7 @@ import { styles as otpStyles } from './otp.styles';
 import { color } from '../../../theme/colors';
 import imageIndex from '../../../assets/imageIndex';
 import { useIsFocused } from '@react-navigation/native';
-import { styles } from '../Login/login.styles';
+import { styles } from '../login/login.styles';
 
 export default function OtpScreen() {
   const {

@@ -15,7 +15,7 @@ import StatusBarComponent from '../../../component/common/StatusBarCompoent';
 import CustomHeader from '../../../component/common/CustomHeader';
 import { hp } from '../../../utils/Constant';
 import font from '../../../theme/font';
-import { Privacypolicy } from '../../../Api/authApi/AuthApi';
+import { Privacypolicy } from '../../../api/authApi/AuthApi';
 import { color } from '../../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
 

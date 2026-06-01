@@ -21,7 +21,7 @@ import LoadingModal from '../../../component/LoadingModal';
 import useCreateNewPassword from './useCreatePassword';
 import imageIndex from '../../../assets/imageIndex';
 import { useIsFocused } from '@react-navigation/native';
-import { styles } from '../Login/login.styles';
+import { styles } from '../login/login.styles';
 
 export default function CreateNewPassword() {
   const {

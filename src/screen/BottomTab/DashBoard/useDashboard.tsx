@@ -3,8 +3,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logout } from "../../../redux/feature/authSlice";
-import { ENDPOINT } from "../../../Api/endpoints";
-import { GET_API, POST_API } from "../../../Api/APIRequest";
+import { ENDPOINT } from "../../../api/endpoints";
+import { GET_API, POST_API } from "../../../api/APIRequest";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ScreenNameEnum from "../../../routes/screenName.enum";
 

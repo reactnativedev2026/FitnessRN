@@ -16,7 +16,7 @@ import CustomHeader from '../../../component/common/CustomHeader';
 import LoadingModal from '../../../component/LoadingModal';
 import { hp } from '../../../utils/Constant';
 import font from '../../../theme/font';
-import { Termsconditions } from '../../../Api/authApi/AuthApi';
+import { Termsconditions } from '../../../api/authApi/AuthApi';
 import { color } from '../../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
 

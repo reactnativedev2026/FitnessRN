@@ -1,7 +1,7 @@
 // useSignup.ts
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { UpdteProfileApi } from '../../../Api/authApi/AuthApi';
+import { UpdteProfileApi } from '../../../api/authApi/AuthApi';
 import { errorToast } from '../../../utils/customToast';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';

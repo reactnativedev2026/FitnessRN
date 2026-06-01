@@ -5,7 +5,7 @@ import CustomDrawerContent from '../component/common/CustomDrawerContent';
 import PrivacyPolicy from '../screen/Profile/privacy-policy/PrivacyPolicy';
 import ScreenNameEnum from '../routes/screenName.enum';
 import HelpScreen from '../screen/Profile/help/HelpScreen';
-import Dashboard from '../screen/BottomTab/DashBoard/Dashboard';
+import Dashboard from '../screen/BottomTab/Dashboard/Dashboard';
 import ProfileScreen from '../screen/Profile/profile-screen/ProfileScreen';
 import AnnouncementsScreen from '../screen/Announcements/Announcements';
 import OffersScreen from '../screen/Offers/Offers';

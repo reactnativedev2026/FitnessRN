@@ -1,7 +1,7 @@
 // useSignup.ts
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { signupApi } from '../../../Api/authApi/AuthApi';
+import { signupApi } from '../../../api/authApi/AuthApi';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import { errorToast } from '../../../utils/customToast';
 import { Alert } from 'react-native';

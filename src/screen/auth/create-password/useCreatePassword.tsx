@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import { Alert } from 'react-native';
-import { authResetPassword } from '../../../Api/authApi/AuthApi';
+import { authResetPassword } from '../../../api/authApi/AuthApi';
 import { errorToast, successToast } from '../../../utils/customToast';
 
 const useCreateNewPassword = () => {

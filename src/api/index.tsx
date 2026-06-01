@@ -85,7 +85,7 @@ export const requestCameraPermissions = async () => {
   if (Platform.OS === 'android') {
     try {
       const permissions = [PermissionsAndroid.PERMISSIONS.CAMERA];
-      
+
       // Add storage permissions only for older Android versions if needed, 
       // but CAMERA is the main one for taking photos.
       if (Platform.Version < 33) {
@@ -95,7 +95,7 @@ export const requestCameraPermissions = async () => {
       const granted = await PermissionsAndroid.requestMultiple(permissions);
 
       const cameraGranted = granted[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED;
-      
+
       return cameraGranted;
     } catch (error) {
       console.warn('Permission request error:', error);

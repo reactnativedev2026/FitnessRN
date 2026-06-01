@@ -20,8 +20,8 @@ import useDashboard from './useDashboard';
 
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { POST_API } from '../../../Api/APIRequest';
-import { ENDPOINT } from '../../../Api/endpoints';
+import { POST_API } from '../../../api/APIRequest';
+import { ENDPOINT } from '../../../api/endpoints';
 import LoadingModal from '../../../component/LoadingModal';
 
 const darkMapStyle = [

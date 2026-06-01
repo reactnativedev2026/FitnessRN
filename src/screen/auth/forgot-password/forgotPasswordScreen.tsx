@@ -23,7 +23,7 @@ import useForgot from './useForgot';
 import imageIndex from '../../../assets/imageIndex';
 
 import { useIsFocused } from '@react-navigation/native';
-import { styles } from '../Login/login.styles';
+import { styles } from '../login/login.styles';
 
 export default function PasswordReset() {
   const { credentials, errors, isLoading, handleChange, handleForgot, navigation } = useForgot();

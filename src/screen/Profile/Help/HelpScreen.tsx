@@ -9,8 +9,8 @@ import CustomHeader from "../../../component/common/CustomHeader";
 import imageIndex from "../../../assets/imageIndex";
 import CustomButton from "../../../component/common/CustomButton";
 import { Linking } from "react-native";
-import { POST_API, GET_API } from "../../../Api/APIRequest";
-import { ENDPOINT } from "../../../Api/endpoints";
+import { POST_API, GET_API } from "../../../api/APIRequest";
+import { ENDPOINT } from "../../../api/endpoints";
 import { color } from "../../../theme/colors";
 
 const HelpSupportScreen = () => {

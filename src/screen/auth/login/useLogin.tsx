@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-import { authLogin } from '../../../Api/authApi/AuthApi';
+import { authLogin } from '../../../api/authApi/AuthApi';
 import { errorToast, successToast } from '../../../utils/customToast';
 
 interface Credentials {

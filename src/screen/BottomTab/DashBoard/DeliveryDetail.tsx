@@ -14,8 +14,8 @@ import { color } from '../../../theme/colors';
 import imageIndex from '../../../assets/imageIndex';
 import CustomHeader from '../../../component/common/CustomHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GET_API } from '../../../Api/APIRequest';
-import { ENDPOINT } from '../../../Api/endpoints';
+import { GET_API } from '../../../api/APIRequest';
+import { ENDPOINT } from '../../../api/endpoints';
 import LoadingModal from '../../../component/LoadingModal';
 import moment from 'moment';
 import ScreenNameEnum from '../../../routes/screenName.enum';
@@ -116,6 +116,22 @@ const DeliveryDetail = () => {
             </View>
           </View>
         </View>
+        {/* 
+-- complete delivery status
+-- add report modal 
+-- privacy policy
+-- terms and conditions
+-- support
+-- update profile image
+-- Call customer 
+-- submit order
+
+Note - Please send me Google map api key for map feature 
+
+ipa - https://i.diawi.com/GUYjQ1
+video - https://we.tl/t-igs8sx4sRtF5H6ba
+*/}
+
 
         {/* Package Details */}
         <View style={styles.sectionCard}>
@@ -164,7 +180,6 @@ const DeliveryDetail = () => {
             </TouchableOpacity>
             <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.navigate(ScreenNameEnum.MapScreen as never, { delivery } as never)}>
               <Text style={styles.buttonText}>View on Map</Text>
-
             </TouchableOpacity>
           </View>
         )}

@@ -24,8 +24,8 @@ import Svg, { Path } from 'react-native-svg';
 import ReportIssueModal from '../../../component/ReportIssueModal';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GET_API, POST_API } from '../../../Api/APIRequest';
-import { ENDPOINT } from '../../../Api/endpoints';
+import { GET_API, POST_API } from '../../../api/APIRequest';
+import { ENDPOINT } from '../../../api/endpoints';
 import LoadingModal from '../../../component/LoadingModal';
 import Clipboard from '@react-native-clipboard/clipboard';
 

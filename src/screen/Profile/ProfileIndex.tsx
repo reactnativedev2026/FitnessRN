@@ -19,7 +19,7 @@ import { logout } from '../../redux/feature/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../component/common/CustomHeader';
-import { IMAGE_URL } from '../../Api';
+import { IMAGE_URL } from '../../api';
 
 
 const ProfileIndex = () => {
