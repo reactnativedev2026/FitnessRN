@@ -116,23 +116,6 @@ const DeliveryDetail = () => {
             </View>
           </View>
         </View>
-        {/* 
--- complete delivery status
--- add report modal 
--- privacy policy
--- terms and conditions
--- support
--- update profile image
--- Call customer 
--- submit order
-
-Note - Please send me Google map api key for map feature 
-
-ipa - https://i.diawi.com/GUYjQ1
-video - https://we.tl/t-igs8sx4sRtF5H6ba
-*/}
-
-
         {/* Package Details */}
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>Package Info</Text>
