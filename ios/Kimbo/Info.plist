@@ -37,15 +37,15 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs access to your camera to take photos.</string>
+	<string>Kimbo requires access to your camera to let you take and upload photos for your profile and share them within the app.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to your location to show your location on admin.</string>
+	<string>Kimbo needs access to your location to show your location on admin.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app needs microphone access</string>
+	<string>Kimbo requires microphone access to record audio when capturing videos.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>This app needs permission to save photos to your gallery.</string>
+	<string>Kimbo requires permission to save photos and media you create or receive to your device's photo gallery.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to your photo library to select images.</string>
+	<string>Kimbo requires access to your photo library to let you select and upload images for your profile and posts.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UIAppFonts</key>

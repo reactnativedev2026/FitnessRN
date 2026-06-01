@@ -12,11 +12,11 @@ interface Credentials {
 
 const useLogin = () => {
   const [credentials, setCredentials] = useState<Credentials>({
-    email: '',
-    // email: 'gs@yopmail.com',
+    // email: '',
+    email: __DEV__ ? 'gs@yopmail.com' : '',
     phone: '',
-    password: '',
-    // password: '12345678',
+    // password: '',
+    password: __DEV__ ? '12345678' : '',
   });
 
   const [errors, setErrors] = useState<Partial<Credentials>>({});
