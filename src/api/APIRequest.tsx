@@ -1,4 +1,5 @@
 import { BASE_URL } from ".";
+import { Platform } from "react-native";
 
 
 export const API_CALL = async (
@@ -97,10 +98,11 @@ export const objectToFormData = (obj: any) => {
 
     // Image / File handling
     if (typeof value === 'object' && value?.path) {
+      const imageName = value.filename || value.path.split('/').pop() || `${key}.jpg`;
       formData.append(key, {
-        uri: value.path,
+        uri: Platform.OS === 'ios' ? value.path.replace('file://', '') : value.path,
         type: value.mime || 'image/jpeg',
-        name: value.filename || `${key}.jpg`,
+        name: imageName,
       } as any);
     }
 

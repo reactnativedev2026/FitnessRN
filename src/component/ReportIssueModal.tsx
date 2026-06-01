@@ -17,9 +17,9 @@ import font from '../theme/font';
 import CustomButton from './common/CustomButton';
 import Toast from 'react-native-toast-message';
 import toastConfig from '../utils/customToast';
-import ImagePicker from 'react-native-image-crop-picker';
-import { requestCameraPermissions } from '../api';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ImageSourceSheet from './common/ImageSourceSheet';
+import { ImageSourceType, isImagePickerCancelled, pickImageFromSource } from '../utils/imagePicker';
 
 const { width } = Dimensions.get('window');
 
@@ -32,10 +32,11 @@ interface ReportIssueModalProps {
 const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ visible, onClose, onSubmit }) => {
   const [note, setNote] = useState('');
   const [photo, setPhoto] = useState<string | null>(null);
+  const [imageSheetVisible, setImageSheetVisible] = useState(false);
 
-  const handleTakePhoto = async () => {
+  const handlePickPhoto = async (source: ImageSourceType) => {
     try {
-      const image = await ImagePicker.openPicker({
+      const image = await pickImageFromSource(source, {
         width: 1000,
         height: 1000,
         cropping: true,
@@ -47,7 +48,7 @@ const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ visible, onClose, o
         setPhoto(`data:${image.mime};base64,${image.data}`);
       }
     } catch (error: any) {
-      if (error.code !== 'E_PICKER_CANCELLED') {
+      if (!isImagePickerCancelled(error)) {
         console.error('Photo capture error:', error);
       }
     }
@@ -106,19 +107,46 @@ const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ visible, onClose, o
               />
 
               <Text style={styles.label}>Issue Photo (Optional)</Text>
-              <TouchableOpacity style={styles.photoContainer} onPress={handleTakePhoto}>
+              <View style={styles.photoContainer}>
                 {photo ? (
                   <View style={{ alignItems: 'center' }}>
                     <Image source={{ uri: photo }} style={styles.previewImage} />
-                    <Text style={styles.photoActionText}>Tap to retake</Text>
+                    <TouchableOpacity
+                      style={styles.changePhotoButton}
+                      onPress={() => setImageSheetVisible(true)}
+                      activeOpacity={0.85}
+                    >
+                      <Icon name="swap-horizontal-outline" size={17} color="#fff" />
+                      <Text style={styles.changePhotoText}>Change Photo</Text>
+                    </TouchableOpacity>
                   </View>
                 ) : (
-                  <View style={{ alignItems: 'center' }}>
-                    <Icon name="camera-outline" size={32} color="#9CA3AF" />
-                    <Text style={styles.photoActionText}>Tap to take photo</Text>
-                  </View>
+                  <>
+                    <View style={styles.photoEmptyIcon}>
+                      <Icon name="image-outline" size={30} color="#9CA3AF" />
+                    </View>
+                    <Text style={styles.photoHintText}>Attach an issue photo from camera or gallery</Text>
+                    <View style={styles.photoActionRow}>
+                      <TouchableOpacity
+                        style={styles.photoActionButton}
+                        onPress={() => handlePickPhoto('camera')}
+                        activeOpacity={0.85}
+                      >
+                        <Icon name="camera-outline" size={20} color="#fff" />
+                        <Text style={styles.photoActionText}>Camera</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.photoActionButton}
+                        onPress={() => handlePickPhoto('gallery')}
+                        activeOpacity={0.85}
+                      >
+                        <Icon name="images-outline" size={20} color="#fff" />
+                        <Text style={styles.photoActionText}>Gallery</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </>
                 )}
-              </TouchableOpacity>
+              </View>
 
               <View style={styles.buttonWrapper}>
                 <CustomButton
@@ -131,6 +159,12 @@ const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ visible, onClose, o
           </View>
         </KeyboardAvoidingView>
         <Toast config={toastConfig} />
+        <ImageSourceSheet
+          visible={imageSheetVisible}
+          title="Add Issue Photo"
+          onClose={() => setImageSheetVisible(false)}
+          onSelect={handlePickPhoto}
+        />
       </View>
     </Modal>
   );
@@ -218,12 +252,59 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 12,
-    marginBottom: 8,
+    marginBottom: 12,
+    backgroundColor: '#111827',
+  },
+  photoEmptyIcon: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#111827',
+    marginBottom: 10,
+  },
+  photoHintText: {
+    color: '#9CA3AF',
+    fontSize: 12,
+    textAlign: 'center',
+    marginBottom: 14,
+    fontFamily: font.MonolithRegular,
+  },
+  photoActionRow: {
+    flexDirection: 'row',
+    width: '100%',
+    gap: 12,
+  },
+  photoActionButton: {
+    flex: 1,
+    height: 46,
+    borderRadius: 14,
+    backgroundColor: color.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 7,
   },
   photoActionText: {
-    color: '#9CA3AF',
+    color: '#fff',
     fontSize: 13,
-    fontFamily: font.MonolithRegular,
+    fontWeight: '700',
+  },
+  changePhotoButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: color.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 14,
+  },
+  changePhotoText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '700',
   },
   buttonWrapper: {
     marginTop: 30,

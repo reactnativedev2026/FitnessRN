@@ -1,18 +1,19 @@
-import ImagePicker from 'react-native-image-crop-picker';
+import { isImagePickerCancelled, pickImageFromSource } from '../../../utils/imagePicker';
 
-export const pickProfileImage = async () => {
+export const pickProfileImage = async (source = 'gallery') => {
   try {
-    const image = await ImagePicker.openPicker({
+    const image = await pickImageFromSource(source, {
       width: 400,
       height: 400,
-      cropping: false,
+      cropping: true,
       compressImageQuality: 0.8,
-      mediaType: 'photo',
     });
 
     return image;
   } catch (error) {
-    console.log('Image pick cancelled');
+    if (!isImagePickerCancelled(error)) {
+      console.log('Profile image pick error:', error);
+    }
     return null;
   }
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -21,9 +21,12 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import useProfileScreen from './useProfile';
 import { pickProfileImage } from './imagePicker';
 import { styles } from './profile.styles';
+import ImageSourceSheet from '../../../component/common/ImageSourceSheet';
+import { ImageSourceType } from '../../../utils/imagePicker';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
+  const [imageSheetVisible, setImageSheetVisible] = useState(false);
   const {
     credentials,
     errors,
@@ -32,8 +35,8 @@ export default function ProfileScreen() {
     handleUpdateProfile,
   } = useProfileScreen();
 
-  const handleImagePick = async () => {
-    const result = await pickProfileImage();
+  const handleImagePick = async (source: ImageSourceType) => {
+    const result = await pickProfileImage(source);
     if (result) {
       handleChange('profileImage', result);
     }
@@ -75,7 +78,7 @@ export default function ProfileScreen() {
                 }
                 style={styles.avatar}
               />
-              <TouchableOpacity style={styles.editButton} onPress={handleImagePick}>
+              <TouchableOpacity style={styles.editButton} onPress={() => setImageSheetVisible(true)}>
                 <Icon name="camera-alt" size={20} color="#fff" />
               </TouchableOpacity>
             </View>
@@ -134,6 +137,13 @@ export default function ProfileScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <ImageSourceSheet
+        visible={imageSheetVisible}
+        title="Update Profile Photo"
+        onClose={() => setImageSheetVisible(false)}
+        onSelect={handleImagePick}
+      />
     </SafeAreaView>
   );
 }

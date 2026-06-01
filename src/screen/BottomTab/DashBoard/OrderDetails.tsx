@@ -18,7 +18,6 @@ import ScreenNameEnum from '../../../routes/screenName.enum';
 import { color } from '../../../theme/colors';
 import imageIndex from '../../../assets/imageIndex';
 import CustomHeader from '../../../component/common/CustomHeader';
-import ImagePicker from 'react-native-image-crop-picker';
 import SignaturePad from '../../../component/SignaturePad';
 import Svg, { Path } from 'react-native-svg';
 import ReportIssueModal from '../../../component/ReportIssueModal';
@@ -28,6 +27,8 @@ import { GET_API, POST_API } from '../../../api/APIRequest';
 import { ENDPOINT } from '../../../api/endpoints';
 import LoadingModal from '../../../component/LoadingModal';
 import Clipboard from '@react-native-clipboard/clipboard';
+import ImageSourceSheet from '../../../component/common/ImageSourceSheet';
+import { ImageSourceType, isImagePickerCancelled, pickImageFromSource } from '../../../utils/imagePicker';
 
 const { width } = Dimensions.get('window');
 
@@ -59,6 +60,7 @@ const OrderDetails = () => {
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showPhotoSourceSheet, setShowPhotoSourceSheet] = useState(false);
 
   useEffect(() => {
     if (deliveryId) {
@@ -273,9 +275,9 @@ const OrderDetails = () => {
     );
   };
 
-  const handleTakePhoto = async () => {
+  const handlePickDeliveryPhoto = async (source: ImageSourceType) => {
     try {
-      const image = await ImagePicker.openPicker({
+      const image = await pickImageFromSource(source, {
         width: 1000,
         height: 1000,
         cropping: true,
@@ -290,7 +292,7 @@ const OrderDetails = () => {
         }
       }
     } catch (error: any) {
-      if (error.code === 'E_PICKER_CANCELLED') {
+      if (isImagePickerCancelled(error)) {
         console.log('User cancelled image picker');
       } else {
         console.error('Photo capture error:', error);
@@ -444,15 +446,37 @@ const OrderDetails = () => {
               <Text style={[styles.inputLabel, { textAlign: 'center' }]}>Upload Photo (Optional)</Text>
               {capturedPhoto ? (
                 <View style={{ alignItems: 'center' }}>
-                  <Image source={{ uri: capturedPhoto }} style={{ width: 150, height: 150, borderRadius: 10, marginBottom: 10 }} />
-                  <TouchableOpacity onPress={handleTakePhoto}>
-                    <Text style={{ color: color.primary }}>Retake Photo</Text>
+                  <Image source={{ uri: capturedPhoto }} style={styles.proofPreviewImage} />
+                  <TouchableOpacity style={styles.changePhotoButton} onPress={() => setShowPhotoSourceSheet(true)}>
+                    <Icon name="swap-horizontal-outline" size={17} color="#fff" />
+                    <Text style={styles.changePhotoText}>Change Photo</Text>
                   </TouchableOpacity>
                 </View>
               ) : (
-                <TouchableOpacity style={styles.takePhotoButton} onPress={handleTakePhoto}>
-                  <Text style={{ color: '#000', fontWeight: '600' }}>Take Photo</Text>
-                </TouchableOpacity>
+                <>
+                  <View style={styles.photoEmptyIcon}>
+                    <Icon name="image-outline" size={30} color="#9CA3AF" />
+                  </View>
+                  <Text style={styles.photoHintText}>Upload delivery proof from camera or gallery</Text>
+                  <View style={styles.photoActionRow}>
+                    <TouchableOpacity
+                      style={styles.photoActionButton}
+                      onPress={() => handlePickDeliveryPhoto('camera')}
+                      activeOpacity={0.85}
+                    >
+                      <Icon name="camera-outline" size={20} color="#fff" />
+                      <Text style={styles.photoActionText}>Camera</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.photoActionButton}
+                      onPress={() => handlePickDeliveryPhoto('gallery')}
+                      activeOpacity={0.85}
+                    >
+                      <Icon name="images-outline" size={20} color="#fff" />
+                      <Text style={styles.photoActionText}>Gallery</Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
               )}
             </View>
 
@@ -548,6 +572,12 @@ const OrderDetails = () => {
           visible={showReportModal}
           onClose={() => setShowReportModal(false)}
           onSubmit={handleReportSubmit}
+        />
+        <ImageSourceSheet
+          visible={showPhotoSourceSheet}
+          title="Upload Proof Photo"
+          onClose={() => setShowPhotoSourceSheet(false)}
+          onSelect={handlePickDeliveryPhoto}
         />
       </ScrollView>
     </SafeAreaView>
@@ -725,14 +755,68 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#2B3545',
+    borderStyle: 'dashed',
   },
-  takePhotoButton: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    paddingHorizontal: 20,
+  proofPreviewImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 12,
+    marginBottom: 12,
+    backgroundColor: '#111827',
+  },
+  photoEmptyIcon: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#111827',
+    marginTop: 2,
+    marginBottom: 10,
+  },
+  photoHintText: {
+    color: '#9CA3AF',
+    fontSize: 12,
+    textAlign: 'center',
+    marginBottom: 14,
+  },
+  photoActionRow: {
+    flexDirection: 'row',
+    width: '100%',
+    gap: 12,
+  },
+  photoActionButton: {
+    flex: 1,
+    height: 46,
+    borderRadius: 14,
+    backgroundColor: color.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 7,
+  },
+  photoActionText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  changePhotoButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: color.primary,
+    paddingHorizontal: 16,
     paddingVertical: 10,
-    marginTop: 10
+    borderRadius: 14,
+  },
+  changePhotoText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '700',
   },
   formFooter: {
     color: '#6F767E',
