@@ -43,6 +43,75 @@ const DashboardScreen = () => {
     <SafeAreaView style={styles.container}>
       <LoadingModal visible={loading} />
       <StatusBar barStyle="light-content" />
+
+      {/* Header Section */}
+      <ImageBackground source={imageIndex.dashboardTop}
+        style={[
+          styles.headerGradient,
+          { paddingTop: Platform.OS === "android" ? insets.top + 20 : 20 }
+        ]}
+      >
+        <View style={styles.headerContent}>
+          <View>
+            <Text style={styles.welcomeText}>Welcome back!</Text>
+            <Text style={styles.userName}>Hello {userData?.name || 'Alex'} 👋</Text>
+          </View>
+          <View style={styles.headerIcons}>
+            <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.NotificationsScreen as never)}
+            >
+              <Icon name="notifications-outline" size={24} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate(ScreenNameEnum.ProfileSetup as never)}>
+              {userData?.profile_image_url || userData?.profile_image ? (
+                <Image
+                  source={{
+                    uri: (() => {
+                      const img = userData.profile_image_url || userData.profile_image;
+                      if (img.startsWith('http://') || img.startsWith('https://')) return img;
+                      return `${IMAGE_URL}${img.startsWith('/') ? img : '/' + img}`;
+                    })()
+                  }}
+                  style={{ width: 40, height: 40, borderRadius: 20 }}
+                />
+              ) : (
+                <Icon name="person-outline" size={24} color="#fff" />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ImageBackground>
+      <View style={{ marginHorizontal: 20, marginTop: 15 }}>
+        <SwipeButton
+          disabled={false}
+          swipeSuccessThreshold={70}
+          height={60}
+          width={Dimensions.get('window').width - 40}
+          title={selectedDuty.status === 'on_duty' ? "Swipe to go Offline" : "Swipe to go Online"}
+          shouldResetAfterSuccess={true}
+          resetAfterSuccessAnimDelay={100}
+          titleFadeOut={false}
+          onSwipeSuccess={async () => {
+            const nextStatus = selectedDuty.status === 'on_duty' ? 'off_duty' : 'on_duty';
+            const duty = DUTY_OPTIONS.find(d => d.status === nextStatus);
+            if (duty) {
+              const isOnline = nextStatus === 'on_duty';
+              await toggleAvailability(isOnline, false);
+              selectDuty(duty);
+            }
+          }}
+          railFillBackgroundColor={'transparent'}
+          railFillBorderColor={selectedDuty.status != 'on_duty' ? '#FF3B30' : color.primary}
+          thumbIconBackgroundColor={selectedDuty.status != 'on_duty' ? '#FF3B30' : color.primary}
+          thumbIconComponent={() => (
+            <Image source={imageIndex.go} style={{ width: 50, height: 50 }} />
+          )}
+          railBackgroundColor="#1C1F26"
+          railBorderColor="#393B48"
+          titleColor="#fff"
+          titleFontSize={16}
+          titleStyles={{ fontFamily: font.TrialBold }}
+        />
+      </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -54,75 +123,7 @@ const DashboardScreen = () => {
           />
         }
       >
-        {/* Header Section */}
-        <ImageBackground source={imageIndex.dashboardTop}
-          style={[
-            styles.headerGradient,
-            { paddingTop: Platform.OS === "android" ? insets.top + 20 : 20 }
-          ]}
-        >
-          <View style={styles.headerContent}>
-            <View>
-              <Text style={styles.welcomeText}>Welcome back!</Text>
-              <Text style={styles.userName}>Hello {userData?.name || 'Alex'} 👋</Text>
-            </View>
-            <View style={styles.headerIcons}>
-              <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.NotificationsScreen as never)}
-              >
-                <Icon name="notifications-outline" size={24} color="#fff" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate(ScreenNameEnum.ProfileSetup as never)}>
-                {userData?.profile_image_url || userData?.profile_image ? (
-                  <Image
-                    source={{
-                      uri: (() => {
-                        const img = userData.profile_image_url || userData.profile_image;
-                        if (img.startsWith('http://') || img.startsWith('https://')) return img;
-                        return `${IMAGE_URL}${img.startsWith('/') ? img : '/' + img}`;
-                      })()
-                    }}
-                    style={{ width: 40, height: 40, borderRadius: 20 }}
-                  />
-                ) : (
-                  <Icon name="person-outline" size={24} color="#fff" />
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ImageBackground>
 
-        <View style={{ marginHorizontal: 20, marginTop: 15 }}>
-          <SwipeButton
-            disabled={false}
-            swipeSuccessThreshold={70}
-            height={60}
-            width={Dimensions.get('window').width - 40}
-            title={selectedDuty.status === 'on_duty' ? "Swipe to go Offline" : "Swipe to go Online"}
-            shouldResetAfterSuccess={true}
-            resetAfterSuccessAnimDelay={100}
-            titleFadeOut={false}
-            onSwipeSuccess={async () => {
-              const nextStatus = selectedDuty.status === 'on_duty' ? 'off_duty' : 'on_duty';
-              const duty = DUTY_OPTIONS.find(d => d.status === nextStatus);
-              if (duty) {
-                const isOnline = nextStatus === 'on_duty';
-                await toggleAvailability(isOnline, false);
-                selectDuty(duty);
-              }
-            }}
-            railFillBackgroundColor={'transparent'}
-            railFillBorderColor={selectedDuty.status != 'on_duty' ? '#FF3B30' : color.primary}
-            thumbIconBackgroundColor={selectedDuty.status != 'on_duty' ? '#FF3B30' : color.primary}
-            thumbIconComponent={() => (
-              <Image source={imageIndex.go} style={{ width: 50, height: 50 }} />
-            )}
-            railBackgroundColor="#1C1F26"
-            railBorderColor="#393B48"
-            titleColor="#fff"
-            titleFontSize={16}
-            titleStyles={{ fontFamily: font.TrialBold }}
-          />
-        </View>
 
         {/* Stats Section */}
         <View style={styles.statsRow}>
