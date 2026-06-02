@@ -214,6 +214,9 @@ const DashboardScreen = () => {
                 status={item.shipment_status_label}
                 fromAddress={item.origin?.address}
                 toAddress={item.destination?.address}
+                clientName={item?.client_name}
+                saplername={item?.supplier_name}
+
               />
             </TouchableOpacity>
           ))

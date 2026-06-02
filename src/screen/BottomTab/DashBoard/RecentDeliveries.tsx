@@ -35,7 +35,6 @@ const RecentDeliveries = ({ route }: any) => {
     await fetchDeliveries();
     setRefreshing(false);
   };
-
   const getHeaderLabel = () => {
     switch (status) {
       case 'assigned': return 'Assigned Deliveries';
@@ -46,6 +45,7 @@ const RecentDeliveries = ({ route }: any) => {
   };
 
   const filteredDeliveries = deliveries.filter((item: any) => {
+
     const searchStr = searchQuery.toLowerCase();
     return (
       item.tracking_number?.toLowerCase().includes(searchStr) ||
@@ -126,17 +126,23 @@ const RecentDeliveries = ({ route }: any) => {
             colors={['#fff']}
           />
         }
-        renderItem={({ item }) => (
-          <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}>
-            <DeliveryCard
-              id={item.tracking_number}
-              date={item.expected_delivery}
-              status={item.shipment_status_label}
-              fromAddress={item.origin?.address}
-              toAddress={item.destination?.address}
-            />
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) => {
+          console.log(item, "item")
+          return (
+            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}>
+              <DeliveryCard
+                id={item.tracking_number}
+                date={item.expected_delivery}
+                status={item.shipment_status_label}
+                fromAddress={item.origin?.address}
+                toAddress={item.destination?.address}
+                clientName={item?.client_name}
+                saplername={item?.supplier_name}
+
+              />
+            </TouchableOpacity>
+          )
+        }}
         ListEmptyComponent={
           <EmptyListMessage
             message={`No ${getHeaderLabel().toLowerCase()} found.`}

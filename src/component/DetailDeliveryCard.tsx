@@ -13,6 +13,8 @@ interface DetailDeliveryCardProps {
   onPressStart?: () => void;
   onPressMenu?: () => void;
   onPress?: () => void;
+  clientName?: string;
+  saplername?: string
 }
 
 const DetailDeliveryCard: React.FC<DetailDeliveryCardProps> = ({
@@ -24,6 +26,8 @@ const DetailDeliveryCard: React.FC<DetailDeliveryCardProps> = ({
   onPressStart,
   onPressMenu,
   onPress,
+  clientName,
+  saplername
 }) => {
   const isCompleted = status === 'Completed';
 
@@ -70,6 +74,10 @@ const DetailDeliveryCard: React.FC<DetailDeliveryCardProps> = ({
           </View>
           <View style={styles.addressTextWrapper}>
             <Text style={styles.addressLabel}>Pickup</Text>
+            {saplername && <Text style={[styles.addressValue, {
+              color: color.primary
+            }]} >{saplername}</Text>}
+
             <Text style={styles.addressValue} numberOfLines={2}>{pickupAddress}</Text>
           </View>
         </View>
@@ -81,6 +89,10 @@ const DetailDeliveryCard: React.FC<DetailDeliveryCardProps> = ({
           </View>
           <View style={styles.addressTextWrapper}>
             <Text style={styles.addressLabel}>Drop</Text>
+            {clientName && <Text style={[styles.addressValue, {
+              color: color.primary
+            }]} >{clientName}</Text>}
+
             <Text style={styles.addressValue} numberOfLines={2}>{dropAddress}</Text>
           </View>
         </View>

@@ -13,6 +13,8 @@ interface DeliveryCardProps {
   toAddress?: string;
   pickupLabel?: string;
   dropLabel?: string;
+  clientName?: string;
+  saplername?: string
 }
 
 const DeliveryCard: React.FC<DeliveryCardProps> = ({
@@ -23,6 +25,8 @@ const DeliveryCard: React.FC<DeliveryCardProps> = ({
   toAddress = "5678 Maple Avenue Seattle, WA 98101",
   pickupLabel = "From",
   dropLabel = "To",
+  clientName,
+  saplername
 }) => {
   return (
     <View style={dashboardStyles.deliveryCard}>
@@ -51,7 +55,12 @@ const DeliveryCard: React.FC<DeliveryCardProps> = ({
             <View style={dashboardStyles.dot} />
           </View>
           <View style={{ flex: 1, marginLeft: 10 }}>
+
             <Text style={dashboardStyles.addressLabel}>{pickupLabel}</Text>
+            {saplername && <Text style={[dashboardStyles.addressText, {
+              fontSize: 14,
+              color: color.primary
+            }]}>{saplername}</Text>}
             <Text style={dashboardStyles.addressText} numberOfLines={2}>
               {fromAddress}
             </Text>
@@ -75,6 +84,12 @@ const DeliveryCard: React.FC<DeliveryCardProps> = ({
           </View>
           <View style={{ flex: 1, marginLeft: 10 }}>
             <Text style={dashboardStyles.addressLabel}>{dropLabel}</Text>
+            {clientName && <Text style={[dashboardStyles.addressText, {
+              fontSize: 14,
+              color: color.primary
+            }]}>{clientName}</Text>}
+
+
             <Text style={dashboardStyles.addressText}>{toAddress}</Text>
           </View>
         </View>

@@ -92,6 +92,10 @@ const DashboardDetail = ({ route }: any) => {
             onPressStart={() => navigation.navigate(ScreenNameEnum.MapScreen as never, { delivery: item } as never)}
             onPressMenu={() => console.log('Menu', item.id)}
             onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}
+
+            clientName={item?.client_name}
+            saplername={item?.supplier_name}
+
           />
         ))}
         {filteredData.length === 0 && (
