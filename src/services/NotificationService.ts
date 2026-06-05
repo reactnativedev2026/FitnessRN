@@ -1,16 +1,30 @@
-import messaging from '@react-native-firebase/messaging';
+import {
+  AuthorizationStatus,
+  getAPNSToken,
+  getInitialNotification,
+  getMessaging,
+  getToken,
+  isDeviceRegisteredForRemoteMessages,
+  onMessage,
+  onNotificationOpenedApp,
+  onTokenRefresh,
+  registerDeviceForRemoteMessages,
+  requestPermission,
+  type RemoteMessage,
+} from '@react-native-firebase/messaging';
 import { Platform } from 'react-native';
 import notifee, { AndroidImportance, EventType } from '@notifee/react-native';
 
 export class NotificationService {
   static async requestUserPermission() {
-    if (Platform.OS === 'android' && Platform.Version >= 33) {
-      await notifee.requestPermission();
-    }
-    const authStatus = await messaging().requestPermission();
+    const notifeeSettings = await notifee.requestPermission();
+    console.log('Notifee notification settings:', notifeeSettings);
+
+    const messagingInstance = getMessaging();
+    const authStatus = await requestPermission(messagingInstance);
     const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+      authStatus === AuthorizationStatus.AUTHORIZED ||
+      authStatus === AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
       console.log('Authorization status:', authStatus);
@@ -20,10 +34,16 @@ export class NotificationService {
 
   static async getToken() {
     try {
-      if (!messaging().isDeviceRegisteredForRemoteMessages) {
-        await messaging().registerDeviceForRemoteMessages();
+      const messagingInstance = getMessaging();
+      if (!isDeviceRegisteredForRemoteMessages(messagingInstance)) {
+        await registerDeviceForRemoteMessages(messagingInstance);
       }
-      const fcmToken = await messaging().getToken();
+      const apnsToken =
+        Platform.OS === 'ios' ? await getAPNSToken(messagingInstance) : null;
+      if (Platform.OS === 'ios') {
+        console.log('APNs Token:', apnsToken);
+      }
+      const fcmToken = await getToken(messagingInstance);
       console.log('FCM Token:', fcmToken);
       return fcmToken;
     } catch (error) {
@@ -32,51 +52,65 @@ export class NotificationService {
     }
   }
 
-  static onMessageListener() {
-    return messaging().onMessage(async remoteMessage => {
-      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  private static async displayRemoteMessage(remoteMessage: RemoteMessage) {
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'kimbo Channel',
+      importance: AndroidImportance.HIGH,
+    });
 
-      const channelId = await notifee.createChannel({
-        id: 'default',
-        name: 'kimbo Channel',
-        importance: AndroidImportance.HIGH,
-      });
-
-      await notifee.displayNotification({
-        title: remoteMessage.notification?.title || 'New Notification',
-        body: remoteMessage.notification?.body || '',
-        data: remoteMessage.data,
-        android: {
-          channelId,
-          smallIcon: 'ic_launcher', // Make sure this icon exists in mipmap/drawable
-          pressAction: {
-            id: 'default',
-          },
+    await notifee.displayNotification({
+      title:
+        remoteMessage.notification?.title ||
+        String(remoteMessage.data?.title || 'New Notification'),
+      body:
+        remoteMessage.notification?.body ||
+        String(remoteMessage.data?.body || remoteMessage.data?.message || ''),
+      data: remoteMessage.data,
+      android: {
+        channelId,
+        smallIcon: 'ic_launcher',
+        pressAction: {
+          id: 'default',
         },
-      });
+      },
+      ios: {
+        foregroundPresentationOptions: {
+          alert: true,
+          badge: true,
+          banner: true,
+          list: true,
+          sound: true,
+        },
+      },
+    });
+  }
+
+  static onMessageListener() {
+    return onMessage(getMessaging(), async remoteMessage => {
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      await NotificationService.displayRemoteMessage(remoteMessage);
     });
   }
 
   static setupListeners() {
-    messaging().onNotificationOpenedApp(remoteMessage => {
+    const unsubscribeOpenedApp = onNotificationOpenedApp(getMessaging(), remoteMessage => {
       console.log(
         'Notification caused app to open from background state:',
         remoteMessage.notification,
       );
     });
 
-    messaging()
-      .getInitialNotification()
-      .then(remoteMessage => {
-        if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.notification,
-          );
-        }
-      });
+    getInitialNotification(getMessaging()).then(remoteMessage => {
+      if (remoteMessage) {
+        console.log(
+          'Notification caused app to open from quit state:',
+          remoteMessage.notification,
+        );
+      }
+    });
 
-    notifee.onForegroundEvent(({ type, detail }) => {
+    const unsubscribeForegroundEvent = notifee.onForegroundEvent(({ type, detail }) => {
       switch (type) {
         case EventType.DISMISSED:
           console.log('User dismissed notification', detail.notification);
@@ -86,5 +120,15 @@ export class NotificationService {
           break;
       }
     });
+
+    const unsubscribeTokenRefresh = onTokenRefresh(getMessaging(), token => {
+      console.log('FCM Token refreshed:', token);
+    });
+
+    return () => {
+      unsubscribeOpenedApp();
+      unsubscribeForegroundEvent();
+      unsubscribeTokenRefresh();
+    };
   }
 }

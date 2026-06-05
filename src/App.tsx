@@ -21,11 +21,20 @@ LogBox.ignoreAllLogs();
 
 const App: FunctionComponent<any> = () => {
   useEffect(() => {
-    NotificationService.requestUserPermission();
-    NotificationService.getToken();
-    NotificationService.setupListeners();
-    const unsubscribe = NotificationService.onMessageListener();
-    return unsubscribe;
+    const initializeNotifications = async () => {
+      const hasPermission = await NotificationService.requestUserPermission();
+      if (hasPermission) {
+        await NotificationService.getToken();
+      }
+    };
+
+    initializeNotifications();
+    const unsubscribeSetupListeners = NotificationService.setupListeners();
+    const unsubscribeMessageListener = NotificationService.onMessageListener();
+    return () => {
+      unsubscribeSetupListeners();
+      unsubscribeMessageListener();
+    };
   }, []);
 
   return <AppNavigator />;

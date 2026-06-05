@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, SafeAreaView, View, StyleSheet } from 'react-native';
+import { StatusBar } from 'react-native';
 
 type StatusBarComponentProps = {
   barStyle?: 'default' | 'light-content' | 'dark-content';
@@ -20,11 +20,5 @@ const StatusBarComponent: React.FC<StatusBarComponentProps> = ({
     />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
-});
 
 export default StatusBarComponent;
