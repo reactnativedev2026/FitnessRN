@@ -5,7 +5,8 @@ export const pickProfileImage = async (source = 'gallery') => {
     const image = await pickImageFromSource(source, {
       width: 400,
       height: 400,
-      cropping: true,
+      cropping: false,
+
       compressImageQuality: 0.8,
     });
 

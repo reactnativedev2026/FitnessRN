@@ -39,7 +39,8 @@ const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ visible, onClose, o
       const image = await pickImageFromSource(source, {
         width: 1000,
         height: 1000,
-        cropping: true,
+        cropping: false,
+
         includeBase64: true,
         compressImageQuality: 0.5,
       });

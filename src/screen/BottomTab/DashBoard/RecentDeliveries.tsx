@@ -6,6 +6,7 @@ import {
   TextInput,
   View,
   RefreshControl,
+  Alert
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { styles } from "./DashboardStyle";
@@ -127,7 +128,6 @@ const RecentDeliveries = ({ route }: any) => {
           />
         }
         renderItem={({ item }) => {
-          console.log(item, "item")
           return (
             <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, { deliveryId: item.id } as never)}>
               <DeliveryCard
@@ -138,6 +138,8 @@ const RecentDeliveries = ({ route }: any) => {
                 toAddress={item.destination?.address}
                 clientName={item?.client_name}
                 saplername={item?.supplier_name}
+                companyName={item?.company_name}
+                boxcount={item?.box_count}
 
               />
             </TouchableOpacity>

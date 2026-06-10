@@ -14,7 +14,9 @@ interface DeliveryCardProps {
   pickupLabel?: string;
   dropLabel?: string;
   clientName?: string;
-  saplername?: string
+  saplername?: string;
+  companyName?: string;
+  boxcount?: string
 }
 
 const DeliveryCard: React.FC<DeliveryCardProps> = ({
@@ -26,7 +28,9 @@ const DeliveryCard: React.FC<DeliveryCardProps> = ({
   pickupLabel = "From",
   dropLabel = "To",
   clientName,
-  saplername
+  saplername,
+  companyName,
+  boxcount
 }) => {
   return (
     <View style={dashboardStyles.deliveryCard}>
@@ -49,6 +53,10 @@ const DeliveryCard: React.FC<DeliveryCardProps> = ({
       </View>
 
       <View style={dashboardStyles.addressSection}>
+
+
+
+
         {/* Pickup Address Row */}
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ width: 20, alignItems: 'center' }}>
@@ -94,6 +102,59 @@ const DeliveryCard: React.FC<DeliveryCardProps> = ({
           </View>
         </View>
       </View>
+      {companyName ? (
+        <View style={{ marginTop: 10 }}>
+          <Text
+            style={[
+              dashboardStyles.addressText,
+              {
+                fontSize: 13,
+                color: color.white,
+              },
+            ]}
+          >
+            <Text style={{ fontWeight: '600', color: color.white }}>
+              Company Name :
+            </Text>
+            <Text
+              style={{
+                fontWeight: '400',
+                color: color.primary,
+                textTransform: 'capitalize',
+              }}
+            >
+              {' '}{companyName}
+            </Text>
+          </Text>
+        </View>
+      ) : null}
+
+      {boxcount ? (
+        <View style={{ marginTop: 5, marginBottom: 5 }}>
+          <Text
+            style={[
+              dashboardStyles.addressText,
+              {
+                fontSize: 13,
+
+                color: color.white,
+              },
+            ]}
+          >
+            <Text style={{ fontWeight: '600', color: color.white }}>
+              Box Count :
+            </Text>
+            <Text
+              style={{
+                fontWeight: '400',
+                color: color.primary,
+              }}
+            >
+              {' '}{boxcount}
+            </Text>
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 };

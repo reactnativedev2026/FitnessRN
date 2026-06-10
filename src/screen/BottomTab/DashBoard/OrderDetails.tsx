@@ -280,7 +280,7 @@ const OrderDetails = () => {
       const image = await pickImageFromSource(source, {
         width: 1000,
         height: 1000,
-        cropping: true,
+        cropping: false,
         compressImageQuality: 0.5,
         includeBase64: true,
       });

@@ -38,7 +38,8 @@ const DashboardScreen = () => {
     onRefresh,
     toggleAvailability,
   } = useDashboard();
-
+  // console.log("dashboardData?.recent_deliveries0", dashboardData?.recent_deliveries)
+  // console.log("dashboardData?.summary", dashboardData?.summary)
   return (
     <SafeAreaView style={styles.container}>
       <LoadingModal visible={loading} />
@@ -216,7 +217,8 @@ const DashboardScreen = () => {
                 toAddress={item.destination?.address}
                 clientName={item?.client_name}
                 saplername={item?.supplier_name}
-
+                companyName={item?.company_name}
+                boxcount={item?.box_count}
               />
             </TouchableOpacity>
           ))

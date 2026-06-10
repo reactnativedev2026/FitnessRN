@@ -113,6 +113,10 @@ const DeliveryDetail = () => {
                 <Text style={styles.addressLabel}>Destination Location</Text>
                 <Text style={styles.addressText}>{delivery?.destination?.address}</Text>
               </View>
+
+
+
+
             </View>
           </View>
         </View>

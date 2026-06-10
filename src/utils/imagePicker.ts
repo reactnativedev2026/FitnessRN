@@ -15,7 +15,8 @@ type PickImageOptions = {
 const defaultOptions = {
   width: 1000,
   height: 1000,
-  cropping: true,
+  cropping: false,
+
   mediaType: 'photo' as const,
   compressImageQuality: 0.75,
 };
