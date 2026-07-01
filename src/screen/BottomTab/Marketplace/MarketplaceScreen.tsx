@@ -17,7 +17,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { color } from '../../../theme';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
+// Removed static color import;
 
 const tabs = ['All', 'Supplements', 'Equipment'];
 
@@ -53,6 +55,9 @@ const products = [
 ];
 
 export default function MarketplaceScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [active, setActive] = useState('All');
 
     return (
@@ -157,8 +162,8 @@ export default function MarketplaceScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: color.background },
+const createStyles = (theme: any) => StyleSheet.create({
+    container: { flex: 1, backgroundColor: theme.colors.background },
 
     scroll: {
         paddingHorizontal: 18,
@@ -172,7 +177,7 @@ const styles = StyleSheet.create({
     },
 
     headerTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 18,
         fontWeight: '800',
         marginLeft: 12,
@@ -207,7 +212,7 @@ const styles = StyleSheet.create({
     },
 
     activeTab: {
-        backgroundColor: '#fff',
+        backgroundColor: theme.colors.surface,
         borderColor: '#fff',
     },
 
@@ -218,7 +223,7 @@ const styles = StyleSheet.create({
     },
 
     activeTabText: {
-        color: '#000',
+        color: theme.colors.text,
     },
 
     banner: {
@@ -250,13 +255,13 @@ const styles = StyleSheet.create({
     },
 
     badgeText: {
-        color: '#000',
+        color: theme.colors.text,
         fontSize: 9,
         fontWeight: '900',
     },
 
     bannerTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 17,
         fontWeight: '900',
     },
@@ -273,14 +278,14 @@ const styles = StyleSheet.create({
         width: 110,
         height: 34,
         borderRadius: 5,
-        backgroundColor: '#fff',
+        backgroundColor: theme.colors.surface,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 14,
     },
 
     shopText: {
-        color: '#000',
+        color: theme.colors.text,
         fontSize: 11,
         fontWeight: '900',
     },
@@ -294,7 +299,7 @@ const styles = StyleSheet.create({
     },
 
     sectionTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 18,
         fontWeight: '900',
     },
@@ -351,7 +356,7 @@ const styles = StyleSheet.create({
     },
 
     productName: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 12,
         fontWeight: '800',
         marginTop: 5,
@@ -366,7 +371,7 @@ const styles = StyleSheet.create({
     },
 
     price: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 18,
         fontWeight: '900',
     },

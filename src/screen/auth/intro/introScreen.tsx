@@ -12,8 +12,13 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import imageIndex from '../../../assets/imageIndex';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function CoachlyLogin() {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
   const navigation = useNavigation<any>()
 
   return (
@@ -38,9 +43,9 @@ export default function CoachlyLogin() {
                 navigation.navigate(ScreenNameEnum.ActivityFocusScreen)
               }}
 
-              style={styles.googleBtn}>
-              <FontAwesome name="google" size={16} color="#111" />
-              <Text style={styles.googleText}>Continue with Google</Text>
+              style={styles.appleBtn}>
+              <FontAwesome name="google" size={16} color="white" />
+              <Text  style={styles.appleText}>Continue with Google</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -70,7 +75,7 @@ export default function CoachlyLogin() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#05070D',
@@ -100,14 +105,14 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 28,
     fontWeight: '900',
     marginBottom: 14,
   },
 
   subtitle: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 13,
     marginBottom: 38,
   },
@@ -116,7 +121,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 58,
     borderRadius: 29,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.surface,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -144,20 +149,20 @@ const styles = StyleSheet.create({
   },
 
   appleText: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 12,
   },
 
   guestText: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 13,
     fontWeight: '400',
   },
 
   emailLogin: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 10,
     letterSpacing: 2,
     textAlign: 'center',

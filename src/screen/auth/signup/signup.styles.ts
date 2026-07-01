@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { hp } from "../../../utils/Constant";
 import { color } from "../../../theme/colors";
 
-export const styles = StyleSheet.create({
+export const getStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -98,7 +98,7 @@ export const styles = StyleSheet.create({
     height: 22,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: color.primary,
+    borderColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
@@ -108,7 +108,7 @@ export const styles = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 2,
-    backgroundColor: color.primary,
+    backgroundColor: colors.primary,
   },
   checkboxLabel: {
     fontSize: 14,
@@ -130,7 +130,7 @@ export const styles = StyleSheet.create({
   signUpLink: {
     fontSize: 16,
     fontWeight: '700',
-    color: color.primary
+    color: colors.primary
   },
   errorText: {
     color: '#FF3B30',

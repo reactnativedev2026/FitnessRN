@@ -16,8 +16,13 @@ import ScreenNameEnum from '../../../routes/screenName.enum';
 import FitnessHeader from '../../../component/common/FitnessHeader';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function IsolationCardioScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor="#000" barStyle="light-content" />
@@ -102,8 +107,8 @@ export default function IsolationCardioScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#000' },
+const createStyles = (theme: any) => StyleSheet.create({
+    container: { flex: 1, backgroundColor: theme.colors.background },
 
     scroll: {
         paddingHorizontal: 18,
@@ -133,8 +138,8 @@ const styles = StyleSheet.create({
     },
 
     avatarText: { fontSize: 18 },
-    hello: { color: '#fff', fontSize: 10 },
-    name: { color: '#fff', fontSize: 14, fontWeight: '800' },
+    hello: { color: theme.colors.text, fontSize: 10 },
+    name: { color: theme.colors.text, fontSize: 14, fontWeight: '800' },
 
     dot: {
         position: 'absolute',
@@ -172,7 +177,7 @@ const styles = StyleSheet.create({
     },
 
     heroTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 18,
         fontWeight: '900',
         marginTop: 4,
@@ -193,7 +198,7 @@ const styles = StyleSheet.create({
     },
 
     isoText: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 11,
         fontWeight: '900',
         marginLeft: 6,
@@ -223,7 +228,7 @@ const styles = StyleSheet.create({
     },
 
     statValue: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 29,
         fontWeight: '900',
         marginTop: 10,
@@ -284,7 +289,7 @@ const styles = StyleSheet.create({
     },
 
     intensityTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 20,
         fontWeight: '900',
     },
@@ -346,7 +351,7 @@ const styles = StyleSheet.create({
         width: 140,
         height: 140,
         borderRadius: 10,
-        backgroundColor: '#fff',
+        backgroundColor: theme.colors.surface,
         alignItems: 'center',
         justifyContent: 'center',
         shadowColor: '#FFB36B',

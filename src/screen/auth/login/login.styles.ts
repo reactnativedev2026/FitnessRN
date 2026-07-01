@@ -2,10 +2,10 @@
 import { StyleSheet } from 'react-native';
 import { color } from '../../../theme/colors';
 
-export const styles = StyleSheet.create({
+export const getStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.background,
+    backgroundColor: colors.background,
     paddingHorizontal: 20,
     justifyContent: 'center'
   },
@@ -20,12 +20,12 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',
-    color: color.white,
+    color: colors.white,
   },
 
   subTitle: {
     fontSize: 14,
-    color: color.grey,
+    color: colors.grey,
     textAlign: 'center',
     marginTop: 6,
     marginBottom: 20,
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: color.primary,
+    borderColor: colors.primary,
     justifyContent: 'center',
     marginRight: 10,
   },
@@ -71,7 +71,7 @@ export const styles = StyleSheet.create({
 
   signUpText: {
     fontSize: 15,
-    color: color.grey,
+    color: colors.grey,
   },
 
   signUpLink: {
@@ -103,7 +103,7 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   activeTabText: {
-    color: color.white,
+    color: colors.white,
   },
   backgroundVideo: {
     position: 'absolute',

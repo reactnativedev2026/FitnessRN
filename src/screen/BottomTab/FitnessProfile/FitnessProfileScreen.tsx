@@ -14,11 +14,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import { resetToLogin } from '../../../routes/navigationService';
 import ScreenHeader from '../../../component/common/ScreenHeader';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 const fitnessImg =
     'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=900';
 
 export default function FitnessProfileScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor="#050505" barStyle="light-content" />
@@ -165,7 +170,7 @@ export default function FitnessProfileScreen({ navigation }: any) {
 
 const ORANGE = '#FF9500';
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#050505',
@@ -209,7 +214,7 @@ const styles = StyleSheet.create({
     },
 
     topTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 8,
         fontWeight: '900',
         letterSpacing: 1,
@@ -235,7 +240,7 @@ const styles = StyleSheet.create({
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 26,
         lineHeight: 28,
         fontWeight: '900',
@@ -245,7 +250,7 @@ const styles = StyleSheet.create({
         width: 58,
         height: 34,
         borderRadius: 16,
-        backgroundColor: '#fff',
+        backgroundColor: theme.colors.surface,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -281,7 +286,7 @@ const styles = StyleSheet.create({
     },
 
     statValue: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 18,
         fontWeight: '900',
     },
@@ -306,7 +311,7 @@ const styles = StyleSheet.create({
     },
 
     goalTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 18,
         fontWeight: '900',
     },
@@ -384,7 +389,7 @@ const styles = StyleSheet.create({
     },
 
     metricTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 12,
         fontWeight: '900',
     },
@@ -417,7 +422,7 @@ const styles = StyleSheet.create({
     },
 
     menuText: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 13,
         fontWeight: '800',
     },

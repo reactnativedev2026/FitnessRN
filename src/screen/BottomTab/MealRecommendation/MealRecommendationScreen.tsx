@@ -17,7 +17,9 @@ import ScreenNameEnum from '../../../routes/screenName.enum';
 import FitnessHeader from '../../../component/common/FitnessHeader';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { color } from '../../../theme';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
+// Removed static color import;
 
 const recommendations = [
     {
@@ -57,6 +59,9 @@ const meals = [
 ];
 
 export default function MealRecommendationScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor="#000" barStyle="light-content" />
@@ -173,10 +178,10 @@ export default function MealRecommendationScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.background,
+        backgroundColor: theme.colors.background,
     },
 
     header: {
@@ -206,12 +211,12 @@ const styles = StyleSheet.create({
     },
 
     hello: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 10,
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontWeight: '800',
         fontSize: 13,
     },
@@ -238,7 +243,7 @@ const styles = StyleSheet.create({
     },
 
     aiTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 20,
         fontWeight: '900',
         marginTop: 4,
@@ -290,7 +295,7 @@ const styles = StyleSheet.create({
     },
 
     badgeText: {
-        color: '#000',
+        color: theme.colors.text,
         fontWeight: '800',
         fontSize: 9,
     },
@@ -300,7 +305,7 @@ const styles = StyleSheet.create({
     },
 
     foodTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 20,
         fontWeight: '900',
     },
@@ -312,7 +317,7 @@ const styles = StyleSheet.create({
     },
 
     statNumber: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 20,
         fontWeight: '900',
     },
@@ -333,7 +338,7 @@ const styles = StyleSheet.create({
     },
 
     generateText: {
-        color: 'white',
+        color: theme.colors.text,
         fontWeight: '900',
         marginLeft: 8,
     },

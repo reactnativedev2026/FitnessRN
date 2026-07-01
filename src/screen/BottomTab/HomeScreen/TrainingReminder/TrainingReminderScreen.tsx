@@ -15,8 +15,13 @@ import Animated, {
     FadeInUp,
 } from 'react-native-reanimated';
 import ScreenNameEnum from '../../../../routes/screenName.enum';
+import { useAppTheme } from '../../../../theme/ThemeProvider';
+
 
 export default function TrainingReminderScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [enabled, setEnabled] = useState(true);
     const [selectedDay, setSelectedDay] = useState('M');
 
@@ -152,10 +157,10 @@ export default function TrainingReminderScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: theme.colors.background,
         paddingHorizontal: 24,
     },
 
@@ -180,7 +185,7 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 40,
         fontWeight: '900',
         lineHeight: 42,
@@ -210,7 +215,7 @@ const styles = StyleSheet.create({
     },
 
     cardTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontWeight: '700',
         fontSize: 16,
     },
@@ -271,7 +276,7 @@ const styles = StyleSheet.create({
     },
 
     reminderTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontWeight: '700',
     },
 
@@ -291,7 +296,7 @@ const styles = StyleSheet.create({
     },
 
     buttonText: {
-        color: '#000',
+        color: theme.colors.text,
         fontWeight: '900',
         fontSize: 16,
     },

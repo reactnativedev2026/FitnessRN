@@ -15,8 +15,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import FitnessHeader from '../../../component/common/FitnessHeader';
 import ScreenHeader from '../../../component/common/ScreenHeader';
-import { color } from '../../../theme';
+// Removed static color import;
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 const categories = ['All', 'Chest', 'Back', 'Legs', 'Arms'];
 
@@ -49,6 +51,9 @@ const exercises = [
 ];
 
 export default function ExerciseLibraryScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [active, setActive] = useState('All');
 
     return (
@@ -114,10 +119,10 @@ export default function ExerciseLibraryScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.background,
+        backgroundColor: theme.colors.background,
     },
 
     header: {
@@ -147,12 +152,12 @@ const styles = StyleSheet.create({
     },
 
     hello: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 9,
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 12,
         fontWeight: '800',
         marginTop: 2,
@@ -189,7 +194,7 @@ const styles = StyleSheet.create({
 
     input: {
         flex: 1,
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 12,
         marginLeft: 8,
         paddingVertical: 0,
@@ -222,7 +227,7 @@ const styles = StyleSheet.create({
     },
 
     activeChipText: {
-        color: '#fff',
+        color: theme.colors.text,
     },
 
     card: {
@@ -250,7 +255,7 @@ const styles = StyleSheet.create({
     },
 
     exerciseName: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 13,
         fontWeight: '800',
     },

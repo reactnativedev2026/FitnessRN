@@ -13,7 +13,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import ScreenHeader from '../../../component/common/ScreenHeader';
-import { color } from '../../../theme';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
+// Removed static color import;
 
 const protocols = [
     {
@@ -35,6 +37,9 @@ const protocols = [
 ];
 
 export default function FastingProtocolScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor="#050505" barStyle="light-content" />
@@ -115,10 +120,10 @@ export default function FastingProtocolScreen({ navigation }: any) {
 
 const ORANGE = '#FF9500';
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.background,
+        backgroundColor: theme.colors.background,
     },
 
     scroll: {

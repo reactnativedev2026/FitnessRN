@@ -26,7 +26,7 @@ import { useAppTheme } from '../../theme/ThemeProvider';
 import StatusBarComponent from '../../component/common/StatusBarCompoent';
 import CommonToggleSwitch from '../../component/common/CommonToggleSwitch';
 import { resetToLogin } from '../../routes/navigationService';
-import { color } from '../../theme';
+// Removed static color import;
 
 const BLACK = {
   background: '#050505',
@@ -48,7 +48,8 @@ const ProfileIndex = () => {
   const { userData } = useSelector((state: any) => state.auth);
 
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
-  const { isDark, setThemeMode } = useAppTheme();
+  const { isDark, setThemeMode , theme} = useAppTheme();
+  const styles = createStyles(theme);
 
   const transition = React.useRef(new Animated.Value(1)).current;
 
@@ -264,10 +265,10 @@ const ProfileIndex = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.background,
+    backgroundColor: theme.colors.background,
   },
 
   animatedContent: {
@@ -302,7 +303,7 @@ const styles = StyleSheet.create({
   },
 
   memberText: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 12,
     fontWeight: '900',
     marginLeft: 5,
@@ -568,7 +569,7 @@ const styles = StyleSheet.create({
   },
 
   logoutText: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 16,
     fontWeight: '900',
     fontFamily: font.TrialBold,

@@ -16,8 +16,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import FitnessHeader from '../../../component/common/FitnessHeader';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function SmartNotificationScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [enabled, setEnabled] = useState(true);
 
     return (
@@ -120,10 +125,10 @@ export default function SmartNotificationScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: theme.colors.background,
         paddingHorizontal: 24,
     },
 
@@ -154,12 +159,12 @@ const styles = StyleSheet.create({
     },
 
     hello: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 10,
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontWeight: '800',
         fontSize: 15,
         marginTop: 2,
@@ -203,7 +208,7 @@ const styles = StyleSheet.create({
     },
 
     cardTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 16,
         fontWeight: '700',
         marginLeft: 10,
@@ -224,7 +229,7 @@ const styles = StyleSheet.create({
     },
 
     toggleText: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 13,
         fontWeight: '500',
     },

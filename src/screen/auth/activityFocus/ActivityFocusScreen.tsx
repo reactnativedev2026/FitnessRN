@@ -13,10 +13,15 @@ import imageIndex from '../../../assets/imageIndex';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../../component/common/CustomButton';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-import { color } from '../../../theme';
+// Removed static color import;
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function ActivityFocusScreen() {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
   const navigation = useNavigation<any>();
   const [selected, setSelected] = useState<'gym' | 'home'>('gym');
 
@@ -37,7 +42,7 @@ export default function ActivityFocusScreen() {
 
   return (
     <ImageBackground source={imageIndex.bag} style={styles.container} resizeMode="cover">
-      <StatusBar barStyle="light-content" backgroundColor={color.background} translucent />
+      <StatusBar barStyle="light-content" backgroundColor={theme.colors.background} translucent />
 
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
@@ -117,10 +122,10 @@ export default function ActivityFocusScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.background,
+    backgroundColor: theme.colors.background,
   },
   safeArea: {
     flex: 1,
@@ -153,7 +158,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   step: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 15,
     fontWeight: '800',
   },
@@ -169,7 +174,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   title: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 36,
     fontWeight: '900',
     letterSpacing: -0.7,
@@ -237,7 +242,7 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   optionTitle: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 23,
     fontWeight: '900',
   },

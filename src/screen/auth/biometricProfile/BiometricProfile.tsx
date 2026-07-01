@@ -10,13 +10,18 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomButton from '../../../component/common/CustomButton';
-import { color } from '../../../theme/colors';
+// Removed static color import;
 import AppSafeAreaView from '../../../component/common/AppSafeAreaView';
 import imageIndex from '../../../assets/imageIndex';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 const BiometricProfile = ({ navigation }: any) => {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [age, setAge] = useState(28);
     const [height, setHeight] = useState(178);
     const [weight, setWeight] = useState(76.5);
@@ -118,7 +123,7 @@ const BiometricProfile = ({ navigation }: any) => {
 
 export default BiometricProfile;
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     bg: {
         flex: 1,
     },
@@ -150,7 +155,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     step: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 15,
         fontWeight: '800',
     },
@@ -163,7 +168,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 44,
         fontWeight: '900',
         marginTop: 22,
@@ -201,7 +206,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
     },
     value: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 42,
         fontWeight: '900',
     },
@@ -242,7 +247,7 @@ const styles = StyleSheet.create({
     sliderGlow: {
         width: 7,
         height: 34,
-        backgroundColor: '#fff',
+        backgroundColor: theme.colors.surface,
         borderRadius: 20,
         shadowColor: '#fff',
         shadowOpacity: 1,
@@ -266,14 +271,14 @@ const styles = StyleSheet.create({
     continueBtn: {
         height: 76,
         borderRadius: 16,
-        backgroundColor: '#fff',
+        backgroundColor: theme.colors.surface,
         alignItems: 'center',
         justifyContent: 'center',
         marginHorizontal: 26,
         marginTop: -5,
     },
     continueText: {
-        color: '#000',
+        color: theme.colors.text,
         fontSize: 22,
         fontWeight: '500',
     },

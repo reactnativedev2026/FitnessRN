@@ -13,6 +13,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import ScreenNameEnum from '../../../routes/screenName.enum';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 const days = [
     { day: 'MON', date: '23' },
@@ -23,6 +25,9 @@ const days = [
 ];
 
 export default function WatchLock({ navigation }: { navigation: any }) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [selectedDate, setSelectedDate] = useState('25');
 
     return (
@@ -126,10 +131,10 @@ export default function WatchLock({ navigation }: { navigation: any }) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: theme.colors.background,
     },
 
     scroll: {
@@ -159,13 +164,13 @@ const styles = StyleSheet.create({
     },
 
     hello: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 12,
         fontWeight: '600',
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 20,
         fontWeight: '900',
         marginTop: 2,
@@ -196,13 +201,13 @@ const styles = StyleSheet.create({
     },
 
     performanceTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 14,
         fontWeight: '700',
     },
 
     dateText: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 13,
         fontWeight: '600',
     },
@@ -230,13 +235,13 @@ const styles = StyleSheet.create({
     },
 
     dayLabel: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 9,
         fontWeight: '700',
     },
 
     dayDate: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 14,
         fontWeight: '800',
         marginTop: 4,
@@ -286,7 +291,7 @@ const styles = StyleSheet.create({
     },
 
     rewardTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 15,
         fontWeight: '900',
         textAlign: 'center',
@@ -345,7 +350,7 @@ const styles = StyleSheet.create({
     },
 
     offerTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 11,
         fontWeight: '800',
         marginTop: 2,
@@ -359,7 +364,7 @@ const styles = StyleSheet.create({
     },
 
     sectionTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 15,
         fontWeight: '900',
     },
@@ -392,7 +397,7 @@ const styles = StyleSheet.create({
     },
 
     workoutTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 14,
         fontWeight: '900',
     },

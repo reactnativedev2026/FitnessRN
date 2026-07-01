@@ -15,8 +15,13 @@ import ScreenNameEnum from '../../../routes/screenName.enum';
 import FitnessHeader from '../../../component/common/FitnessHeader';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function HydrationGoalScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [selected, setSelected] = useState('Every 1.5 Hours');
     const intervals = ['Every 1 Hour', 'Every 1.5 Hours', 'Every 2 Hours'];
     const selectNextInterval = () => {
@@ -121,10 +126,10 @@ export default function HydrationGoalScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: theme.colors.background,
     },
 
     header: {
@@ -150,12 +155,12 @@ const styles = StyleSheet.create({
     },
 
     hello: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 10,
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 14,
         fontWeight: '800',
     },
@@ -189,13 +194,13 @@ const styles = StyleSheet.create({
     },
 
     goalText: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 34,
         fontWeight: '900',
     },
 
     goalSub: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 11,
         fontWeight: '700',
         letterSpacing: 1,
@@ -224,7 +229,7 @@ const styles = StyleSheet.create({
     },
 
     interval: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 14,
     },
 

@@ -16,8 +16,13 @@ import { useNavigation } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import FitnessHeader from '../../../component/common/FitnessHeader';
 import ScreenHeader from '../../../component/common/ScreenHeader';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function FitnessDashboardScreen() {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const navigation = useNavigation<any>();
     return (
         <AppSafeAreaView style={styles.container}>
@@ -81,6 +86,9 @@ export default function FitnessDashboardScreen() {
 }
 
 function StatBox({ icon, title, value }: any) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
+
     return (
         <View style={styles.statBox}>
             <Ionicons name={icon} size={18} color="#FFB19F" />
@@ -91,6 +99,9 @@ function StatBox({ icon, title, value }: any) {
 }
 
 function Metric({ title, value, icon, onPress }: any) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
+
     return (
         <TouchableOpacity activeOpacity={0.86} style={styles.metric} onPress={onPress}>
             <View style={styles.metricLeft}>
@@ -105,8 +116,8 @@ function Metric({ title, value, icon, onPress }: any) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#000' },
+const createStyles = (theme: any) => StyleSheet.create({
+    container: { flex: 1, backgroundColor: theme.colors.background },
 
     scroll: {
         paddingHorizontal: 18,
@@ -120,8 +131,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    hello: { color: '#fff', fontSize: 9 },
-    name: { color: '#fff', fontSize: 13, fontWeight: '800' },
+    hello: { color: theme.colors.text, fontSize: 9 },
+    name: { color: theme.colors.text, fontSize: 13, fontWeight: '800' },
 
     dot: {
         position: 'absolute',
@@ -153,7 +164,7 @@ const styles = StyleSheet.create({
     },
 
     heroTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 28,
         fontWeight: '900',
         lineHeight: 30,
@@ -164,13 +175,13 @@ const styles = StyleSheet.create({
         width: 76,
         height: 28,
         borderRadius: 14,
-        backgroundColor: '#fff',
+        backgroundColor: theme.colors.surface,
         alignItems: 'center',
         justifyContent: 'center',
     },
 
     startText: {
-        color: '#000',
+        color: theme.colors.text,
         fontSize: 10,
         fontWeight: '900',
     },
@@ -193,7 +204,7 @@ const styles = StyleSheet.create({
     },
 
     statValue: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 17,
         fontWeight: '900',
         marginTop: 4,
@@ -220,7 +231,7 @@ const styles = StyleSheet.create({
     },
 
     cardTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 13,
         fontWeight: '800',
     },
@@ -262,7 +273,7 @@ const styles = StyleSheet.create({
     },
 
     metricTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 12,
         fontWeight: '700',
     },
@@ -283,7 +294,7 @@ const styles = StyleSheet.create({
     },
 
     buttonText: {
-        color: '#000',
+        color: theme.colors.text,
         fontSize: 12,
         fontWeight: '900',
     },

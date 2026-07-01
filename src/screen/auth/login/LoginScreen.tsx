@@ -20,14 +20,18 @@ import CustomButton from '../../../component/common/CustomButton';
 import LoadingModal from '../../../component/LoadingModal';
 import useLogin from './useLogin';
 import TextInputField from '../../../component/common/TextInputField';
-import { styles } from './login.styles';
+import { getStyles } from './login.styles';
 import imageIndex from '../../../assets/imageIndex';
-import { color } from '../../../theme/colors';
+// Removed static color import;
 import CountryPicker, { Country, CountryCode } from 'react-native-country-picker-modal';
 import { useIsFocused } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function Login() {
+  const { theme } = useAppTheme();
+
   const {
     credentials,
     errors,
@@ -43,6 +47,7 @@ export default function Login() {
   const [callingCode, setCallingCode] = useState<string>('1');
   const [visible, setVisible] = useState<boolean>(false);
   const isFocused = useIsFocused();
+  const styles = getStyles(theme.colors);
 
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const isLandscape = windowWidth > windowHeight;
@@ -197,7 +202,7 @@ export default function Login() {
                 onPress={() => navigation.navigate(ScreenNameEnum.PasswordReset)}
                 style={{ alignSelf: 'flex-end', marginTop: 10 }}
               >
-                <Text style={{ color: color.primary, fontWeight: '600', fontSize: 14 }}>
+                <Text style={{ color: theme.colors.primary, fontWeight: '600', fontSize: 14 }}>
                   Forgot Password?
                 </Text>
               </TouchableOpacity>
@@ -211,8 +216,8 @@ export default function Login() {
                 onPress={() => navigation.navigate(ScreenNameEnum.Sinup as never)}
                 style={{ alignSelf: 'center', marginBottom: 30 }}
               >
-                <Text style={{ color: color.grey, fontSize: 14 }}>
-                  Don't have an account? <Text style={{ color: color.primary, fontWeight: '700' }}>Sign Up</Text>
+                <Text style={{ color: theme.colors.textMuted, fontSize: 14 }}>
+                  Don't have an account? <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>Sign Up</Text>
                 </Text>
               </TouchableOpacity>
             </View>

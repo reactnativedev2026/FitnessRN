@@ -13,9 +13,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { color } from '../../../theme';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
+// Removed static color import;
 
 export default function BMICalculatorScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [height, setHeight] = useState(180);
     const [weight, setWeight] = useState(78.5);
 
@@ -80,6 +85,9 @@ export default function BMICalculatorScreen({ navigation }: any) {
 }
 
 function CounterCard({ title, value, onMinus, onPlus }: any) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
+
     return (
         <View style={styles.counterCard}>
             <Text style={styles.counterTitle}>{title}</Text>
@@ -105,6 +113,9 @@ function CounterCard({ title, value, onMinus, onPlus }: any) {
 }
 
 function Insight({ icon, text }: any) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
+
     return (
         <View style={styles.insightRow}>
             <Ionicons name={icon} size={18} color="#FF9F1C" />
@@ -113,10 +124,10 @@ function Insight({ icon, text }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.background,
+        backgroundColor: theme.colors.background,
     },
 
     scroll: {
@@ -132,7 +143,7 @@ const styles = StyleSheet.create({
 
     headerTitle: {
         flex: 1,
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 17,
         fontWeight: '900',
         marginLeft: 12,
@@ -165,13 +176,13 @@ const styles = StyleSheet.create({
     },
 
     bmiValue: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 31,
         fontWeight: '900',
     },
 
     bmiLabel: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 10,
         fontWeight: '900',
         marginTop: 2,
@@ -189,7 +200,7 @@ const styles = StyleSheet.create({
     },
 
     badgeText: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 9,
         fontWeight: '900',
         letterSpacing: 0.7,
@@ -230,7 +241,7 @@ const styles = StyleSheet.create({
     },
 
     counterValue: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 23,
         fontWeight: '900',
         marginHorizontal: 24,
@@ -305,7 +316,7 @@ const styles = StyleSheet.create({
     },
 
     saveText: {
-        color: '#000',
+        color: theme.colors.text,
         fontSize: 12,
         fontWeight: '900',
     },

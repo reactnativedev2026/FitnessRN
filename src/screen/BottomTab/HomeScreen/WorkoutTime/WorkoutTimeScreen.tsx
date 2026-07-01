@@ -17,9 +17,14 @@ import ScreenNameEnum from '../../../../routes/screenName.enum';
 import FitnessHeader from '../../../../component/common/FitnessHeader';
 import ScreenHeader from '../../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { color } from '../../../../theme';
+import { useAppTheme } from '../../../../theme/ThemeProvider';
+
+// Removed static color import;
 
 export default function WorkoutTimeScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [morning, setMorning] = useState(true);
     const [evening, setEvening] = useState(false);
 
@@ -63,6 +68,9 @@ export default function WorkoutTimeScreen({ navigation }: any) {
 }
 
 function TimeCard({ label, title, time, period, icon, value, onChange, delay }: any) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
+
     return (
         <Animated.View entering={FadeInUp.delay(delay).duration(600)} style={styles.card}>
             <View>
@@ -94,10 +102,10 @@ function TimeCard({ label, title, time, period, icon, value, onChange, delay }: 
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.background,
+        backgroundColor: theme.colors.background,
     },
 
     topHeader: {
@@ -126,13 +134,13 @@ const styles = StyleSheet.create({
     },
 
     hello: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 9,
         marginLeft: 9,
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 12,
         fontWeight: '800',
         marginLeft: 9,
@@ -189,7 +197,7 @@ const styles = StyleSheet.create({
     },
 
     cardTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 17,
         fontWeight: '800',
         marginTop: 7,
@@ -202,7 +210,7 @@ const styles = StyleSheet.create({
     },
 
     time: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 23,
         fontWeight: '900',
     },

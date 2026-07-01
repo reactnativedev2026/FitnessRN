@@ -15,9 +15,14 @@ import ScreenNameEnum from '../../../routes/screenName.enum';
 import FitnessHeader from '../../../component/common/FitnessHeader';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { color } from '../../../theme';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
+// Removed static color import;
 
 export default function FitnessProgressScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor="#000" barStyle="light-content" />
@@ -62,6 +67,9 @@ export default function FitnessProgressScreen({ navigation }: any) {
 }
 
 function MetricCard({ title, value, unit, percent, onPress }: any) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
+
     return (
         <TouchableOpacity activeOpacity={0.86} style={styles.metricCard} onPress={onPress}>
             <View style={styles.metricTop}>
@@ -81,10 +89,10 @@ function MetricCard({ title, value, unit, percent, onPress }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.background,
+        backgroundColor: theme.colors.background,
     },
 
     scroll: {
@@ -100,12 +108,12 @@ const styles = StyleSheet.create({
     },
 
     hello: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 9,
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 13,
         fontWeight: '800',
     },
@@ -137,7 +145,7 @@ const styles = StyleSheet.create({
     },
 
     cardTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 15,
         fontWeight: '800',
         marginTop: 4,
@@ -159,7 +167,7 @@ const styles = StyleSheet.create({
     },
 
     big: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 28,
         fontWeight: '900',
         marginTop: 5,
@@ -179,7 +187,7 @@ const styles = StyleSheet.create({
     },
 
     high: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 16,
         fontWeight: '900',
         marginTop: 4,
@@ -202,7 +210,7 @@ const styles = StyleSheet.create({
     },
 
     circleValue: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 26,
         fontWeight: '900',
     },
@@ -235,7 +243,7 @@ const styles = StyleSheet.create({
     },
 
     metricValue: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 22,
         fontWeight: '900',
         marginTop: 4,

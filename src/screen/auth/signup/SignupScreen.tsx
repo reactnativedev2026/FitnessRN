@@ -24,12 +24,19 @@ import ScreenHeader from '../../../component/common/ScreenHeader';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import LoadingModal from '../../../component/LoadingModal';
-import { color } from '../../../theme/colors';
+// Removed static color import;
 import useSignup from './useSignup';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { styles } from './signup.styles';
+import { getStyles } from './signup.styles';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function SignUpUI() {
+  const { theme } = useAppTheme();
+  const styles = getStyles(theme.colors);
+
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+
   const navigation = useNavigation();
    
   const {
@@ -145,7 +152,7 @@ export default function SignUpUI() {
 
               {/* Language Dropdown */} 
               <Text style={{
-                color:"black" ,
+                color: theme.colors.text ,
               
                 marginBottom:10,
                 marginTop:19 ,
@@ -240,7 +247,7 @@ export default function SignUpUI() {
                 <View style={styles.verifyTile}>
                    <Text style={styles.tileLabel}>{fmcsaData.dotNumber || 'DOT Number'}</Text>
                    <View style={styles.tileRight}>
-                      {fmcsaData.verifying ? <ActivityIndicator size="small" color={color.primary}/> : 
+                      {fmcsaData.verifying ? <ActivityIndicator size="small" color={theme.colors.primary}/> : 
                       <Text style={[styles.statusText, {color: fmcsaData.isDotVerified ? '#4CAF50' : '#999'}]}>
                         {fmcsaData.isDotVerified ? 'Verified' : '---'}
                       </Text>}

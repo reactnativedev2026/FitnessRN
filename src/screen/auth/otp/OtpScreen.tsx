@@ -22,12 +22,17 @@ import StatusBarComponent from '../../../component/common/StatusBarCompoent';
 import LoadingModal from '../../../component/LoadingModal';
 import { useOtpVerification } from './useOtp';
 import { styles as otpStyles } from './otp.styles';
-import { color } from '../../../theme/colors';
+// Removed static color import;
 import imageIndex from '../../../assets/imageIndex';
 import { useIsFocused } from '@react-navigation/native';
-import { styles } from '../login/login.styles';
+import { getStyles } from '../login/login.styles';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function OtpScreen() {
+  const { theme } = useAppTheme();
+  const styles = getStyles(theme.colors);
+
   const {
     value,
     isLoading,
@@ -138,7 +143,7 @@ export default function OtpScreen() {
                 ) : (
                   <Text style={styles.subTitle}>
                     Didn't receive the code?{' '}
-                    <Text style={[styles.subTitle, { color: color.primary, fontWeight: '700' }]} onPress={handleResendOTP}>
+                    <Text style={[styles.subTitle, { color: theme.colors.primary, fontWeight: '700' }]} onPress={handleResendOTP}>
                       Resend OTP
                     </Text>
                   </Text>

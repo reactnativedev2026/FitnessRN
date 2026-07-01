@@ -14,8 +14,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import imageIndex from '../../../assets/imageIndex';
 import { resetToMainTabs } from '../../../routes/navigationService';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function DefinePathScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [selected, setSelected] = useState('Muscle Gain');
     const enterApp = () => resetToMainTabs();
 
@@ -98,6 +103,9 @@ export default function DefinePathScreen({ navigation }: any) {
 }
 
 function OptionCard({ icon, tag, title, desc, selected, onPress }: any) {
+    const { theme } = useAppTheme();
+    const styles = createStyles(theme);
+
     return (
         <TouchableOpacity
             activeOpacity={0.85}
@@ -124,7 +132,7 @@ function OptionCard({ icon, tag, title, desc, selected, onPress }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
     },
@@ -173,7 +181,7 @@ const styles = StyleSheet.create({
     },
 
     step: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 15,
         fontWeight: '800',
     },
@@ -185,7 +193,7 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 38,
         lineHeight: 46,
         fontWeight: '900',
@@ -249,7 +257,7 @@ const styles = StyleSheet.create({
     },
 
     cardTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 23,
         lineHeight: 29,
         fontWeight: '900',
@@ -293,7 +301,7 @@ const styles = StyleSheet.create({
     nextBtn: {
         height: 58,
         borderRadius: 20,
-        backgroundColor: 'white',
+        backgroundColor: "white",
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
@@ -308,7 +316,7 @@ const styles = StyleSheet.create({
     },
 
     skipText: {
-        color: 'white',
+        color: theme.colors.text,
         fontSize: 15,
         fontWeight: '700',
         textAlign: 'center',

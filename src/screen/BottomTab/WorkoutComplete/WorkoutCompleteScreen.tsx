@@ -18,6 +18,8 @@ import { resetToMainTabs } from '../../../routes/navigationService';
 import FitnessHeader from '../../../component/common/FitnessHeader';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 const exercises = [
     {
@@ -43,6 +45,9 @@ const exercises = [
 ];
 
 export default function WorkoutCompleteScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const bars = [25, 42, 55, 72, 82, 94, 70, 60, 48, 36, 42, 62, 75, 58, 45];
 
     return (
@@ -132,10 +137,10 @@ export default function WorkoutCompleteScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: theme.colors.background,
     },
 
     scroll: {
@@ -170,12 +175,12 @@ const styles = StyleSheet.create({
     },
 
     hello: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 9,
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 12,
         fontWeight: '800',
         marginTop: 2,
@@ -222,7 +227,7 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        color: '#fff',
+        color: theme.colors.text,
         textAlign: 'center',
         fontSize: 19,
         fontWeight: '900',
@@ -261,7 +266,7 @@ const styles = StyleSheet.create({
     },
 
     statValue: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 17,
         fontWeight: '900',
         marginTop: 3,
@@ -282,7 +287,7 @@ const styles = StyleSheet.create({
     },
 
     heartTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 10,
         fontWeight: '900',
     },
@@ -329,7 +334,7 @@ const styles = StyleSheet.create({
     },
 
     summaryTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 10,
         fontWeight: '900',
         letterSpacing: 0.7,
@@ -362,7 +367,7 @@ const styles = StyleSheet.create({
     },
 
     exerciseTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 12,
         fontWeight: '800',
     },
@@ -409,7 +414,7 @@ const styles = StyleSheet.create({
     },
 
     backText: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 10,
         fontWeight: '900',
     },

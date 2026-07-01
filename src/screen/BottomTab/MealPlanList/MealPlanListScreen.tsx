@@ -15,7 +15,9 @@ import ScreenNameEnum from '../../../routes/screenName.enum';
 import FitnessHeader from '../../../component/common/FitnessHeader';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { color } from '../../../theme';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
+// Removed static color import;
 
 const meals = [
     {
@@ -51,6 +53,9 @@ const meals = [
 ];
 
 export default function MealPlanListScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor="#000" barStyle="light-content" />
@@ -107,8 +112,8 @@ export default function MealPlanListScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: color.background },
+const createStyles = (theme: any) => StyleSheet.create({
+    container: { flex: 1, backgroundColor: theme.colors.background },
 
     scroll: {
         paddingHorizontal: 18,
@@ -122,12 +127,12 @@ const styles = StyleSheet.create({
     },
 
     hello: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 9,
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 13,
         fontWeight: '800',
     },
@@ -151,7 +156,7 @@ const styles = StyleSheet.create({
     },
 
     screenTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 13,
         fontWeight: '900',
         letterSpacing: 1,
@@ -192,7 +197,7 @@ const styles = StyleSheet.create({
     },
 
     tagText: {
-        color: '#000',
+        color: theme.colors.text,
         fontSize: 9,
         fontWeight: '900',
     },
@@ -202,7 +207,7 @@ const styles = StyleSheet.create({
     },
 
     mealTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 18,
         fontWeight: '900',
     },

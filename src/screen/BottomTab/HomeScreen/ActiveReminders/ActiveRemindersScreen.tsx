@@ -15,8 +15,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import ScreenNameEnum from '../../../../routes/screenName.enum';
 import FitnessHeader from '../../../../component/common/FitnessHeader';
+import { useAppTheme } from '../../../../theme/ThemeProvider';
+
 
 export default function ActiveRemindersScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [reminders, setReminders] = useState([
         {
             title: 'Morning Workout',
@@ -114,10 +119,10 @@ export default function ActiveRemindersScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: theme.colors.background,
         paddingHorizontal: 8,
     },
 
@@ -148,13 +153,13 @@ const styles = StyleSheet.create({
     },
 
     hello: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 10,
         marginLeft: 10,
     },
 
     name: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 15,
         fontWeight: '800',
         marginLeft: 10,
@@ -233,7 +238,7 @@ const styles = StyleSheet.create({
     },
 
     cardTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 18,
         fontWeight: '800',
     },

@@ -25,7 +25,7 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: PropsWithChildren) => {
   const systemMode = Appearance.getColorScheme() === 'light' ? 'light' : 'dark';
-  const [mode, setMode] = useState<ThemeMode>(systemMode);
+  const [mode, setMode] = useState<ThemeMode>('dark'); // Set default to dark as requested
 
   useEffect(() => {
     const loadTheme = async () => {

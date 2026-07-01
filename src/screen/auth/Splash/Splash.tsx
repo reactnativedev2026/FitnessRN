@@ -18,9 +18,14 @@ import ScreenNameEnum from '../../../routes/screenName.enum';
 import AppSafeAreaView from '../../../component/common/AppSafeAreaView';
 import { restoreLogin } from '../../../redux/feature/authSlice';
 import imageIndex from '../../../assets/imageIndex';
-import { color } from '../../../theme';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
+// Removed static color import;
 
 const Splash: React.FC = () => {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
 
@@ -173,10 +178,10 @@ export default Splash;
 
 const ORANGE = '#E09A45';
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color?.background || '#070707',
+    backgroundColor: theme.colors.background || '#070707',
   },
   bgImage: {
     flex: 1,
@@ -215,7 +220,7 @@ const styles = StyleSheet.create({
     marginBottom: 26,
   },
   logoText: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 26,
     fontWeight: '900',
     letterSpacing: 2,
@@ -230,7 +235,7 @@ const styles = StyleSheet.create({
   titleBox: {
   },
   title: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 55,
     fontWeight: '900',
     letterSpacing: 4,
@@ -271,7 +276,7 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'ios' ? 36 : 30,
   },
   subtitle: {
-    color: '#fff',
+    color: theme.colors.text,
     fontSize: 18,
     fontWeight: '900',
     letterSpacing: 0.5,

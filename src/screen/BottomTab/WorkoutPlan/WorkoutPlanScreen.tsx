@@ -12,7 +12,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { color } from '../../../theme';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
+// Removed static color import;
 
 const workouts = [
     {
@@ -50,6 +52,9 @@ const workouts = [
 ];
 
 export default function WorkoutPlanScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const renderItem = ({ item }: any) => (
         <TouchableOpacity
             activeOpacity={0.9}
@@ -110,10 +115,10 @@ export default function WorkoutPlanScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.background,
+        backgroundColor: theme.colors.background,
     },
 
     header: {
@@ -124,7 +129,7 @@ const styles = StyleSheet.create({
 
     headerTitle: {
         flex: 1,
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 18,
         fontWeight: '900',
         marginLeft: 12,
@@ -156,7 +161,7 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 24,
         fontWeight: '900',
     },

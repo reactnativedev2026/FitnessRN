@@ -17,8 +17,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import FitnessHeader from '../../../component/common/FitnessHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+
 
 export default function SkinnyAIChatScreen({ navigation }: any) {
+  const { theme } = useAppTheme();
+  const styles = createStyles(theme);
+
     const [message, setMessage] = useState('');
     const fade = useRef(new Animated.Value(0)).current;
     const slide = useRef(new Animated.Value(25)).current;
@@ -177,7 +182,7 @@ export default function SkinnyAIChatScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     flex: {
         flex: 1,
     },
@@ -229,7 +234,7 @@ const styles = StyleSheet.create({
     },
 
     aiTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 20,
         fontWeight: '900',
     },
@@ -316,7 +321,7 @@ const styles = StyleSheet.create({
     },
 
     planTitle: {
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 17,
         fontWeight: '900',
         flex: 1,
@@ -399,7 +404,7 @@ const styles = StyleSheet.create({
 
     input: {
         flex: 1,
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 13,
         paddingHorizontal: 12,
     },
