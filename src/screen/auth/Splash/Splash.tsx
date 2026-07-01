@@ -141,7 +141,7 @@ const Splash: React.FC = () => {
                 transform: [{ scale: pulseAnim }],
               },
             ]}>
-            <Image source={imageIndex.bag} />
+            <Image source={imageIndex.bago} />
 
           </Animated.View>
 

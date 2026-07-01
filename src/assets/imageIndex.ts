@@ -1,7 +1,9 @@
 export default {
   appLogo: require('./images/appLogo.png'),
   introBag: require('./images/introBag.png'),
-  bag: require('./images/bag.png'),
+  bag: require('./images/bag1.png'),
+    bago: require('./images/bag.png'),
+
   appLogo1: require('./images/logo.png'),
   gymBag: require('./images/gymBag.png'),
   splash: require('./images/splash.png'),
