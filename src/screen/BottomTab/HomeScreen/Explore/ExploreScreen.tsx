@@ -13,6 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import FastImage from '@d11/react-native-fast-image';
 
 import StatusBarComponent from '../../../../component/common/StatusBarCompoent';
 import FitnessHeader from '../../../../component/common/FitnessHeader';
@@ -116,13 +117,13 @@ export default function ExploreScreen() {
                         activeOpacity={0.9}
                         style={styles.challengeCard}
                         onPress={() => navigation.navigate(ScreenNameEnum.IsolationCardio)}>
-
-                        <ImageBackground
-                            source={{
-                                uri: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200',
-                            }}
-                            style={styles.challengeImage}
-                            imageStyle={styles.challengeImageStyle}>
+                        <View style={styles.challengeImage}>
+                            <FastImage
+                                source={{
+                                    uri: 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWl1cXpibjJjd3BjdzR5am05em10aGtzNW42dm4xbnFmY2V0dXlpeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1n6exUWUnxvyzkYAaG/giphy.gif',
+                                }}
+                                style={[StyleSheet.absoluteFillObject, styles.challengeImageStyle]}
+                            />
 
                             <View style={styles.overlay} />
 
@@ -151,7 +152,7 @@ export default function ExploreScreen() {
                                     />
                                 </TouchableOpacity>
                             </View>
-                        </ImageBackground>
+                        </View>
                     </TouchableOpacity>
 
                     <View style={styles.sectionHeader}>

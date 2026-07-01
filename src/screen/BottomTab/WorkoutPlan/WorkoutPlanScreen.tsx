@@ -13,6 +13,7 @@ import ScreenNameEnum from '../../../routes/screenName.enum';
 import ScreenHeader from '../../../component/common/ScreenHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppTheme } from '../../../theme/ThemeProvider';
+import FastImage from '@d11/react-native-fast-image';
 
 // Removed static color import;
 
@@ -23,7 +24,7 @@ const workouts = [
         exercises: '12 Exercises',
         duration: '45 min',
         image:
-            'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&q=80',
+            'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGtwdHBseXkyaW9zMThneGp2bGxiOXBnaHBxOXR0azFkZDA5N2NtbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/M2Bromx7Ehlm0/giphy.gif',
     },
     {
         id: 2,
@@ -31,23 +32,16 @@ const workouts = [
         exercises: '10 Exercises',
         duration: '40 min',
         image:
-            'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1200&q=80',
+            'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnI4bGNrbTdsY2l6OGo1ZmgxamVpczExMXg1Zzk3aGI0ams0OXFjOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JvIwBdr0rX82vzqyLb/giphy.gif',
     },
-    {
-        id: 3,
-        title: 'LEGS',
-        exercises: '14 Exercises',
-        duration: '55 min',
-        image:
-            'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80',
-    },
+    
     {
         id: 4,
         title: 'CARDIO',
         exercises: '8 Exercises',
         duration: '30 min',
         image:
-            'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1200&q=80',
+            'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3YzOGJpOGYzNnZnYTAzeDlyd3ZnMGswNGg3b3dodXA2b2c0eXRhcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dCBt8HdDHMgdccPTM0/giphy.gif',
     },
 ];
 
@@ -61,11 +55,11 @@ export default function WorkoutPlanScreen({ navigation }: any) {
             style={styles.card}
             onPress={() => navigation?.navigate(ScreenNameEnum.ExerciseLibrary, { workout: item })}
         >
-            <ImageBackground
-                source={{ uri: item.image }}
-                style={styles.image}
-                imageStyle={styles.imageRadius}
-            >
+            <View style={styles.image}>
+                <FastImage
+                    source={{ uri: item.image }}
+                    style={[StyleSheet.absoluteFillObject, styles.imageRadius]}
+                />
                 <View style={styles.overlay} />
 
                 <View style={styles.content}>
@@ -92,7 +86,7 @@ export default function WorkoutPlanScreen({ navigation }: any) {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </ImageBackground>
+            </View>
         </TouchableOpacity>
     );
 

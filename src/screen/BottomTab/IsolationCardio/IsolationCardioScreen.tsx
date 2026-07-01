@@ -7,11 +7,11 @@ import {
     StatusBar,
     TouchableOpacity,
     ScrollView,
-    ImageBackground,
 } from 'react-native';
 import AppSafeAreaView from '../../../component/common/AppSafeAreaView';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
+import FastImage from '@d11/react-native-fast-image';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import FitnessHeader from '../../../component/common/FitnessHeader';
 import ScreenHeader from '../../../component/common/ScreenHeader';
@@ -30,12 +30,13 @@ export default function IsolationCardioScreen({ navigation }: any) {
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
 
-                <ImageBackground
-                    source={{
-                        uri: 'https://images.unsplash.com/photo-1549476464-37392f717541?w=1200&q=80',
-                    }}
-                    style={styles.hero}
-                    imageStyle={styles.heroImg}>
+                <View style={styles.hero}>
+                    <FastImage
+                        source={{
+                            uri: 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMng4cmJvMm0weDJsN2d0eWowZnZnN24yYmc4cTZoMjc5bTA4cTF1bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/KyGzJFEORPjthnoY4s/giphy.gif',
+                        }}
+                        style={[StyleSheet.absoluteFillObject, styles.heroImg]}
+                    />
                     <View style={styles.heroOverlay} />
 
                     <View style={styles.heroContent}>
@@ -47,7 +48,7 @@ export default function IsolationCardioScreen({ navigation }: any) {
                             <Text style={styles.isoText}>ISOLATION</Text>
                         </View>
                     </View>
-                </ImageBackground>
+                </View>
 
                 <View style={styles.statsRow}>
                     <View style={styles.statCard}>
