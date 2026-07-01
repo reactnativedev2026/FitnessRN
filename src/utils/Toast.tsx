@@ -1,4 +1,5 @@
 import Snackbar from 'react-native-snackbar';
+import { color } from '../theme/colors';
 
 export const Toast = (
   text: string,
@@ -8,8 +9,8 @@ export const Toast = (
 ) => {
   Snackbar.show({
     text,
-    backgroundColor: backgroundColor ?? '#333',
-    textColor: textColor ?? '#ffffff',
+    backgroundColor: backgroundColor ?? color.cardBackground,
+    textColor: textColor ?? color.white,
     duration: Snackbar.LENGTH_SHORT,
     marginBottom: marginBottom ?? 10,
   });
@@ -22,8 +23,8 @@ export const RedToast = (
 ) => {
   Snackbar.show({
     text,
-    backgroundColor: backgroundColor ?? '#333',
-    textColor: textColor ?? '#ffffff',
+    backgroundColor: backgroundColor ?? color.danger,
+    textColor: textColor ?? color.white,
     duration: Snackbar.LENGTH_SHORT,
     marginBottom: marginBottom ?? 10,
   });

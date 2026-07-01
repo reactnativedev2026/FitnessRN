@@ -24,8 +24,8 @@ import { styles } from './login.styles';
 import imageIndex from '../../../assets/imageIndex';
 import { color } from '../../../theme/colors';
 import CountryPicker, { Country, CountryCode } from 'react-native-country-picker-modal';
-import ScreenNameEnum from '../../../routes/screenName.enum';
 import { useIsFocused } from '@react-navigation/native';
+import ScreenNameEnum from '../../../routes/screenName.enum';
 
 export default function Login() {
   const {
@@ -91,8 +91,7 @@ export default function Login() {
           backgroundColor: '#010A16',
           onBackgroundTextColor: '#fff',
           fontSize: 16,
-          filterPlaceholderTextColor: '#6F767E',
-          itemCountryNameTextStyle: { color: '#fff' }
+          filterPlaceholderTextColor: '#6F767E'
         }}
         containerButtonStyle={{ display: 'none' }}
       />
@@ -116,7 +115,6 @@ export default function Login() {
                 justifyContent: 'flex-end',
                 paddingBottom: 20
               }}
-              resizeMode="cover"
             >
               <Image
                 source={imageIndex.appLogo}
@@ -205,9 +203,18 @@ export default function Login() {
               </TouchableOpacity>
 
               {/* Login Button */}
-              <View style={{ marginTop: 15, marginBottom: 30 }}>
+              <View style={{ marginTop: 15, marginBottom: 15 }}>
                 <CustomButton title="Login" onPress={() => handleLogin(activeTab)} style={styles.loginBtn} />
               </View>
+
+              <TouchableOpacity
+                onPress={() => navigation.navigate(ScreenNameEnum.Sinup as never)}
+                style={{ alignSelf: 'center', marginBottom: 30 }}
+              >
+                <Text style={{ color: color.grey, fontSize: 14 }}>
+                  Don't have an account? <Text style={{ color: color.primary, fontWeight: '700' }}>Sign Up</Text>
+                </Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>

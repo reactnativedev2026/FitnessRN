@@ -1,16 +1,18 @@
 import React from 'react';
 import {
-  Modal,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { color } from '../../theme/colors';
+import { AppThemeColors, color } from '../../theme/colors';
+import { useAppTheme } from '../../theme/ThemeProvider';
+import spacing from '../../theme/spacing';
+import sizes from '../../theme/sizes';
 import { ImageSourceType } from '../../utils/imagePicker';
+import CommonModal from './CommonModal';
 
 type ImageSourceSheetProps = {
   visible: boolean;
@@ -25,86 +27,75 @@ const ImageSourceSheet = ({
   onClose,
   onSelect,
 }: ImageSourceSheetProps) => {
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
+
   const handleSelect = (source: ImageSourceType) => {
     onClose();
     setTimeout(() => onSelect(source), Platform.OS === 'ios' ? 650 : 250);
   };
 
   return (
-    <Modal
+    <CommonModal
       visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onClose}
+      onClose={onClose}
+      align="bottom"
+      contentStyle={styles.sheet}
     >
-      <Pressable style={styles.backdrop} onPress={onClose}>
-        <Pressable style={styles.sheet}>
-          <View style={styles.handle} />
-          <Text style={styles.title}>{title}</Text>
+      <View style={styles.handle} />
+      <Text style={styles.title}>{title}</Text>
 
-          <View style={styles.optionRow}>
-            <TouchableOpacity
-              style={styles.option}
-              activeOpacity={0.85}
-              onPress={() => handleSelect('camera')}
-            >
-              <View style={styles.iconCircle}>
-                <Icon name="camera-outline" size={28} color={color.white} />
-              </View>
-              <Text style={styles.optionTitle}>Camera</Text>
-              <Text style={styles.optionSub}>Take new photo</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.option}
-              activeOpacity={0.85}
-              onPress={() => handleSelect('gallery')}
-            >
-              <View style={styles.iconCircle}>
-                <Icon name="images-outline" size={28} color={color.white} />
-              </View>
-              <Text style={styles.optionTitle}>Gallery</Text>
-              <Text style={styles.optionSub}>Choose from phone</Text>
-            </TouchableOpacity>
+      <View style={styles.optionRow}>
+        <TouchableOpacity
+          style={styles.option}
+          activeOpacity={0.85}
+          onPress={() => handleSelect('camera')}
+        >
+          <View style={styles.iconCircle}>
+            <Icon name="camera-outline" size={28} color={theme.colors.textInverse} />
           </View>
+          <Text style={styles.optionTitle}>Camera</Text>
+          <Text style={styles.optionSub}>Take new photo</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-            <Text style={styles.cancelText}>Cancel</Text>
-          </TouchableOpacity>
-        </Pressable>
-      </Pressable>
-    </Modal>
+        <TouchableOpacity
+          style={styles.option}
+          activeOpacity={0.85}
+          onPress={() => handleSelect('gallery')}
+        >
+          <View style={styles.iconCircle}>
+            <Icon name="images-outline" size={28} color={theme.colors.textInverse} />
+          </View>
+          <Text style={styles.optionTitle}>Gallery</Text>
+          <Text style={styles.optionSub}>Choose from phone</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+        <Text style={styles.cancelText}>Cancel</Text>
+      </TouchableOpacity>
+    </CommonModal>
   );
 };
 
 export default ImageSourceSheet;
 
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
-  },
+const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
   sheet: {
-    backgroundColor: '#0B1220',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
     paddingBottom: 28,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
   },
   handle: {
     alignSelf: 'center',
     width: 42,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#334155',
+    backgroundColor: colors.disabled,
     marginBottom: 18,
   },
   title: {
-    color: color.white,
+    color: colors.text,
     fontSize: 18,
     fontWeight: '700',
     textAlign: 'center',
@@ -112,16 +103,16 @@ const styles = StyleSheet.create({
   },
   optionRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.md,
   },
   option: {
     flex: 1,
     alignItems: 'center',
-    borderRadius: 18,
-    backgroundColor: '#111827',
+    borderRadius: sizes.radius.lg,
+    backgroundColor: color.secondary,
     paddingVertical: 18,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: colors.border,
   },
   iconCircle: {
     width: 56,
@@ -129,7 +120,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: color.primary,
+    backgroundColor: color.background,
     marginBottom: 10,
   },
   optionTitle: {
@@ -138,7 +129,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   optionSub: {
-    color: '#94A3B8',
+    color: color.white,
     fontSize: 11,
     marginTop: 4,
   },
@@ -147,11 +138,11 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1F2937',
+    backgroundColor: colors.chip,
     marginTop: 14,
   },
   cancelText: {
-    color: color.white,
+    color: colors.text,
     fontSize: 15,
     fontWeight: '600',
   },

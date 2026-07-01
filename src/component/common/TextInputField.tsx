@@ -1,12 +1,15 @@
 import { View, TextInput, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import imageIndex from '../../assets/imageIndex';
-import { color } from '../../theme/colors';
 import CountryFlag from "react-native-country-flag";
+import { useAppTheme } from '../../theme/ThemeProvider';
+import { AppThemeColors } from '../../theme/colors';
 
 export default function TextInputField({ ...props }) {
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
 
   const PasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -55,7 +58,7 @@ export default function TextInputField({ ...props }) {
               <Image
                 source={props.img}
                 style={[
-                  { width: 20, height: 20, tintColor: '#6F767E' },
+                  { width: 20, height: 20, tintColor: theme.colors.iconMuted },
                   props.imgStyle,
                 ]}
                 resizeMode="contain"
@@ -67,7 +70,7 @@ export default function TextInputField({ ...props }) {
         {/* Input Section */}
         <TextInput
           {...props}
-          placeholderTextColor={color.placeholderText}
+          placeholderTextColor={theme.colors.placeholder}
           style={[
             styles.textInput,
             props.textStyle,
@@ -93,7 +96,7 @@ export default function TextInputField({ ...props }) {
             <Image
               source={showPassword ? imageIndex.eye : imageIndex.hide}
               style={{ width: 22, height: 22 }}
-              tintColor={"#6F767E"}
+              tintColor={theme.colors.iconMuted}
             />
           </TouchableOpacity>
         )}
@@ -102,7 +105,7 @@ export default function TextInputField({ ...props }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
   outerContainer: {
     marginVertical: 15,
     width: '100%',
@@ -111,12 +114,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -10,
     left: 20,
-    backgroundColor: '#010A16', // Match background color
+    backgroundColor: colors.background,
     paddingHorizontal: 5,
     zIndex: 1,
   },
   labelText: {
-    color: '#6F767E',
+    color: colors.textMuted,
     fontSize: 12,
     fontWeight: '500',
   },
@@ -125,13 +128,13 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#91939bff', // Dark border color
+    borderColor: colors.border,
     alignItems: 'center',
     paddingHorizontal: 15,
-    backgroundColor: 'transparent',
+    backgroundColor: colors.transparent,
   },
   focusedBorder: {
-    borderColor: color.primary,
+    borderColor: colors.primary,
   },
   leftSection: {
     marginRight: 10,
@@ -143,7 +146,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   prefixText: {
-    color: color.white,
+    color: colors.text,
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 5,
@@ -151,13 +154,13 @@ const styles = StyleSheet.create({
   separator: {
     width: 1,
     height: 20,
-    backgroundColor: '#23262F',
+    backgroundColor: colors.border,
     marginLeft: 10,
     marginRight: 5,
   },
   textInput: {
     flex: 1,
-    color: color.white,
+    color: colors.text,
     fontSize: 15,
     fontWeight: '500',
     height: '100%',

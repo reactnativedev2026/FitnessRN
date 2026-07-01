@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, PixelRatio } from 'react-native';
+import { StyleSheet, Text, PixelRatio, TextProps, StyleProp, TextStyle } from 'react-native';
+import { color } from '../theme/colors';
 
 export const Size = {
   XXXSmall: 12,
@@ -13,6 +14,15 @@ export const Size = {
   XXXLarge: 34,
 };
 
+type TextComponentProps = TextProps & {
+  children?: React.ReactNode;
+  style?: StyleProp<TextStyle>;
+  size?: number;
+  fontWeight?: TextStyle['fontWeight'];
+  color?: string;
+  lineHeight?: number;
+};
+
 const TextCompoent = ({
   children,
   onTextLayout,
@@ -21,11 +31,11 @@ const TextCompoent = ({
   style,
   size = 14,
   fontWeight = '400',
-  color = '#0B040F',
+  color: textColor = color.textPrimary,
   ellipsizeMode,
   adjustsFontSizeToFit = false,
   lineHeight,
-}) => {
+}: TextComponentProps) => {
   const fs = PixelRatio.getFontScale();
   return (
     <Text
@@ -39,7 +49,7 @@ const TextCompoent = ({
         style,
         {
           fontSize: size / fs,
-          color: color,
+          color: textColor,
           fontWeight: fontWeight,
           lineHeight: lineHeight
             ? lineHeight

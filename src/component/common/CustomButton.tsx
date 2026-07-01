@@ -8,8 +8,9 @@ import {
   ViewStyle,
   TextStyle,
   GestureResponderEvent,
+  Platform,
 } from 'react-native';
-import { color } from '../../theme/colors';
+import { useAppTheme } from '../../theme/ThemeProvider';
 
 type AlignType = 'left' | 'center' | 'right';
 
@@ -29,8 +30,8 @@ interface CustomButtonProps {
 
 const CustomButton: React.FC<CustomButtonProps> = ({
   title,
-  txtcolor = '#FFFFFF',
-  bgColor = color.primary,
+  txtcolor,
+  bgColor,
   leftIcon,
   alignItm = 'center',
   style,
@@ -40,6 +41,8 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   onPress,
   disabled = false,
 }) => {
+  const { theme } = useAppTheme();
+
   const alignment = {
     left: 'flex-start',
     center: 'center',
@@ -49,22 +52,26 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   return (
 
     <TouchableOpacity
+      activeOpacity={0.85}
       onPress={onPress}
       disabled={disabled}
       style={[
         styles.button,
-        { height: height },
+        {
+          height: height,
+          backgroundColor: bgColor || theme.colors.button,
+          shadowColor: theme.colors.shadow,
+        },
         button1,
         style
       ]}
-      activeOpacity={0.7}
     >
       <View style={[styles.content, { justifyContent: alignment[alignItm] }]}>
         {leftIcon && <View style={styles.icon}>{leftIcon}</View>}
 
         <Text
           allowFontScaling={false}
-          style={[styles.text, { color: txtcolor }, textStyle]}
+          style={[styles.text, { color: txtcolor || theme.colors.buttonText }, textStyle]}
         >
           {title}
         </Text>
@@ -81,13 +88,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   button: {
-    width: '100%',
-    paddingHorizontal: 20,
-    backgroundColor: color.primary,
-    height: 50,
-    borderRadius: 20,
-    alignSelf: 'center'
 
+    height: 55,
+    borderRadius: 12,
+    marginBottom: Platform.OS === 'ios' ? 8 : 18,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
     flexDirection: 'row',
@@ -99,9 +105,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   text: {
-    fontSize: 16,
-    color: "white",
-    fontWeight: "bold"
+    fontSize: 14,
+    fontWeight: '600',
+
   },
 });
 

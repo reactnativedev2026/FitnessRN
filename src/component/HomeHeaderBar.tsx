@@ -1,79 +1,83 @@
-import React from "react";
-import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
-import imageIndex from "../assets/imageIndex";
- 
+import React from 'react';
+import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { AppThemeColors } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeProvider';
+import fonts from '../theme/fonts';
+import spacing from '../theme/spacing';
+import sizes from '../theme/sizes';
+
+type HomeHeaderBarProps = {
+  location?: string;
+  lable?: string;
+  style1?: StyleProp<TextStyle>;
+  onNotificationPress?: () => void;
+  hasNotification?: boolean;
+};
+
 const HomeHeaderBar = ({
-  location = "Wallace, Australia",
-  lable ="Current location" ,
+  location = 'Johan Smiths',
+  lable = 'Welcome,',
   style1,
-  onLocationPress,
   onNotificationPress,
   hasNotification = true,
-}: any) => {
+}: HomeHeaderBarProps) => {
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
+
   return (
     <View>
-      <Text style={styles.tex}>Welcome,</Text>
-
+      <Text style={styles.label}>{lable}</Text>
       <View style={styles.container}>
-         
-          {/* <Image source={imageIndex.location1} style={styles.iconSmall} /> */}
-          <Text
-            style={[styles.locationText, style1]}
-            >
-            {/* {location} */}
-            Johan Smiths
-          </Text>
-          {/* <Image source={imageIndex.arrowqdown} style={styles.iconSmall} /> */}
- 
-        <TouchableOpacity
-          style={styles.notificationContainer}
-          onPress={onNotificationPress}
-        >
-          <Image source={imageIndex.Notification} style={styles.iconLarge} />
-          {/* {hasNotification && <View style={styles.badge} />} */}
+        <Text style={[styles.locationText, style1]}>{location}</Text>
+        <TouchableOpacity style={styles.notificationContainer} onPress={onNotificationPress}>
+          <Icon name="notifications-outline" size={sizes.icon.lg} color={theme.colors.icon} />
+          {hasNotification ? <View style={styles.badge} /> : null}
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#fff",
-  },
-  locationContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,                     // allow text to shrink if needed
-    marginRight: 10,             // some spacing from notification
+    alignItems: 'center',
+    backgroundColor: colors.background,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   locationText: {
+    bottom: 6,
+    color: colors.text,
+    fontFamily: fonts.medium,
     fontSize: 15,
-     color: "#000",
-     fontWeight:"500" ,
-     bottom:6
-    },
-  tex: {
-    color: "##09BFCD",
+    fontWeight: '500',
+  },
+  label: {
+    color: colors.primary,
+    fontFamily: fonts.bold,
     fontSize: 12,
-     fontWeight:"800"
+    fontWeight: '800',
   },
   notificationContainer: {
-    position: "relative",
+    alignItems: 'center',
+    backgroundColor: colors.chip,
+    borderRadius: sizes.radius.round,
+    height: 44,
+    justifyContent: 'center',
+    position: 'relative',
+    width: 44,
   },
   badge: {
-     
-  },
-  iconSmall: {
-    width: 22,
-    height: 22,
-  },
-  iconLarge: {
-    width: 44,
-    height: 44,
+    backgroundColor: colors.primary,
+    borderColor: colors.background,
+    borderRadius: 5,
+    borderWidth: 2,
+    height: 10,
+    position: 'absolute',
+    right: spacing.sm,
+    top: spacing.sm,
+    width: 10,
   },
 });
 

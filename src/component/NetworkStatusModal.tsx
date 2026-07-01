@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, Modal, StyleSheet, TouchableOpacity, Linking, Platform, Image } from 'react-native';
+import { Linking, Platform, StyleSheet, Text } from 'react-native';
+import CommonModal from './common/CommonModal';
+import CustomButton from './common/CustomButton';
+import { AppThemeColors } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeProvider';
+import fonts from '../theme/fonts';
+import spacing from '../theme/spacing';
 
 type Props = {
   isConnected?: boolean | null;
@@ -9,24 +15,23 @@ type Props = {
   checkingText?: string;
 };
 
-const NetworkStatusModal: React.FC<Props> = ({
+const NetworkStatusModal = ({
   isConnected,
   modalVisible,
   onlineText,
   offlineText,
   checkingText,
-}) => {
+}: Props) => {
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
+
   const openSettings = () => {
     if (Platform.OS === 'ios') {
       Linking.openURL('App-Prefs:root=MOBILE_DATA_SETTINGS_ID');
-        //     Linking.openURL('App-Prefs:root=WIFI');
-
     } else {
       Linking.openSettings();
     }
   };
-
-   
 
   const getStatusText = () => {
     if (isConnected === null) return checkingText || 'Checking connection...';
@@ -34,66 +39,35 @@ const NetworkStatusModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal visible={modalVisible} transparent animationType="fade">
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-           <Text allowFontScaling={false} style={styles.text}>
-            {getStatusText()}
-          </Text>
-          {!isConnected && (
-            <TouchableOpacity style={styles.button} onPress={openSettings}>
-              <Text allowFontScaling={false} style={styles.buttonText}>Go to Settings</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
-    </Modal>
+    <CommonModal visible={modalVisible}>
+      <Text allowFontScaling={false} style={styles.text}>
+        {getStatusText()}
+      </Text>
+      {!isConnected ? (
+        <CustomButton
+          title="Go to Settings"
+          onPress={openSettings}
+          bgColor={theme.colors.success}
+          txtcolor={theme.colors.textInverse}
+          style={styles.button}
+        />
+      ) : null}
+    </CommonModal>
   );
 };
 
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Slightly darker for better contrast
-  },
-  modalContent: {
-    width: '85%',
-    padding: 25,
-    backgroundColor: 'white',
-    borderRadius: 15,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  statusIcon: {
-    width: 60,
-    height: 60,
-    marginBottom: 15,
-  },
+const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
   text: {
+    color: colors.text,
+    fontFamily: fonts.medium,
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    lineHeight: 24,
+    marginBottom: spacing.lg,
     textAlign: 'center',
-    marginBottom: 15,
-    lineHeight:20
   },
   button: {
-    marginTop: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    backgroundColor: 'rgba(21, 190, 119, 1)', // Friendly green button
-    borderRadius: 20,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: 'white',
-    fontWeight: '600',
+    marginBottom: 0,
   },
 });
 

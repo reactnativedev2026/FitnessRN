@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
+import { AppThemeColors, color } from "../../../theme/colors";
 
-export const styles = StyleSheet.create({
+export const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#050B18',
+    backgroundColor: colors.background,
   },
   keyboardAvoid: {
     flex: 1,
@@ -25,21 +26,19 @@ export const styles = StyleSheet.create({
     height: 120,
     borderRadius: 60,
     borderWidth: 2,
-    borderColor: '#0066FF',
-    backgroundColor: '#1E293B',
+
   },
   editButton: {
     position: 'absolute',
     right: 0,
     bottom: 0,
-    backgroundColor: '#0066FF',
+    backgroundColor: color.secondary,
     width: 36,
     height: 36,
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 3,
-    borderColor: '#050B18',
+
   },
   formContainer: {
     marginTop: 10,
@@ -49,7 +48,7 @@ export const styles = StyleSheet.create({
     paddingTop: 30,
   },
   errorText: {
-    color: '#FF4B4B',
+    color: colors.danger,
     fontSize: 12,
     marginTop: -5,
     marginBottom: 10,

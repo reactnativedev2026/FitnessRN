@@ -20,9 +20,7 @@ const Icon: React.FC<IconProps> = ({ source, size = 24, colorIcon = color.primar
 };
 
 const styles = StyleSheet.create({
-  icon: {
-    tintColor: '#000',
-  },
+  icon: {},
 });
 
 export default Icon;

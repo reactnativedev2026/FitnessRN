@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Switch, FlatList, StyleSheet, Alert } from "react-native";
-import CustomHeader from "../../../component/common/CustomHeader";
-import imageIndex from "../../../assets/imageIndex";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, FlatList, StyleSheet, Alert } from "react-native";
+import AppSafeAreaView from "../../../component/common/AppSafeAreaView";
 import StatusBarComponent from "../../../component/common/StatusBarCompoent";
-import { color } from "../../../theme/colors";
+import ScreenHeader from "../../../component/common/ScreenHeader";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import LoadingModal from "../../../component/LoadingModal";
 import { BASE_URL } from "../../../api";
+import { useAppTheme } from "../../../theme/ThemeProvider";
+import { AppThemeColors } from "../../../theme/colors";
+import CommonToggleSwitch from "../../../component/common/CommonToggleSwitch";
 
 const NotificationsSetting = () => {
   const navigation = useNavigation();
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
   const { token } = useSelector((state: RootState) => state.auth);
   const [initialLoading, setInitialLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
@@ -113,25 +116,18 @@ const NotificationsSetting = () => {
     <View style={styles.notificationOption}>
       <Text style={styles.optionText}>{item.label}</Text>
 
-      <Switch
+      <CommonToggleSwitch
         value={settings[item.key as keyof typeof settings]}
         onValueChange={() => handleToggle(item.key)}
-        trackColor={{ false: '#E5E7EB', true: color.primary }}
-        thumbColor="#FFFFFF"
-        ios_backgroundColor="#E5E7EB"
         disabled={updating || initialLoading}
       />
     </View>
   );
 
   return (
-    <SafeAreaView edges={['top']} style={styles.container}>
+    <AppSafeAreaView edges={['top']} style={styles.container}>
       <StatusBarComponent />
-      <CustomHeader
-        label="Notifications"
-        menuIcon={imageIndex.back}
-        leftPress={() => navigation.goBack()}
-      />
+      <ScreenHeader title="Notifications" showNotification={false} />
 
       {initialLoading ? (
         <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -143,26 +139,26 @@ const NotificationsSetting = () => {
           keyExtractor={item => item.key}
           renderItem={renderItem}
           contentContainerStyle={{ marginTop: 40, marginHorizontal: 15 }}
-          ListFooterComponent={updating ? <Text style={{ color: 'white', textAlign: 'center', marginTop: 10, opacity: 0.7 }}>Updating...</Text> : null}
+          ListFooterComponent={updating ? <Text style={{ color: theme.colors.text, textAlign: 'center', marginTop: 10, opacity: 0.7 }}>Updating...</Text> : null}
         />
       )}
-    </SafeAreaView>
+    </AppSafeAreaView>
   );
 };
 
 export default NotificationsSetting;
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#050B18',
+    backgroundColor: colors.background,
   },
   switchContainer: {
     width: 45,
     height: 27,
     borderRadius: 18,
     borderWidth: 3,
-    borderColor: "transparent",
+    borderColor: colors.transparent,
     padding: 2,
   },
   circle: {
@@ -178,11 +174,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.05)',
+    borderBottomColor: colors.divider,
   },
   optionText: {
     fontSize: 16,
-    color: "#fff",
+    color: colors.text,
     lineHeight: 15,
   },
 });

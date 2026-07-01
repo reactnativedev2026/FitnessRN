@@ -1,144 +1,137 @@
 import React, { memo } from 'react';
-import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import font from '../theme/font';
-import { color } from '../theme/colors';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import CommonModal from './common/CommonModal';
+import CustomButton from './common/CustomButton';
+import { AppThemeColors } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeProvider';
+import fonts from '../theme/fonts';
+import spacing from '../theme/spacing';
+import sizes from '../theme/sizes';
 
 const LogoutModal = ({ visible, onLogout, onCancel }: any) => {
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
+
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-    >
-      <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.closeButton} onPress={onCancel}>
-            <Text style={styles.closeText}>×</Text>
-          </TouchableOpacity>
+    <CommonModal visible={visible} onClose={onCancel}>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.closeButton}
+        onPress={onCancel}>
+        <Icon name="close" size={18} color={theme.colors.text} />
+      </TouchableOpacity>
 
-          <Text allowFontScaling={false} style={styles.title}>
-            Log Out
-          </Text>
-          <Text allowFontScaling={false} style={styles.message}>
-            Are you sure want to log out?
-          </Text>
-
-          <View style={styles.buttonContainer}>
-            {/* <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-              <Text allowFontScaling={false} style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity> */}
-
-            <TouchableOpacity style={styles.logoutButton}
-              onPress={onLogout}>
-              <Text allowFontScaling={false} style={styles.logoutText}>Logout</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+      <View style={styles.iconCircle}>
+        <Icon name="log-out-outline" size={34} color={theme.colors.danger} />
       </View>
-    </Modal>
+
+      <Text allowFontScaling={false} style={styles.title}>
+        Log Out?
+      </Text>
+
+      <Text allowFontScaling={false} style={styles.message}>
+        Are you sure you want to log out from your account?
+      </Text>
+
+      <View style={styles.buttonContainer}>
+        <CustomButton
+          title="Logout"
+          onPress={onLogout}
+          bgColor={theme.colors.text}
+          txtcolor={theme.colors.textInverse}
+          style={styles.logoutButton}
+        />
+
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.cancelButton}
+          onPress={onCancel}>
+          <Text allowFontScaling={false} style={styles.cancelText}>
+            Cancel
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </CommonModal>
   );
 };
 
-const { width } = Dimensions.get('window');
+const makeStyles = (colors: AppThemeColors) =>
+  StyleSheet.create({
+    closeButton: {
+      position: 'absolute',
+      right: spacing.lg,
+      top: spacing.lg,
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      backgroundColor: colors.backgroundSecondary || 'rgba(0,0,0,0.06)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 10,
+    },
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    width: width * 0.85,
-    backgroundColor: '#1C1F2E',
-    borderRadius: 25,
-    padding: 25,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 10,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 15,
-    left: 15,
-    zIndex: 1,
-    backgroundColor: 'red',
-    height: 25,
-    width: 25,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  closeText: {
-    fontSize: 22,
-    color: '#fff',
-    lineHeight: 25
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    marginBottom: 10,
-    textAlign: 'center',
-    color: '#fff',
-    fontFamily: font.TrialBold,
-    marginTop: 20
-  },
-  message: {
-    fontSize: 16,
-    color: '#9CA3AF',
-    textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 30,
-    fontWeight: '500',
-    fontFamily: font.TrialRegular,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  logoutButton: {
-    flex: 1,
-    backgroundColor: color.primary,
-    paddingVertical: 12,
-    marginLeft: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    shadowColor: color.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  logoutText: {
-    color: '#fff',
-    fontSize: 15,
-    fontFamily: font.TrialBold,
-  },
-  cancelButton: {
-    flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    paddingVertical: 14,
-    marginRight: 12,
-    borderRadius: 15,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-  },
-  cancelText: {
-    color: '#fff',
-    fontSize: 15,
-    fontFamily: font.TrialRegular,
-    fontWeight: '600',
-  },
-});
+    iconCircle: {
+      alignSelf: 'center',
+      width: 78,
+      height: 78,
+      borderRadius: 39,
+      backgroundColor: 'rgba(255,59,48,0.12)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: spacing.xl,
+      marginBottom: spacing.lg,
+      borderWidth: 1,
+      borderColor: 'rgba(255,59,48,0.22)',
+    },
+
+    title: {
+      color: colors.text,
+      fontFamily: fonts.bold,
+      fontSize: 24,
+      fontWeight: '800',
+      textAlign: 'center',
+      marginBottom: spacing.sm,
+    },
+
+    message: {
+      color: colors.textSecondary,
+      fontFamily: fonts.regular,
+      fontSize: 15,
+      fontWeight: '500',
+      lineHeight: 22,
+      textAlign: 'center',
+      paddingHorizontal: spacing.lg,
+      marginBottom: spacing.xl,
+    },
+
+    buttonContainer: {
+      width: '100%',
+      gap: 12,
+    },
+
+    logoutButton: {
+      marginBottom: 0,
+      borderRadius: 14,
+      height: 54,
+    },
+
+    cancelButton: {
+      height: 52,
+      borderRadius: 14,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.backgroundSecondary || 'rgba(0,0,0,0.06)',
+      borderWidth: 1,
+      borderColor: colors.border || 'rgba(0,0,0,0.08)',
+    },
+
+    cancelText: {
+      color: colors.text,
+      fontFamily: fonts.bold,
+      fontSize: 15,
+      fontWeight: '700',
+    },
+  });
 
 export default memo(LogoutModal);
-
-
-

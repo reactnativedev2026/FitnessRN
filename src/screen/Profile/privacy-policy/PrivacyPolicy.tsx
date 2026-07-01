@@ -1,28 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Image,
   ScrollView,
-  View,
   StyleSheet,
-  useWindowDimensions,
   Text,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import HTML from 'react-native-render-html';
+import AppSafeAreaView from '../../../component/common/AppSafeAreaView';
 
-import imageIndex from '../../../assets/imageIndex';
 import StatusBarComponent from '../../../component/common/StatusBarCompoent';
-import CustomHeader from '../../../component/common/CustomHeader';
-import { hp } from '../../../utils/Constant';
+import ScreenHeader from '../../../component/common/ScreenHeader';
 import font from '../../../theme/font';
 import { Privacypolicy } from '../../../api/authApi/AuthApi';
-import { color } from '../../../theme/colors';
-import { useNavigation } from '@react-navigation/native';
+import { useAppTheme } from '../../../theme/ThemeProvider';
+import { AppThemeColors } from '../../../theme/colors';
 
 const PrivacyPolicy = () => {
   const [isLoading, setLoading] = useState(false);
   const [content, setContent] = useState<string>('');
-  const { width } = useWindowDimensions();
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
 
   useEffect(() => {
     getPrivacyPolicy();
@@ -45,25 +40,16 @@ const PrivacyPolicy = () => {
       console.log('Privacy Policy Error:', error);
     }
   };
-  const navigation = useNavigation();
   return (
-    <SafeAreaView style={styles.container}>
+    <AppSafeAreaView style={styles.container}>
       <StatusBarComponent />
       {/* <LoadingModal visible={isLoading} /> */}
 
-      <CustomHeader label="Privacy Policy" menuIcon={imageIndex.back} leftPress={() => navigation.goBack()} />
+      <ScreenHeader title="Privacy Policy" showNotification={false} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
       >
-        <View style={styles.illustrationWrapper}>
-          <Image
-            source={imageIndex.helpPrva}
-            style={styles.illustration}
-            resizeMode="contain"
-          />
-        </View>
-
         {content ? (
           // <HTML
           //   source={{ html: content }}
@@ -75,56 +61,23 @@ const PrivacyPolicy = () => {
           <Text style={styles.bodyText}>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy. This Privacy Policy has been created with the help of the</Text>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </AppSafeAreaView>
   );
 };
 
 export default PrivacyPolicy;
-const styles = StyleSheet.create({
+const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.background,
+    backgroundColor: colors.background,
   },
   contentContainer: {
     padding: 12,
   },
-  illustrationWrapper: {
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  illustration: {
-    width: '80%',
-    height: hp(30),
-  },
-  htmlStyles: {
-    p: {
-      fontSize: 14,
-      color: '#9CA3AF',
-      lineHeight: 24,
-      fontWeight: '500',
-      marginTop: 8,
-      fontFamily: font.TrialRegular,
-    },
-    h1: {
-      fontSize: 22,
-      color: '#fff',
-      marginBottom: 10,
-      fontFamily: font.TrialBold,
-    },
-    h2: {
-      fontSize: 18,
-      color: '#fff',
-      marginBottom: 8,
-      fontFamily: font.TrialBold,
-    },
-    a: {
-      color: '#0066FF',
-    },
-  },
   bodyText: {
     fontSize: 14,
     lineHeight: 20,
-    color: '#fff',
+    color: colors.text,
     fontFamily: font.MonolithRegular,
   },
 });

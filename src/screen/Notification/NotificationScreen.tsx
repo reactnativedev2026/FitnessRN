@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity, RefreshControl, Modal, Image, Dimensions } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeader from '../../component/common/CustomHeader';
-import imageIndex from '../../assets/imageIndex';
-import { color } from '../../theme/colors';
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity, RefreshControl, Modal } from 'react-native';
+import AppSafeAreaView from '../../component/common/AppSafeAreaView';
+import ScreenHeader from '../../component/common/ScreenHeader';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_API } from '../../api/APIRequest';
@@ -15,10 +13,16 @@ import CustomButton from '../../component/common/CustomButton';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import ScreenNameEnum from '../../routes/screenName.enum';
+import { useAppTheme } from '../../theme/ThemeProvider';
+import { AppThemeColors } from '../../theme/colors';
+import StatusBarComponent from '../../component/common/StatusBarCompoent';
+import { resetToLogin } from '../../routes/navigationService';
 
 const NotificationItem = ({ item, isUnread, onPress }: { item: any; isUnread: boolean; onPress: () => void }) => {
   const rawDate = item.created_at || item.date || '';
   const formattedDate = rawDate ? moment(rawDate).fromNow() : '';
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
 
   return (
     <TouchableOpacity
@@ -33,7 +37,7 @@ const NotificationItem = ({ item, isUnread, onPress }: { item: any; isUnread: bo
         <Icon
           name={isUnread ? "notifications" : "notifications-outline"}
           size={24}
-          color={isUnread ? color.primary : '#9CA3AF'}
+          color={isUnread ? theme.colors.primary : theme.colors.iconMuted}
         />
         {isUnread && <View style={styles.unreadDot} />}
       </View>
@@ -64,11 +68,13 @@ const NotificationDetailModal = ({
   onClose: () => void;
   onGoToDetail: (item: any) => void;
 }) => {
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
   if (!item) return null;
   const rawDate = item.created_at || item.date || '';
   const formattedDate = rawDate ? moment(rawDate).format('DD MMM YYYY, hh:mm A') : '';
   const relativeTime = rawDate ? moment(rawDate).fromNow() : '';
-  const isDeliveryUpdate = item.type === 'delivery_update' && item.shipment_id;
+  const canOpenDetail = Boolean(item.workout_id || item.plan_id || item.shipment_id);
 
   return (
     <Modal
@@ -88,10 +94,10 @@ const NotificationDetailModal = ({
         >
           <View style={styles.modalHeader}>
             <View style={styles.modalIconContainer}>
-              <Icon name="notifications" size={32} color={color.primary} />
+              <Icon name="notifications" size={32} color={theme.colors.primary} />
             </View>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Icon name="close" size={20} color={color.white} />
+              <Icon name="close" size={20} color={theme.colors.text} />
             </TouchableOpacity>
           </View>
 
@@ -103,7 +109,7 @@ const NotificationDetailModal = ({
           </View>
 
           <View style={styles.modalFooter}>
-            {isDeliveryUpdate && (
+            {canOpenDetail && (
               <CustomButton
                 onPress={() => onGoToDetail(item)}
                 title="Go to Detail"
@@ -113,8 +119,8 @@ const NotificationDetailModal = ({
             <CustomButton
               onPress={onClose}
               title="Close"
-              bgColor="rgba(255,255,255,0.05)"
-              txtcolor={color.white}
+              bgColor={theme.colors.chip}
+              txtcolor={theme.colors.text}
               style={styles.footerButton}
             />
           </View>
@@ -125,7 +131,9 @@ const NotificationDetailModal = ({
 };
 
 const NotificationsScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
   const dispatch = useDispatch();
   const token = useSelector((state: any) => state.auth.token);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -135,16 +143,7 @@ const NotificationsScreen = () => {
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await fetchNotifications();
-    setRefreshing(false);
-  };
 
-  useEffect(() => {
-    loadReadStatus();
-    fetchNotifications();
-  }, []);
 
   const loadReadStatus = async () => {
     try {
@@ -165,10 +164,12 @@ const NotificationsScreen = () => {
 
   const handleGoToDetail = (item: any) => {
     setModalVisible(false);
-    if (item.shipment_id) {
-      navigation.navigate(ScreenNameEnum.DELIVERY_DETAIL as never, {
-        deliveryId: item.shipment_id
-      } as never);
+    const workoutId = item.workout_id || item.plan_id || item.shipment_id;
+    if (workoutId) {
+      navigation.navigate(ScreenNameEnum.WorkoutPlan, {
+        workoutId,
+        notificationId: item.id,
+      });
     }
   };
 
@@ -193,6 +194,7 @@ const NotificationsScreen = () => {
         console.log("Notifications:", response.data || []);
       } else if (response?.message === "Unauthenticated.") {
         dispatch(logout());
+        resetToLogin();
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -200,15 +202,12 @@ const NotificationsScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <CustomHeader
-        label={"Notification"}
-        menuIcon={imageIndex.back}
-        leftPress={() => navigation.goBack()}
-      />
+    <AppSafeAreaView style={styles.container}>
+      <StatusBarComponent />
+      <ScreenHeader title="Notification" showNotification={false} />
       {loading ? (
         <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color={color.primary} />
+          <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
       ) : (
         <>
@@ -218,9 +217,8 @@ const NotificationsScreen = () => {
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
-                onRefresh={onRefresh}
-                tintColor={color.primary}
-                colors={[color.primary]}
+                tintColor={theme.colors.primary}
+                colors={[theme.colors.primary]}
               />
             }
             renderItem={({ item }) => {
@@ -250,33 +248,33 @@ const NotificationsScreen = () => {
           />
         </>
       )}
-    </SafeAreaView>
+    </AppSafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.background,
+    backgroundColor: colors.background,
   },
   itemContainer: {
     flexDirection: 'row',
     padding: 16,
     borderRadius: 16,
     marginBottom: 12,
-    backgroundColor: '#111827',
+    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: colors.divider,
   },
   unreadContainer: {
-    borderColor: 'rgba(35, 108, 237, 0.3)',
-    backgroundColor: '#161F2E',
+    borderColor: colors.primary,
+    backgroundColor: colors.primarySoft,
   },
   iconContainer: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: colors.chip,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -292,27 +290,27 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: color.primary,
+    backgroundColor: colors.primary,
     borderWidth: 2,
-    borderColor: '#161F2E',
+    borderColor: colors.primarySoft,
   },
   textContainer: {
     flex: 1,
   },
   title: {
     fontSize: 16,
-    color: color.white,
+    color: colors.text,
     marginBottom: 4,
   },
   description: {
     fontSize: 14,
-    color: '#9CA3AF',
+    color: colors.textSecondary,
     marginBottom: 8,
     lineHeight: 20,
   },
   date: {
     fontSize: 12,
-    color: '#6B7280',
+    color: colors.textMuted,
   },
   loaderContainer: {
     flex: 1,
@@ -322,18 +320,18 @@ const styles = StyleSheet.create({
   // Modal Styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   modalContent: {
     width: '100%',
-    backgroundColor: '#111827',
+    backgroundColor: colors.modal,
     borderRadius: 24,
     padding: 24,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: colors.borderSoft,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -345,7 +343,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: 'rgba(35, 108, 237, 0.1)',
+    backgroundColor: colors.primarySoft,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -357,12 +355,12 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: colors.chip,
     justifyContent: 'center',
     alignItems: 'center',
   },
   closeButtonText: {
-    color: color.white,
+    color: colors.text,
     fontSize: 16,
   },
   modalBody: {
@@ -371,22 +369,22 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: color.white,
+    color: colors.text,
     marginBottom: 8,
   },
   modalDate: {
     fontSize: 14,
-    color: '#6B7280',
+    color: colors.textMuted,
     marginBottom: 16,
   },
   divider: {
     height: 1,
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: colors.divider,
     marginBottom: 16,
   },
   modalDescription: {
     fontSize: 16,
-    color: '#9CA3AF',
+    color: colors.textSecondary,
     lineHeight: 24,
   },
   modalFooter: {

@@ -6,6 +6,9 @@ import {
 } from 'react-native-responsive-screen';
 import { trigger } from 'react-native-haptic-feedback';
 import moment from 'moment';
+import { color } from '../theme/colors';
+import Text from './Text';
+import { errorToast } from './customToast';
 
 
 const { height, width, fontScale, scale } = Dimensions.get('screen');
@@ -79,7 +82,7 @@ const Countdown = ({ eventTime = 1683526848, interval = 1000 }) => {
     }, [eventTime]);
 
     return (
-        <Text size={14} fontWeight="700" color="#FFF">
+        <Text size={14} fontWeight="700" color={color.white}>
             This class start in - {duration.days()}D : {duration.hours()}H :{' '}
             {duration.minutes()}M : {duration.seconds()}S
         </Text>

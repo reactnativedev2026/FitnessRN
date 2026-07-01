@@ -1,71 +1,73 @@
-import React from "react";
-import { View, TextInput, Image, StyleSheet } from "react-native";
-import imageIndex from "../../assets/imageIndex";
+import React from 'react';
+import { Image, StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native';
+import imageIndex from '../../assets/imageIndex';
+import { AppThemeColors } from '../../theme/colors';
+import { useAppTheme } from '../../theme/ThemeProvider';
+import spacing from '../../theme/spacing';
+import sizes from '../../theme/sizes';
 
 interface SearchBarProps {
   placeholder?: string;
   onSearchChange?: (text: string) => void;
-  value?: string,
-  searchBar1?: any
+  value?: string;
+  searchBar1?: StyleProp<ViewStyle>;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ searchBar1, placeholder = "Search", onSearchChange, value }) => {
+const SearchBar = ({
+  searchBar1,
+  placeholder = 'Search',
+  onSearchChange,
+  value,
+}: SearchBarProps) => {
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
+
   return (
     <View style={[styles.searchBar, searchBar1]}>
-      <Image source={imageIndex.search} style={styles.icon} resizeMode="cover" tintColor={'black'} />
+      <Image source={imageIndex.search} style={styles.icon} resizeMode="contain" />
       <TextInput
         allowFontScaling={false}
         style={styles.input}
         placeholder={placeholder}
-        placeholderTextColor="black"
+        placeholderTextColor={theme.colors.placeholder}
         onChangeText={onSearchChange}
         value={value}
       />
-      {/* <Image source={imageIndex.filter} style={styles.icon} resizeMode="cover"  /> */}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
   searchBar: {
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    height: 55,
-
-    // Margins
-    marginVertical: 10,
-    marginTop: 30,
-    marginBottom: 20,
-
-    // Border
+    alignItems: 'center',
+    backgroundColor: colors.input,
+    borderColor: colors.border,
+    borderRadius: sizes.radius.md,
     borderWidth: 1,
-    borderColor: "#FFFFFF",
-
-    // Shadow (Android + iOS)
-    elevation: 8,        // Android
-    shadowColor: "#000", // iOS
+    elevation: 4,
+    flexDirection: 'row',
+    height: 55,
+    marginBottom: spacing.xl,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.xxxl,
+    marginVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.12,
     shadowRadius: 3.5,
-    backgroundColor: "#FFF",
-    marginHorizontal: 15
-
-
-
   },
   icon: {
     height: 22,
+    tintColor: colors.iconMuted,
     width: 22,
-    tintColor: "#F3178B"
   },
   input: {
+    color: colors.text,
     flex: 1,
     fontSize: 15,
-    color: "black",
-    marginLeft: 15,
+    marginLeft: spacing.lg,
   },
 });
 

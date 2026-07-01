@@ -14,13 +14,13 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import AppSafeAreaView from '../../../component/common/AppSafeAreaView';
  import TextInputField from '../../../component/common/TextInputField';
 import CustomButton from '../../../component/common/CustomButton';
 import imageIndex from '../../../assets/imageIndex';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import StatusBarComponent from '../../../component/common/StatusBarCompoent';
-import CustomHeader from '../../../component/common/CustomHeader';
+import ScreenHeader from '../../../component/common/ScreenHeader';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
 import LoadingModal from '../../../component/LoadingModal';
@@ -75,14 +75,10 @@ export default function SignUpUI() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <AppSafeAreaView style={styles.container}>
       <StatusBarComponent />
       
-      <CustomHeader 
-        menuIcon={imageIndex.back} 
-        leftPress={() => navigation.goBack()}  
-        showRight={false}
-      />
+      <ScreenHeader title="Sign Up" showNotification={false} />
       
       <KeyboardAvoidingView
         style={styles.keyboardAvoid}
@@ -378,6 +374,6 @@ export default function SignUpUI() {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-    </SafeAreaView>
+    </AppSafeAreaView>
   );
 }

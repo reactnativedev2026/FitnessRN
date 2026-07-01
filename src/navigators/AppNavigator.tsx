@@ -6,12 +6,16 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from '../redux/store';
 import Toast from 'react-native-toast-message';
 import toastConfig from '../utils/customToast';
-import ProfileWatcher from '../component/ProfileWatcher';
 import { PermissionsAndroid, Platform } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ThemeProvider, useAppTheme } from '../theme/ThemeProvider';
+import { navigationRef } from '../routes/navigationService';
+import AppSafeAreaView from '../component/common/AppSafeAreaView';
 
-const AppNavigator: React.FC = () => {
+const AppNavigatorContent: React.FC = () => {
+  const { theme } = useAppTheme();
+
   useEffect(() => {
     requestUserPermission();
   }, []);
@@ -48,13 +52,23 @@ const AppNavigator: React.FC = () => {
   };
 
   return (
+    <NavigationContainer ref={navigationRef}>
+      <AppSafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }} edges={['bottom']} >
+
+        <RegistrationRoutes />
+        <Toast config={toastConfig} />
+      </AppSafeAreaView>
+    </NavigationContainer>
+  );
+};
+
+const AppNavigator: React.FC = () => {
+  return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
-          <RegistrationRoutes />
-          <ProfileWatcher />
-          <Toast config={toastConfig} />
-        </NavigationContainer>
+        <ThemeProvider>
+          <AppNavigatorContent />
+        </ThemeProvider>
       </PersistGate>
     </Provider>
   );

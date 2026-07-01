@@ -9,24 +9,27 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import AppSafeAreaView from '../../../component/common/AppSafeAreaView';
 import TextInputField from '../../../component/common/TextInputField';
 import CustomButton from '../../../component/common/CustomButton';
 import imageIndex from '../../../assets/imageIndex';
 import StatusBarComponent from '../../../component/common/StatusBarCompoent';
-import CustomHeader from '../../../component/common/CustomHeader';
+import ScreenHeader from '../../../component/common/ScreenHeader';
 import { useNavigation } from '@react-navigation/native';
 import LoadingModal from '../../../component/LoadingModal';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useProfileScreen from './useProfile';
 import { pickProfileImage } from './imagePicker';
-import { styles } from './profile.styles';
+import { makeStyles } from './profile.styles';
 import ImageSourceSheet from '../../../component/common/ImageSourceSheet';
 import { ImageSourceType } from '../../../utils/imagePicker';
+import { useAppTheme } from '../../../theme/ThemeProvider';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
   const [imageSheetVisible, setImageSheetVisible] = useState(false);
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
   const {
     credentials,
     errors,
@@ -43,15 +46,10 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <AppSafeAreaView style={styles.container}>
       <StatusBarComponent />
 
-      <CustomHeader
-        label="Edit Profile"
-        menuIcon={imageIndex.back}
-        leftPress={() => navigation.goBack()}
-        showRight={false}
-      />
+      <ScreenHeader title="Edit Profile" showNotification={false} />
 
       <KeyboardAvoidingView
         style={styles.keyboardAvoid}
@@ -74,12 +72,12 @@ export default function ProfileScreen() {
                           : `${'https://kimbo.aitechnotech.in'}${credentials.profileImage.startsWith('/') ? credentials.profileImage : '/' + credentials.profileImage}`)
                         : credentials.profileImage.path
                     }
-                    : imageIndex.profile
+                    : imageIndex.prfile
                 }
                 style={styles.avatar}
               />
               <TouchableOpacity style={styles.editButton} onPress={() => setImageSheetVisible(true)}>
-                <Icon name="camera-alt" size={20} color="#fff" />
+                <Icon name="camera-alt" size={20} color={theme.colors.textInverse} />
               </TouchableOpacity>
             </View>
           </View>
@@ -144,6 +142,6 @@ export default function ProfileScreen() {
         onClose={() => setImageSheetVisible(false)}
         onSelect={handleImagePick}
       />
-    </SafeAreaView>
+    </AppSafeAreaView>
   );
 }

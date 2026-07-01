@@ -3,47 +3,11 @@ import { createNativeStackNavigator, NativeStackNavigationOptions } from '@react
 import _routes from '../routes/routes';
 import ScreenNameEnum from '../routes/screenName.enum';
 
-export type RegistrationStackParamList = {
-  [ScreenNameEnum.SPLASH_SCREEN]: undefined;
-  [ScreenNameEnum.OnboardingScreen]: undefined;
-  [ScreenNameEnum.LoginScreen]: undefined;
-  [ScreenNameEnum.OtpScreen]: undefined;
-  [ScreenNameEnum.CreatePassword]: undefined;
-  [ScreenNameEnum.PasswordReset]: undefined;
-  [ScreenNameEnum.DrawerNavgation]: undefined;
-  [ScreenNameEnum.DashBoardScreen]: undefined;
-  [ScreenNameEnum.DashBoardDetail]: undefined;
-  [ScreenNameEnum.PatientScreen]: undefined;
-  [ScreenNameEnum.NewTripScreen]: undefined;
-  [ScreenNameEnum.AddPatient]: undefined;
-  [ScreenNameEnum.AddContract]: undefined;
-  [ScreenNameEnum.AddDriver]: undefined;
-  [ScreenNameEnum.SuccessScreen]: undefined;
-  [ScreenNameEnum.MapScreen]: undefined;
-  [ScreenNameEnum.Billing]: undefined;
-  [ScreenNameEnum.setting]: undefined;
-  [ScreenNameEnum.language]: undefined;
-  [ScreenNameEnum.personalInfo]: undefined;
-  [ScreenNameEnum.changePassword]: undefined;
-  [ScreenNameEnum.DriverHome]: undefined;
-  [ScreenNameEnum.TripDetail]: undefined;
-  [ScreenNameEnum.TripSuccess]: undefined;
-  [ScreenNameEnum.TripMap]: undefined;
-  [ScreenNameEnum.CaptureDoc]: undefined;
-  [ScreenNameEnum.CaptureSuccess]: undefined;
-  [ScreenNameEnum.Patient_Driver]: undefined;
-  [ScreenNameEnum.RaceDetail]: undefined;
-  [ScreenNameEnum.NotificationsSetting]: undefined;
-  DrawerNavDriver: undefined;
-  DrawerNav: undefined;
+export type RootStackParamList = {
+  [key in ScreenNameEnum]: any;
 };
 
-type RegistrationRouteType = {
-  name: keyof RegistrationStackParamList;
-  Component: React.ComponentType<any>;
-};
-
-const Stack = createNativeStackNavigator<RegistrationStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const screenOptions: NativeStackNavigationOptions = {
   headerShown: false,
@@ -52,16 +16,25 @@ const screenOptions: NativeStackNavigationOptions = {
   animation: 'slide_from_right',
 };
 
-const RegistrationRoutes: React.FC = () => {
+const fadeScreens = new Set<ScreenNameEnum>([
+  ScreenNameEnum.SPLASH_SCREEN,
+  ScreenNameEnum.TabNavigator,
+  ScreenNameEnum.WorkoutComplete,
+]);
+
+const RegistrationRoutes = () => {
   return (
-    <Stack.Navigator screenOptions={screenOptions}>
-      {_routes.REGISTRATION_ROUTE.map((screen: RegistrationRouteType) => (
+    <Stack.Navigator
+      initialRouteName={ScreenNameEnum.SPLASH_SCREEN}
+      screenOptions={screenOptions}
+    >
+      {_routes.REGISTRATION_ROUTE.map((screen) => (
         <Stack.Screen
           key={screen.name}
           name={screen.name}
           component={screen.Component}
           options={{
-            animation: screen.name === ScreenNameEnum.SuccessScreen ? 'fade' : 'slide_from_right',
+            animation: fadeScreens.has(screen.name) ? 'fade' : 'slide_from_right',
           }}
         />
       ))}

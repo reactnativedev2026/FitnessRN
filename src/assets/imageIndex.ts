@@ -1,17 +1,19 @@
 export default {
   appLogo: require('./images/appLogo.png'),
+  introBag: require('./images/introBag.png'),
+  bag: require('./images/bag.png'),
   appLogo1: require('./images/logo.png'),
-  loginTop: require('./images/loginTop.png'),
-  box: require('./images/box.png'),
-  viewMap: require('./images/viewmap.png'),
-  status: require('./images/status.png'),
-  startdelivery: require('./images/startdelivery.png'),
-  aboutus: require('./images/aboutus.png'),
-  completed: require('./images/completed.png'),
-  inProgress: require('./images/inProgress.png'),
-  assigned: require('./images/assigned.png'),
-  dashboardTop: require('./images/dashboardTop.png'),
-  go: require('./images/go.png'),
+  gymBag: require('./images/gymBag.png'),
+  splash: require('./images/splash.png'),
+  homeW: require('./images/homeW.png'),
+
+
+
+
+
+
+
+
   Textphone: require('./images/Textphone.png'),
   edit: require('./images/edit.png'),
   Textprofile: require('./images/Textprofile.png'),
@@ -19,34 +21,14 @@ export default {
   hide: require('./images/hide.png'),
   email: require('./images/email.png'),
   search: require('./images/search1.png'),
-  helpPrva: require('./images/helpPrva.png'),
   right: require('./images/black.png'),
   prfile: require('./images/prfile.png'),
   back: require('./images/back.png'),
   logout: require('./images/logout.png'),
   no1: require('./images/no1.png'),
-  profile: require('./images/profile.png'),
-  send: require('./images/send.png'),
-  terms: require('./images/terms.png'),
-  support: require('./images/support.png'),
   lock: require('./images/lock.png'),
-  service: require('./images/service.png'),
   dummy: require('./images/dummy.png'),
   multiUser: require('./images/multiUser.png'),
-  navigationMap: require('./images/navigation_map.png'),
-  step1: require('./images/step1.png'),
-  step2: require('./images/step2.png'),
-  step3: require('./images/step3.png'),
-  step4: require('./images/step4.png'),
-  step2f: require('./images/step2f.png'),
-  step3f: require('./images/step3f.png'),
-  step4f: require('./images/step4f.png'),
-  bluebox: require('./images/boxBlue.png'),
-  success: require('./images/success.png'),
-  privacyCircle: require('./images/privacyCircle.png'),
-  profileCircle: require('./images/profileCircle.png'),
-  aboutusCircle: require('./images/aboutusCircle.png'),
-  notificationCircle: require('./images/notificationCircle.png'),
-  appearanceCircle: require('./images/appearanceCircle.png'),
+
   kimboVideo: require('./kimbo.mp4'),
 };

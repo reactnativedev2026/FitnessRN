@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNameEnum from '../../../routes/screenName.enum';
-import { authLogin } from '../../../api/authApi/AuthApi';
+import { authForgotPassword, authLogin } from '../../../api/authApi/AuthApi';
 import { errorToast, successToast } from '../../../utils/customToast';
 
 interface Credentials {
@@ -47,6 +47,18 @@ const useLogin = () => {
     return Object.keys(validationErrors).length === 0;
   };
 
+  const validateLoginTarget = (activeTab: 'email' | 'phone') => {
+    const validationErrors: Partial<Credentials> = {};
+    if (activeTab === 'email' && !credentials.email) {
+      validationErrors.email = 'Email is required';
+    }
+    if (activeTab === 'phone' && !credentials.phone) {
+      validationErrors.phone = 'Phone number is required';
+    }
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).length === 0;
+  };
+
   const handleLogin = async (activeTab: 'email' | 'phone') => {
     if (!validateFields(activeTab)) return;
 
@@ -72,12 +84,38 @@ const useLogin = () => {
     }
   };
 
+  const handleForgotPassword = async (activeTab: 'email' | 'phone') => {
+    if (!validateLoginTarget(activeTab)) return;
+
+    try {
+      const body = {
+        login: activeTab === 'email' ? credentials.email : credentials.phone,
+        role: 'driver',
+      };
+
+      const response = await authForgotPassword(body, setIsLoading);
+
+      if (response?.success) {
+        successToast(response?.message || 'OTP sent successfully');
+        navigation.navigate(ScreenNameEnum.OtpScreen, {
+          type: 'forgot_password',
+          loginData: body,
+        });
+      } else {
+        errorToast(response?.message || 'Failed to send OTP');
+      }
+    } catch (error: any) {
+      errorToast(error?.message || 'Forgot password failed');
+    }
+  };
+
   return {
     credentials,
     errors,
     isLoading,
     handleChange,
     handleLogin,
+    handleForgotPassword,
     clearErrors,
     navigation,
   };

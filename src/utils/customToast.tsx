@@ -2,6 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import Toast from 'react-native-toast-message';
 import TextCompoent, { Size } from './Text';
+import { color } from '../theme/colors';
  
 const toastConfig = {
   successResponse: ({text1}:any) => (
@@ -9,7 +10,7 @@ const toastConfig = {
       <TextCompoent
         style={styles.titleStyle}
         size={Size.Small}
-        color={'#000'}
+        color={color.black}
         fontWeight="700">
         {text1}
       </TextCompoent>
@@ -21,7 +22,7 @@ const toastConfig = {
         fontWeight="700"
         style={styles.titleStyle}
         size={Size.Small}
-        color={'#fff'}>
+        color={color.white}>
         {text1}
       </TextCompoent>
     </View>
@@ -32,7 +33,7 @@ const toastConfig = {
         fontWeight="700"
         style={styles.titleStyle}
         size={Size.Small}
-        color={'#000'}>
+        color={color.black}>
         {text1}
       </TextCompoent>
     </View>
@@ -77,14 +78,14 @@ const styles = StyleSheet.create({
   container: {
     minHeight: 52,
     width: '92%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: color.white,
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
     borderLeftWidth: 6,
-    borderLeftColor: '#2ECC71', // success green
-    shadowColor: '#000',
+    borderLeftColor: color.success,
+    shadowColor: color.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
@@ -94,12 +95,12 @@ const styles = StyleSheet.create({
   errorContainer: {
     minHeight: 52,
     width: '92%',
-    backgroundColor: '#E74C3C', // red
+    backgroundColor: color.danger,
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
-    shadowColor: '#000',
+    shadowColor: color.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -109,14 +110,14 @@ const styles = StyleSheet.create({
   normalContainer: {
     minHeight: 52,
     width: '92%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: color.white,
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
     borderLeftWidth: 6,
-    borderLeftColor: '#5B5FEF', // primary blue
-    shadowColor: '#000',
+    borderLeftColor: color.primary,
+    shadowColor: color.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,

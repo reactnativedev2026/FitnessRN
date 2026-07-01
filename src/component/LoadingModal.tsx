@@ -9,9 +9,13 @@ import {
   Image
 } from 'react-native';
 import imageIndex from '../assets/imageIndex';
-import font from '../theme/font';
+import { AppThemeColors } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeProvider';
+import fonts from '../theme/fonts';
 
 const LoadingModal = ({ visible = true, message = "Loading..." }: any) => {
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
   const spinValue = useRef(new Animated.Value(0)).current;
   const pulseValue = useRef(new Animated.Value(1)).current;
   const fadeValue = useRef(new Animated.Value(0)).current;
@@ -96,10 +100,10 @@ const LoadingModal = ({ visible = true, message = "Loading..." }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.75)', // Deep dark overlay for premium feel
+    backgroundColor: colors.overlayStrong,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -118,7 +122,7 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 45,
     borderWidth: 3,
-    borderColor: 'rgba(255, 255, 255, 0.1)', // Subtle white ring
+    borderColor: colors.borderSoft,
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
@@ -128,8 +132,8 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 45,
     borderWidth: 3,
-    borderColor: 'transparent',
-    borderTopColor: '#FFFFFF', // Bright white spinning segment
+    borderColor: colors.transparent,
+    borderTopColor: colors.text,
     position: 'absolute',
   },
   logoContainer: {
@@ -137,7 +141,7 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#FFFFFF',
+    shadowColor: colors.text,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
@@ -146,15 +150,15 @@ const styles = StyleSheet.create({
   logo: {
     width: 45,
     height: 45,
-    tintColor: '#FFFFFF', // Ensure icon is pure white
+    tintColor: colors.text,
   },
   loadingText: {
     marginTop: 20,
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 16,
     fontWeight: '600',
     letterSpacing: 1.2,
-    fontFamily: font.TrialMedium,
+    fontFamily: fonts.medium,
     opacity: 0.8,
   },
 });

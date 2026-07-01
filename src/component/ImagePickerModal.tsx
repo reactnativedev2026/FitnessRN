@@ -1,14 +1,12 @@
 import React, { memo, useCallback } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet,
-} from 'react-native';
-import { color } from '../theme/colors';
-import font from '../theme/font';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import CommonModal from './common/CommonModal';
+import CustomButton from './common/CustomButton';
+import { AppThemeColors } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeProvider';
+import fonts from '../theme/fonts';
+import spacing from '../theme/spacing';
+import sizes from '../theme/sizes';
 
 interface ImagePickerModalProps {
   modalVisible: boolean;
@@ -17,130 +15,87 @@ interface ImagePickerModalProps {
   takePhotoFromCamera: () => void;
 }
 
-const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
+const ImagePickerModal = ({
   modalVisible,
   setModalVisible,
   pickImageFromGallery,
-  takePhotoFromCamera,
-}) => {
+}: ImagePickerModalProps) => {
+  const { theme } = useAppTheme();
+  const styles = makeStyles(theme.colors);
+
   const handleSelectGallery = useCallback(() => {
     setModalVisible(false);
     pickImageFromGallery();
   }, [pickImageFromGallery, setModalVisible]);
-
-  const handleTakePhoto = useCallback(() => {
-    setModalVisible(false);
-    takePhotoFromCamera();
-  }, [takePhotoFromCamera, setModalVisible]);
 
   const handleCancel = useCallback(() => {
     setModalVisible(false);
   }, [setModalVisible]);
 
   return (
-    <Modal
-      transparent
+    <CommonModal
       visible={modalVisible}
+      onClose={handleCancel}
+      align="bottom"
       animationType="slide"
-      onRequestClose={handleCancel}
+      contentStyle={styles.sheet}
     >
-      <TouchableWithoutFeedback onPress={handleCancel}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <View style={styles.handleBar} />
-            <Text allowFontScaling={false} style={styles.title}>
-              Choose an Option
-            </Text>
+      <View style={styles.handleBar} />
+      <Text allowFontScaling={false} style={styles.title}>Choose an Option</Text>
 
-            <OptionButton text=" 📷   Select from Gallery" onPress={handleSelectGallery} />
-            {/* Uncomment below if camera option needed */}
-            {/* <OptionButton text="📸 Take a Photo" onPress={handleTakePhoto} /> */}
+      <TouchableOpacity style={styles.optionButton} onPress={handleSelectGallery}>
+        <Text allowFontScaling={false} style={styles.optionText}>Select from Gallery</Text>
+      </TouchableOpacity>
 
-            <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-              <Text allowFontScaling={false} style={styles.cancelText}>
-                Cancel
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+      <CustomButton
+        title="Cancel"
+        onPress={handleCancel}
+        bgColor={theme.colors.primary}
+        txtcolor={theme.colors.textInverse}
+        style={styles.cancelButton}
+      />
+    </CommonModal>
   );
 };
 
-interface OptionButtonProps {
-  text: string;
-  onPress: () => void;
-}
-
-const OptionButton: React.FC<OptionButtonProps> = memo(({ text, onPress }) => (
-  <TouchableOpacity style={styles.optionButton} onPress={onPress}>
-    <Text allowFontScaling={false} style={[styles.optionText]}>
-      {text}
-    </Text>
-  </TouchableOpacity>
-));
-
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    width: '100%',
+const makeStyles = (colors: AppThemeColors) => StyleSheet.create({
+  sheet: {
     alignItems: 'center',
-    gap: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
+    gap: spacing.md,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xl,
   },
   handleBar: {
-    width: 40,
-    height: 4,
-    backgroundColor: color.primary,
+    backgroundColor: colors.primary,
     borderRadius: 3,
-    marginBottom: 10,
+    height: 4,
+    marginBottom: spacing.sm,
+    width: 40,
   },
   title: {
+    color: colors.text,
+    fontFamily: fonts.regular,
     fontSize: 15,
-     color: 'black',
-    marginBottom: 10, 
-    fontFamily:font.TrialRegular
+    marginBottom: spacing.sm,
   },
   optionButton: {
-    width: '100%',
-    backgroundColor: '#f1f1f1',
-    paddingVertical: 15,
-    borderRadius: 10,
     alignItems: 'center',
-    justifyContent:"center"
+    backgroundColor: colors.chip,
+    borderRadius: sizes.radius.md,
+    justifyContent: 'center',
+    paddingVertical: 15,
+    width: '100%',
   },
   optionText: {
+    color: colors.text,
+    fontFamily: fonts.regular,
     fontSize: 15,
-    color: '#333',
-    fontFamily:font.TrialRegular ,textAlign:"center" ,
+    textAlign: 'center',
   },
   cancelButton: {
+    marginBottom: 0,
+    marginTop: spacing.sm,
     width: '100%',
-    backgroundColor: color.primary,
-    paddingVertical: 15,
-    borderRadius: 32,
-    alignItems: 'center',
-    marginTop: 10, 
-    justifyContent:"center"
-  },
-  cancelText: {
-    fontSize: 14,
-    color: 'black',
-    fontWeight: '600',
   },
 });
 

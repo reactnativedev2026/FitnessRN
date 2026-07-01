@@ -13,7 +13,7 @@ import {
   Dimensions,
   TouchableOpacity
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import AppSafeAreaView from '../../../component/common/AppSafeAreaView';
 import Video from 'react-native-video';
 import { CodeField, Cursor } from 'react-native-confirmation-code-field';
 
@@ -49,7 +49,7 @@ export default function OtpScreen() {
   const isFocused = useIsFocused();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
+    <AppSafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
       <StatusBarComponent />
       <LoadingModal visible={isLoading} />
 
@@ -86,7 +86,6 @@ export default function OtpScreen() {
                 justifyContent: 'flex-end',
                 paddingBottom: 20
               }}
-              resizeMode="cover"
             >
               <TouchableOpacity
                 onPress={() => navigation.goBack()}
@@ -153,6 +152,6 @@ export default function OtpScreen() {
           </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </AppSafeAreaView>
   );
 }

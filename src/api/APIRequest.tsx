@@ -1,5 +1,8 @@
 import { BASE_URL } from ".";
 import { Platform } from "react-native";
+import { logout } from "../redux/feature/authSlice";
+import { store } from "../redux/store";
+import { resetToLogin } from "../routes/navigationService";
 
 
 export const API_CALL = async (
@@ -47,7 +50,17 @@ export const API_CALL = async (
     
     try {
       const json = JSON.parse(text);
-      return { ...json, success: response.ok };
+      const isUnauthorized =
+        response.status === 401 ||
+        response.status === 403 ||
+        json?.message === 'Unauthenticated.';
+
+      if (isUnauthorized) {
+        store.dispatch(logout());
+        resetToLogin();
+      }
+
+      return { ...json, status: response.status, success: response.ok };
     } catch {
       console.log('Non JSON response:', text);
       return { success: response.ok, message: text || 'Something went wrong' };
