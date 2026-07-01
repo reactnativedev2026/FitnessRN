@@ -351,17 +351,14 @@ const createStyles = (theme: any) => StyleSheet.create({
         width: 140,
         height: 140,
         borderRadius: 10,
-        backgroundColor: theme.colors.surface,
+        backgroundColor: "white",
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: '#FFB36B',
-        shadowOpacity: 0.8,
-        shadowRadius: 18,
-        elevation: 15,
+   
     },
 
     startText: {
-        color: '#5A2B12',
+        color: "black",
         fontSize: 20,
         fontWeight: '900',
         marginTop: 6,
